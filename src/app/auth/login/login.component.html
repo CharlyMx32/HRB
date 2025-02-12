@@ -1,6 +1,7 @@
-<div class="container">
+<div class="contenedor">
   <div class="login-container">
-    <h2>Iniciar Sesión</h2>
+    <i class="fa-solid fa-circle-user fa-2xl" style="color: #fff;"></i>
+        <h2 class="etiquetas">Iniciar Sesión</h2>
     <form (ngSubmit)="login()">
       <input type="email" name="email" [(ngModel)]="email" placeholder="Correo electrónico" required>
       <input type="password" name="password" [(ngModel)]="password" placeholder="Contraseña" required>
