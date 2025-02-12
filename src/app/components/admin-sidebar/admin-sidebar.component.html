@@ -1,7 +1,7 @@
-<div class="relative min-h-screen flex">
+<div class="relative min-h-screen flex sidebar">
     <!-- Sidebar -->
     <div [ngClass]="{'w-16': isCollapsed, 'w-64': !isCollapsed}"
-        class="bg-[#1f1f21] text-white h-screen p-4 transition-all duration-300 rounded-r-2xl">
+        class="bg-[#1f1f21] text-white h-[95vh] p-4 transition-all duration-300 rounded-2xl">
 
         <!-- Toggle Button -->
         <button (click)="toggleSidebar()" class="mb-4 text-xl">
@@ -9,8 +9,8 @@
         </button>
 
         <!-- Navigation -->
-        <ul>
-            <li *ngFor="let item of menuItems" class="p-2 flex items-center gap-2 hover:bg-gray-700 rounded-lg">
+        <ul class="flex flex-col gap-4">
+            <li *ngFor="let item of menuItems" class="p-2 flex items-center gap-2 rounded-lg">
                 <i [class]="item.icon"></i>
                 <span *ngIf="!isCollapsed">{{ item.label }}</span>
             </li>
