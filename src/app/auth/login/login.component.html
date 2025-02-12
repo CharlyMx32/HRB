@@ -1,9 +1,11 @@
-<div class="login-container">
-  <h2>Iniciar Sesión</h2>
-  <form (ngSubmit)="login()">
-    <input type="email" name="email" [(ngModel)]="email" placeholder="Correo electrónico" required>
-    <input type="password" name="password" [(ngModel)]="password" placeholder="Contraseña" required>
-    <button type="submit">Ingresar</button>
-    <p *ngIf="errorMessage">{{ errorMessage }}</p>
-  </form>
+<div class="container">
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
+    <form (ngSubmit)="login()">
+      <input type="email" name="email" [(ngModel)]="email" placeholder="Correo electrónico" required>
+      <input type="password" name="password" [(ngModel)]="password" placeholder="Contraseña" required>
+      <button type="submit">Ingresar</button>
+      <p *ngIf="errorMessage">{{ errorMessage }}</p>
+    </form>
+  </div>
 </div>
