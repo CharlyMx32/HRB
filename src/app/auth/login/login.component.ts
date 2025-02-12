@@ -26,9 +26,9 @@ export class LoginComponent {
         this.authService.setRole(response.role); 
         
         if (response.role === 'admin') {
-          this.router.navigate(['/usuario/dashboard']);
+          this.router.navigate(['/admin/home']);
         } else if (response.role === 'worker') {
-          this.router.navigate(['/worker-dashboard']);
+          this.router.navigate(['/usuario/dashboard']);
         } else {
           this.router.navigate(['/dashboard']); 
         }
