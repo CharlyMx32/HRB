@@ -1,0 +1,170 @@
+/* Contenedor principal */
+.user-dashboard {
+    display: flex;
+    height: 100vh;
+  }
+  
+  /* Barra Lateral */
+  .sidebar {
+    width: 250px;
+    background-color: #1a73e8;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+  }
+  
+  .sidebar .logo img {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin: 15px 0;
+  }
+  
+  .sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  .sidebar ul li a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Contenido principal */
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f4f4f4;
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .logout-btn {
+    background-color: #ff4081;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .logout-btn:hover {
+    background-color: #e03571;
+  }
+  
+  /* Cards */
+  .dashboard-info .cards-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  
+  .card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    font-size: 16px;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .user-dashboard {
+      flex-direction: column;
+    }
+  
+    .sidebar {
+      width: 100%;
+      height: auto;
+      flex-direction: row;
+      justify-content: space-around;
+      padding: 10px;
+    }
+  
+    .content {
+      padding: 10px;
+    }
+  
+    .dashboard-info .cards-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Animación para el mensaje de bienvenida */
+@keyframes slideIn {
+    0% {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .welcome-message {
+    font-size: 36px;
+    color: #1a73e8;
+    font-weight: bold;
+    animation: slideIn 1s ease-out;
+  }
+  
+  /* Opcional: Agregar un cambio de color al final de la animación */
+  @keyframes colorChange {
+    0% {
+      color: #1a73e8;
+    }
+    50% {
+      color: #ff4081;
+    }
+    100% {
+      color: #1a73e8;
+    }
+  }
+  
+  .welcome-message {
+    animation: slideIn 1s ease-out, colorChange 2s ease-in-out infinite;
+  }
+  
+  /* Otros estilos para la página */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .header h1 {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  
