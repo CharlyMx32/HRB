@@ -34,7 +34,9 @@ export class LoginComponent {
         this.isLoading = false; // Detiene el loader
 
         if (response.role === 'admin') {
+
           this.router.navigate(['/admin/home']);
+
         } else if (response.role === 'worker') {
           this.router.navigate(['/worker/dashboard']);
         } else {
