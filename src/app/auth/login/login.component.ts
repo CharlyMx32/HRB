@@ -17,14 +17,19 @@ export class LoginComponent {
   errorMessage = '';
   isPasswordVisible = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/admin/home']); // Cambia la ruta según tu app
+    }
+  }
+  
 
   login() {
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (response) => {
         this.authService.setToken(response.token);
-        this.authService.setRole(response.role); 
-        
+        this.authService.setRole(response.role);
+
         if (response.role === 'admin') {
           this.router.navigate(['/admin/home']);
         } else if (response.role === 'worker') {

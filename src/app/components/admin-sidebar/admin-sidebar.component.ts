@@ -59,8 +59,12 @@ export class AdminSidebarComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
   
-    logout() {
-      this.authService.logout();
+  logout() {
+    this.authService.logout();
+    
+    setTimeout(() => {
       this.router.navigate(['/login']);
-    }
+    }, 100); // Espera 100ms antes de redirigir
+  }
+  
 }
