@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import anime from 'animejs/lib/anime.es.js';
+
 
 @Component({
   selector: 'app-admin-sidebar',
@@ -21,5 +23,29 @@ export class AdminSidebarComponent {
 
   toggleSidebar() {
     this.isCollapsed = !this.isCollapsed;
+  
+    if (!this.isCollapsed) {
+      setTimeout(() => { 
+        anime({
+          targets: '.sidebar li span',
+          opacity: [0, 1],
+          translateX: [-30, 0], 
+          duration: 500,
+          easing: 'easeOutQuad',
+          delay: anime.stagger(100),
+          begin: () => {
+            document.querySelectorAll('.sidebar li span').forEach(el => {
+              el.classList.remove('invisible'); 
+            });
+          }
+        });
+      }, 100);
+    } else {
+      document.querySelectorAll('.sidebar li span').forEach(el => {
+        el.classList.add('invisible');
+      });
+    }
   }
+  
+  
 }

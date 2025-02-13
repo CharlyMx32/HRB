@@ -12,7 +12,7 @@
         <ul class="flex flex-col gap-4">
             <li *ngFor="let item of menuItems" class="p-2 flex items-center gap-2 rounded-lg">
                 <i [class]="item.icon"></i>
-                <span *ngIf="!isCollapsed">{{ item.label }}</span>
+                <span [ngClass]="{'invisible': isCollapsed}">{{ item.label }}</span>
             </li>
         </ul>
     </div>

@@ -23,3 +23,11 @@ li:active{
     margin-top: 10px;
     margin-bottom: 20px;
 }
+.sidebar li span {
+    opacity: 0; /* Ocultar los textos por defecto */
+    display: inline-block;
+}
+
+.invisible {
+    opacity: 0;
+}
