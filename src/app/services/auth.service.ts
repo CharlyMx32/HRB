@@ -30,13 +30,27 @@ export class AuthService {
     return localStorage.getItem('token');
   }
   
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('token'); 
-  }
-  
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+  }
+
+  isTokenExpired(): boolean {
+    const token = this.getToken();
+    if (!token) return true; 
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1])); // Decodifica el JWT
+      const exp = payload.exp * 1000; // Convierte la expiración a milisegundos
+      return Date.now() > exp; // Si la fecha actual es mayor, el token expiró
+    } catch (error) {
+      return true; 
+    }
+  }
+
+  isAuthenticated(): boolean {
+    const token = this.getToken();
+    return !!token && !this.isTokenExpired();
   }
 
 }
