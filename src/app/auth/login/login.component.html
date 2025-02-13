@@ -8,8 +8,13 @@
     <form (ngSubmit)="login()">
       <input type="email" name="email" [(ngModel)]="email" placeholder="Correo electrónico" required>
       <input type="password" name="password" [(ngModel)]="password" placeholder="Contraseña" required>
-      <button type="submit">Ingresar</button>
-      <p *ngIf="errorMessage" class="error-message">
+      <button type="submit" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Ingresar</span>
+        <span *ngIf="isLoading">
+          <i class="fa fa-spinner fa-spin"></i> Cargando...
+        </span>
+      </button>
+            <p *ngIf="errorMessage" class="error-message">
         <i class="fa-solid fa-triangle-exclamation error-icon"></i> 
         {{ errorMessage }}
       </p>
@@ -17,5 +22,6 @@
         <a [routerLink]="['/forgot-password']">¿Olvidaste tu contraseña?</a>
       </p>      
     </form>
+    
   </div>
 </div>
