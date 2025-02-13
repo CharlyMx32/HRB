@@ -6,12 +6,12 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://beae-2806-101e-e-1eb5-9433-cccc-4828-6246.ngrok-free.app/api/login'; 
+  private apiUrl = ' https://1deb-177-244-54-50.ngrok-free.app/api/'; 
 
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(this.apiUrl, credentials);
+    return this.http.post(`${this.apiUrl}/login`, credentials);
   }
   
   setToken(token: string) {

@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router,RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule], 
+  imports: [CommonModule, FormsModule,RouterModule], 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -26,9 +26,9 @@ export class LoginComponent {
         this.authService.setRole(response.role); 
         
         if (response.role === 'admin') {
-          this.router.navigate(['/admin/home']);
-        } else if (response.role === 'worker') {
           this.router.navigate(['/usuario/dashboard']);
+        } else if (response.role === 'worker') {
+          this.router.navigate(['/worker/dashboard']);
         } else {
           this.router.navigate(['/dashboard']); 
         }
@@ -41,5 +41,9 @@ export class LoginComponent {
 
   togglePasswordVisibility() {
     this.isPasswordVisible = !this.isPasswordVisible;
+  }
+
+  forgotPassword() {
+    this.router.navigate(['/forgot-password']);
   }
 }

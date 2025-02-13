@@ -94,6 +94,7 @@ button:active{
   transform: translateX(-50%);
   width: 90%;
   height: auto;
+  bottom: 0;
 }
 
 .animated-line path {
@@ -146,4 +147,11 @@ button:active{
   50% { transform: translateX(4px); }
   75% { transform: translateX(-4px); }
   100% { transform: translateX(0); }
+}
+
+.forgot-password {
+  color: #fff;
+  font-size: 14px;
+  margin-top: 10px;
+  text-decoration: none;
 }
