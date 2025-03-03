@@ -1,0 +1,26 @@
+.parent {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);  /* 3 columnas bien balanceadas */
+    grid-template-rows: auto;
+    grid-template-areas: 
+        "puerta luz accesos"
+        "facturas facturas accesos"
+        "temp peso peso";
+    gap: 15px; /* Espacio entre tarjetas */
+    padding: 20px;
+    align-items: start; /* Evita que se expandan de más */
+}
+
+/* Distribución de tarjetas */
+.div1 { grid-area: accesos; }  /* Accesos recientes */
+.div2 { grid-area: puerta; }   /* Estado de la puerta */
+.div3 { grid-area: luz; }      /* Sensor de luz */
+.div4 { grid-area: facturas; } /* Facturas y pedidos */
+.div5 { grid-area: temp; }     /* Temperatura y humedad */
+.div6 { grid-area: peso; }     /* Sensor de peso */
+
+/* Para que las tarjetas tengan el mismo tamaño y no se deformen */
+.app-cards {
+    width: 100%;
+    height: 100%;
+}
