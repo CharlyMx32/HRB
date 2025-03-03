@@ -1,7 +1,4 @@
 <div class="contenedor">
-    <svg class="animated-line" viewBox="0 0 500 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M 50 150 Q 250 50, 450 150" stroke="white" stroke-width="0.1" fill="transparent" />
-    </svg>
     <div class="registration-container">
         <i class="fa-solid fa-circle-user fa-2xl" style="color: #fff;"></i>
         <h2 class="etiquetas">Registrar Empleado</h2>
@@ -13,9 +10,9 @@
                 <input type="text" name="lastName" [(ngModel)]="lastName" placeholder="Apellido" required>
                 <input type="date" name="birthDate" [(ngModel)]="birthDate" placeholder="Fecha de nacimiento" required>
                 <input type="tel" name="phone" [(ngModel)]="phone" placeholder="Teléfono" required>
-                <input type="text" name="rfid" [(ngModel)]="rfid" placeholder="RFID" required>
-                <input type="text" name="rfc" [(ngModel)]="rfc" placeholder="RFC" required>
-                <input type="text" name="nss" [(ngModel)]="nss" placeholder="NSS" required>
+                <input type="text" name="rfid" [(ngModel)]="rfid" placeholder="RFID">
+                <input type="text" name="rfc" [(ngModel)]="rfc" placeholder="RFC">
+                <input type="text" name="nss" [(ngModel)]="nss" placeholder="NSS">
             </div>
             <button type="submit">Registrar</button>
             <p *ngIf="errorMessage" class="error-message">
