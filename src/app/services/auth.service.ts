@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api'; 
+  private apiUrl = 'https://4fc4-177-244-54-50.ngrok-free.app/api'; 
 
   constructor(private http: HttpClient) {}
 
@@ -22,7 +23,6 @@ export class AuthService {
   checkEmailVerification(email: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/verify-email/${email}`);
   }
-
 
   setToken(token: string) {
     localStorage.setItem('token', token);
@@ -63,4 +63,15 @@ export class AuthService {
     return !!token && !this.isTokenExpired();
   }
 
+  getUser(): any {
+    const token = this.getToken();
+    if (!token) return null;
+    
+    try {
+      const decodedToken = jwtDecode(token);
+      return decodedToken;
+    } catch (error) {
+      return null;
+    }
+  }
 }
