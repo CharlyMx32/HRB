@@ -14,9 +14,8 @@ export class AdminSidebarComponent {
   isCollapsed = true;
   menuItems = [
     { label: 'Dashboard', icon: 'fas fa-home', route: '/admin/home' },
-    { label: 'Mi Almacen', icon: 'fas fa-warehouse', route: '/admin/almacen' },
-    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/registro' },
-    { label: 'Configuración', icon: 'fas fa-cog', route: '/admin/configuracion' }
+    { label: 'Facturas', icon: 'fas fa-file-invoice', route: '/admin/ordenes'},
+    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/registro' }
   ];
   
   navigateTo(route: string) {

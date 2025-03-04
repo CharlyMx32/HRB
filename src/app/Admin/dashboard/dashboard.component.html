@@ -1,1 +1,61 @@
-<p>dashboard works!</p>
+<div class="parent">
+    <!-- Accesos recientes -->
+    <div class="div1">
+        <app-cards 
+            [number]="'01.'"
+            [title]="'Accesos Recientes'"
+            [description]="'Últimos accesos registrados'"
+            [icon]="'fa-id-card'">
+        </app-cards>
+    </div>
+
+    <!-- Estado de la puerta -->
+    <div class="div2">
+        <app-cards 
+            [number]="'02.'"
+            [title]="'Estado de la Puerta'"
+            [description]="'Cerrada'" 
+            [icon]="'fa-door-closed'">
+        </app-cards>
+    </div>
+
+    <!-- Sensor de luz -->
+    <div class="div3">
+        <app-cards 
+            [number]="'03.'"
+            [title]="'Luz'"
+            [description]="'Apagada'" 
+            [icon]="'fa-lightbulb'">
+        </app-cards>
+    </div>
+
+    <!-- Facturas y pedidos -->
+    <div class="div4">
+        <app-cards 
+            [number]="'04.'"
+            [title]="'Facturas y Pedidos'"
+            [description]="'2 entregas pendientes'"
+            [icon]="'fa-file-invoice'">
+        </app-cards>
+    </div>
+
+    <!-- Temperatura y humedad -->
+    <div class="div5">
+        <app-cards 
+            [number]="'05.'"
+            [title]="'Temperatura & Humedad'"
+            [description]="'22°C - 65% HR'"
+            [icon]="'fa-temperature-half'">
+        </app-cards>
+    </div>
+
+    <!-- Sensor de peso -->
+    <div class="div6">
+        <app-cards 
+            [number]="'06.'"
+            [title]="'Peso Estanterías'"
+            [description]="'Cargando datos...'"
+            [icon]="'fa-weight-scale'">
+        </app-cards>
+    </div>
+</div>
