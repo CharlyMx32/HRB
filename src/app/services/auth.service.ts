@@ -41,9 +41,13 @@ export class AuthService {
   }
   
   logout() {
+    console.log('Eliminando token y rol...');
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    sessionStorage.removeItem('token');
+    console.log('Token después de logout:', localStorage.getItem('token'));
   }
+  
 
   isTokenExpired(): boolean {
     const token = this.getToken();
@@ -60,7 +64,9 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     const token = this.getToken();
+    console.log('Verificando autenticación. Token:', token);
     return !!token && !this.isTokenExpired();
   }
+  
 
 }
