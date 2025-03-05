@@ -3,6 +3,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { OrdenesComponent } from './ordenes/ordenes.component';
+import { PdfVistaComponent } from '../components/pdf-vista/pdf-vista.component';
 
 export const adminRoutes: Routes = [
     {
@@ -11,7 +12,9 @@ export const adminRoutes: Routes = [
         children: [
             { path: 'home', component: DashboardComponent },
             { path: 'ordenes', component: OrdenesComponent },
-            { path: 'registro', component: RegisterComponent }
+            { path: 'registro', component: RegisterComponent },
+            { path: 'facturas', component: PdfVistaComponent },
+            
         ]
     }
 ];

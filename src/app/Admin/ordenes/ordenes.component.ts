@@ -35,7 +35,7 @@ export class OrdenesComponent {
 
   // Redirigir al usuario cuando hace clic en el botón "+ Nueva Orden"
   redirectToNuevaOrden() {
-    this.router.navigate(['/nueva-orden']);  // Asegúrate de que la ruta '/nueva-orden' esté configurada en tu RouterModule
+    this.router.navigate(['/admin/facturas']);  // Asegúrate de que la ruta '/nueva-orden' esté configurada en tu RouterModule
   }
 
   getEstadoColor(estado: string): string {

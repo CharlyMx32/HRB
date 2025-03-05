@@ -1,0 +1,15 @@
+<div class="pdf-grid">
+    <div *ngFor="let pdf of pdfs" class="pdf-card" [ngClass]="{ 'ordered': pdf.ordered, 'not-ordered': !pdf.ordered }">
+        <div class="pdf-card-header">
+            <h4>{{ pdf.name }}</h4>
+            <div *ngIf="pdf.ordered" class="ordered-badge">Ordenado</div>
+        </div>
+        <div class="pdf-card-body">
+            <canvas #pdfCanvas></canvas>
+        </div>
+        <div class="pdf-card-footer">
+            <input type="text" [(ngModel)]="pdf.invoiceNumber" placeholder="Número de factura" />
+            <input type="text" [(ngModel)]="pdf.invoiceDate" placeholder="Fecha de emisión" />
+        </div>
+    </div>
+</div>
