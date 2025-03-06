@@ -1,1 +1,29 @@
-<p>user-sidebar works!</p>
+<div class="relative min-h-screen flex sidebar">
+    <!-- Sidebar -->
+    <div [ngClass]="{'w-16': isCollapsed, 'w-64': !isCollapsed}"
+        class="bg-[#232328] text-[#EAEAEA] h-[100vh] p-4 transition-all duration-500  flex flex-col">
+
+        <!-- Toggle Button -->
+        <button (click)="toggleSidebar()" class="mb-4 text-xl">
+            <i class="fas" [ngClass]="{'fa-bars': isCollapsed, 'fa-times': !isCollapsed}"></i>
+        </button>
+
+        <!-- Navigation -->
+        <ul class="flex flex-col gap-4 flex-grow">
+            <li *ngFor="let item of menuItems" class="p-2 flex items-center gap-2 rounded-lg cursor-pointer"
+                (click)="navigateTo(item.route)">
+                <i [class]="item.icon"></i>
+                <span [ngClass]="{'invisible': isCollapsed}">{{ item.label }}</span>
+            </li>
+        </ul>
+        
+
+        <!-- Logout Button -->
+        <button class="Btn self-center mb-4" [ngClass]="{'collapsed': isCollapsed}" (click)="logout()">
+            <div class="sign">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <div class="text" *ngIf="!isCollapsed">Logout</div>
+        </button>
+    </div>
+</div>

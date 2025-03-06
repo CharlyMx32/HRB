@@ -1,0 +1,13 @@
+<button (click)="fetchInvoices()">Cargar Facturas</button>
+
+<div *ngIf="pdfs.length > 0">
+    <h3>Facturas disponibles:</h3>
+    <div class="facturas-container">
+        <div *ngFor="let pdf of pdfs" class="factura-card">
+            <p>{{ pdf.details.title }}</p>
+            <button (click)="selectPdf(pdf)">Ver PDF</button>
+        </div>
+    </div>
+</div>
+
+<canvas #pdfCanvas *ngIf="selectedPdf"></canvas>
