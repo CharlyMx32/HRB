@@ -1,15 +1,13 @@
-<div class="pdf-grid">
-    <div *ngFor="let pdf of pdfs" class="pdf-card" [ngClass]="{ 'ordered': pdf.ordered, 'not-ordered': !pdf.ordered }">
-        <div class="pdf-card-header">
-            <h4>{{ pdf.name }}</h4>
-            <div *ngIf="pdf.ordered" class="ordered-badge">Ordenado</div>
-        </div>
-        <div class="pdf-card-body">
-            <canvas #pdfCanvas></canvas>
-        </div>
-        <div class="pdf-card-footer">
-            <input type="text" [(ngModel)]="pdf.invoiceNumber" placeholder="Número de factura" />
-            <input type="text" [(ngModel)]="pdf.invoiceDate" placeholder="Fecha de emisión" />
+<button (click)="fetchInvoices()">Cargar Facturas</button>
+
+<div *ngIf="pdfs.length > 0">
+    <h3>Facturas disponibles:</h3>
+    <div class="facturas-container">
+        <div *ngFor="let pdf of pdfs" class="factura-card">
+            <p>{{ pdf.details.title }}</p>
+            <button (click)="selectPdf(pdf)">Ver PDF</button>
         </div>
     </div>
 </div>
+
+<canvas #pdfCanvas *ngIf="selectedPdf"></canvas>
