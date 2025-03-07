@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-forget-password',
@@ -22,7 +23,8 @@ export class ForgetPasswordComponent {
   successMessage: string | null = null;
   submitted: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     // Inicialización del formulario de recuperación de contraseña
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -49,15 +51,24 @@ export class ForgetPasswordComponent {
 
   // Enviar correo de recuperación
   onSubmit() {
+    this.submitted = true;
+  
+    if (this.forgotPasswordForm.invalid) {
+      return;
+    }
+  
     this.loading = true;
     const email = this.forgotPasswordForm.value.email;
-
+  
     this.authService.sendPasswordRecoveryEmail(email).subscribe(
       (response) => {
         this.loading = false;
-        this.waitingForVerification = true;
-        this.successMessage = 'Correo enviado. Por favor, verifica tu correo.';
-        this.checkEmailVerification(email); // Comienza a verificar el estado
+        this.successMessage = 'Correo enviado. Por favor, revisa tu bandeja de entrada.';
+        
+        setTimeout(() => {
+          this.successMessage = null;
+          this.router.navigate(['/auth/login']); 
+        }, 3000);
       },
       (error) => {
         this.loading = false;
@@ -65,6 +76,7 @@ export class ForgetPasswordComponent {
       }
     );
   }
+  
 
   // Verificar si el correo fue confirmado
   checkEmailVerification(email: string) {

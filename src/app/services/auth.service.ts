@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
 
-  private apiUrl = 'https://fb35-187-190-56-49.ngrok-free.app/api'; 
+  private apiUrl = 'https://8d95-187-190-56-49.ngrok-free.app/api'; 
 
   constructor(private http: HttpClient) {}
 
@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   sendPasswordRecoveryEmail(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/send-recovery-email`, { email });
+    return this.http.post(`${this.apiUrl}/send-reset-password-link`, { email });
   }
 
   checkEmailVerification(email: string): Observable<any> {
