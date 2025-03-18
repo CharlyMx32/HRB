@@ -8,43 +8,48 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = '//cdnjs.cloudflare.com/ajax/libs/pdf.j
 
 @Component({
   selector: 'app-pdf-vista',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './pdf-vista.component.html',
   styleUrls: ['./pdf-vista.component.css']
 })
 export class PdfVistaComponent implements OnInit {
   @ViewChild('pdfCanvas', { static: false }) pdfCanvasRef!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('pdfPreviewCanvas', { static: false }) pdfPreviewCanvasRef!: ElementRef<HTMLCanvasElement>;
 
-  pdfs: any[] = []; // Lista de PDFs obtenidos desde el backend
-  selectedPdf: any = null; // PDF seleccionado
+  pdfs: any[] = [];
+  selectedPdf: any = null;
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit(): void {
-    this.fetchInvoices(); // Cargar facturas al iniciar
-  }
+  ngOnInit(): void { }
 
   fetchInvoices(): void {
-    this.http.get<any[]>('http://192.168.252.81:8000/api/invoices')
-      .subscribe(response => {
-        console.log('JSON recibido:', response);
-        this.pdfs = response; // Guardamos los PDFs
-      }, error => {
-        console.error('Error en la petición:', error);
+    this.http.get('http://192.168.252.81:8000/api/invoices')
+      .subscribe({
+        next: (response) => {
+          console.log('Facturas recibidas:', response);
+          this.pdfs = response as any[];
+          console.log('Datos en pdfs:', this.pdfs); // Verifica aquí si realmente hay datos.
+        },
+        error: (err) => {
+          console.error('Error en la petición:', err);
+          alert('Hubo un problema al cargar las facturas.');
+        }
       });
   }
-
+  
 
   selectPdf(pdf: any): void {
+    console.log('Seleccionando factura:', pdf); // Verifica que se está llamando correctamente
     this.selectedPdf = pdf;
     this.loadPdf(pdf.URL);
-  
-    setTimeout(() => {
-      document.querySelector('canvas')?.scrollIntoView({ behavior: 'smooth' });
-    }, 500); // Espera un poco para asegurarse de que el PDF se renderiza
   }
   
 
+  deselectPdf(): void {
+    this.selectedPdf = null;
+  }
 
   loadPdf(url: string): void {
     pdfjsLib.getDocument(url).promise.then(pdfDoc => {
@@ -54,16 +59,16 @@ export class PdfVistaComponent implements OnInit {
 
   renderPage(pdfDoc: any, pageNum: number): void {
     if (!this.pdfCanvasRef) return;
-  
+
     const canvas = this.pdfCanvasRef.nativeElement;
     const context = canvas.getContext('2d');
     if (!context) return;
-  
+
     pdfDoc.getPage(pageNum).then((page: any) => {
-      const viewport = page.getViewport({ scale: 0.5 }); // Reducir tamaño
+      const viewport = page.getViewport({ scale: 0.8 });
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-  
+
       const renderContext = {
         canvasContext: context,
         viewport: viewport
@@ -71,5 +76,4 @@ export class PdfVistaComponent implements OnInit {
       page.render(renderContext);
     });
   }
-  
 }

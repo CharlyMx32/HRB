@@ -1,13 +1,40 @@
-<button (click)="fetchInvoices()">Cargar Facturas</button>
+<div class="container">
+    <!-- 📌 Izquierda: Formulario de Factura -->
+    <div class="left-panel" *ngIf="selectedPdf">
+        <h3>Detalles de la Factura</h3>
+        <label>Título:</label>
+        <input type="text" [value]="selectedPdf.details.title" readonly />
 
-<div *ngIf="pdfs.length > 0">
-    <h3>Facturas disponibles:</h3>
-    <div class="facturas-container">
-        <div *ngFor="let pdf of pdfs" class="factura-card">
-            <p>{{ pdf.details.title }}</p>
-            <button (click)="selectPdf(pdf)">Ver PDF</button>
+        <label>Fecha:</label>
+        <input type="text" [value]="selectedPdf.details.date" readonly />
+
+        <label>Productos:</label>
+        <ul>
+            <li *ngFor="let item of selectedPdf.details.items">
+                {{ item.name }} - {{ item.price || item.KG }} {{ item.price ? 'USD' : 'KG' }}
+            </li>
+        </ul>
+
+        <label>Total:</label>
+        <input type="text" [value]="selectedPdf.details.total" readonly />
+
+        <button (click)="deselectPdf()">Volver</button>
+    </div>
+
+    <!-- 📌 Derecha: Vista de PDFs -->
+    <div class="right-panel">
+        <div *ngIf="!selectedPdf" class="facturas-container">
+            <h3>Facturas disponibles:</h3>
+            <div *ngFor="let pdf of pdfs" class="factura-card">
+                <canvas #pdfPreviewCanvas></canvas>
+                <p>{{ pdf.details.title }}</p>
+                <button (click)="selectPdf(pdf)">Seleccionar</button>
+            </div>
         </div>
+
+
+
+        <!-- Vista grande del PDF -->
+        <canvas #pdfCanvas *ngIf="selectedPdf"></canvas>
     </div>
 </div>
-
-<canvas #pdfCanvas *ngIf="selectedPdf"></canvas>
