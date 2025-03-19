@@ -1,6 +1,15 @@
-<div class="flex h-screen">
-    <app-admin-sidebar></app-admin-sidebar>
-    <div class="flex-1 p-4">
-        <router-outlet></router-outlet>
+<div class="flex h-screen flex-col">
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <app-admin-sidebar class="sidebar"></app-admin-sidebar>
+        <!-- Contenedor principal -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Top bar -->
+            <app-top-bar></app-top-bar>
+            <!-- Contenido dinámico (aquí se renderiza el dashboard) -->
+            <div class="flex-1 p-4 overflow-y-auto">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
     </div>
 </div>

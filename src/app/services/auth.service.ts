@@ -17,7 +17,7 @@ export class AuthService {
   }
 
   sendPasswordRecoveryEmail(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/send-recovery-email`, { email });
+    return this.http.post(`${this.apiUrl}/send-reset-password-link`, { email });
   }
 
   checkEmailVerification(email: string): Observable<any> {
