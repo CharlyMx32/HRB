@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
 
-  private apiUrl = 'https://8d95-187-190-56-49.ngrok-free.app/api'; 
+  private apiUrl = 'http://192.168.252.90:8000/api'; 
 
   constructor(private http: HttpClient) {}
 
@@ -79,5 +79,13 @@ export class AuthService {
     } catch (error) {
       return null;
     }
+  }
+  
+  registerWorker(employeeData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register-worker`, employeeData);
+  }
+
+  getEmployees(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/workers`);
   }
 }

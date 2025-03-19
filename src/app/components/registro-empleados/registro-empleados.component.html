@@ -1,0 +1,23 @@
+<div class="registration-card">
+    <button class="back-button" (click)="navigate('/admin/empleados')">Volver</button>
+    <i class="fa-solid fa-circle-user icono-usuario"></i>
+    <h2 class="etiquetas">Registrar Empleado</h2>
+    <form (ngSubmit)="register()">
+        <div class="form-grid">
+            <input type="text" name="name" [(ngModel)]="name" placeholder="Nombre" required>
+            <input type="text" name="lastName" [(ngModel)]="lastName" placeholder="Apellido" required>
+            <input type="date" name="birthDate" [(ngModel)]="birthDate" placeholder="Fecha de nacimiento" required>
+            <input type="tel" name="phone" [(ngModel)]="phone" placeholder="Teléfono" required>
+            <input type="email" name="email" [(ngModel)]="email" placeholder="Correo electrónico" required>
+            <input type="password" name="password" [(ngModel)]="password" placeholder="Contraseña" required>
+            <input type="text" name="rfid" [(ngModel)]="rfid" placeholder="RFID">
+            <input type="text" name="rfc" [(ngModel)]="rfc" placeholder="RFC">
+            <input type="text" name="nss" [(ngModel)]="nss" placeholder="NSS">
+        </div>
+        <button type="submit">Registrar</button>
+        <p *ngIf="errorMessage" class="error-message">
+            <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+            {{ errorMessage }}
+        </p>
+    </form>
+</div>

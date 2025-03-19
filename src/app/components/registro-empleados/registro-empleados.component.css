@@ -1,42 +1,50 @@
-.contenedor {
-    min-height: 100vh;
+.registration-card {
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #141416;
-    position: relative;
-}
-
-
-.registration-container {
-    width: 100%;
-    max-width: 800px; /* Aumentamos el ancho máximo */
-    padding: 20px;
-    text-align: center;
-    opacity: 0;
-    transform: translateY(-30px);
-    animation: slideIn 1s ease-out forwards;
-    border-radius: 10px;
+    max-width: 800px; /* Ajusta el tamaño del card */
     background-color: #1f1f21;
+    padding: 20px;
+    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-
+    text-align: center;
+    margin: 0 auto; /* Centra el card horizontalmente */
+    position: relative; /* Añadimos posición relativa para el botón de volver */
 }
 
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.back-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 0;
+    color: #fff;
+    background-color: rgb(0, 0, 0);
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-size: 15px;
+    transition: all 0.5s ease;
+}
+
+.back-button:hover {
+    letter-spacing: 3px;
+    background-color: hsl(225, 80%, 48%);
+    color: hsl(0, 0%, 100%);
+    box-shadow: rgb(24, 86, 220) 0px 7px 29px 0px;
 }
 
 .icono-usuario {
     font-size: 4rem; /* Aumentamos el tamaño del icono */
     color: #fff;
+    margin-bottom: 20px; /* Añadimos margen inferior */
+}
+
+.etiquetas {
+    color: #fff;
+    font-size: 22px;
+    margin-top: 20px;
+    margin-bottom: 30px; /* Añadimos margen inferior */
 }
 
 .form-grid {
@@ -93,35 +101,6 @@ button:active {
     box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
     transform: translateY(4px);
     transition: 100ms;
-}
-
-.etiquetas {
-    color: #fff;
-    font-size: 22px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.animated-line {
-    position: absolute;
-    top: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    height: auto;
-    bottom: 0;
-}
-
-.animated-line path {
-    stroke-dasharray: 600;
-    stroke-dashoffset: 600;
-    animation: drawLine 2s ease-out forwards;
-}
-
-@keyframes drawLine {
-    to {
-        stroke-dashoffset: 0;
-    }
 }
 
 .error-message {

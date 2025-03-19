@@ -15,7 +15,8 @@ export class AdminSidebarComponent {
   menuItems = [
     { label: 'Dashboard', icon: 'fas fa-home', route: '/admin/home' },
     { label: 'Facturas', icon: 'fas fa-file-invoice', route: '/admin/ordenes'},
-    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/registro' }
+    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/empleados' },
+    { label: 'Configuración', icon: 'fas fa-cog', route: '/admin/configuracion' },
   ];
   
   navigateTo(route: string) {

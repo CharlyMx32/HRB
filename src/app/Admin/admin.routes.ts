@@ -4,6 +4,7 @@ import { RegisterComponent } from './register/register.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { OrdenesComponent } from './ordenes/ordenes.component';
 import { PdfVistaComponent } from '../components/pdf-vista/pdf-vista.component';
+import { EmpleadosComponent } from './empleados/empleados.component';
 
 export const adminRoutes: Routes = [
     {
@@ -14,6 +15,7 @@ export const adminRoutes: Routes = [
             { path: 'ordenes', component: OrdenesComponent },
             { path: 'registro', component: RegisterComponent },
             { path: 'facturas', component: PdfVistaComponent },
+            { path: 'empleados', component: EmpleadosComponent }
             
         ]
     }
