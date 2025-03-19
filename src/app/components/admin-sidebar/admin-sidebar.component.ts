@@ -14,14 +14,9 @@ export class AdminSidebarComponent {
   isCollapsed = true;
   menuItems = [
     { label: 'Dashboard', icon: 'fas fa-home', route: '/admin/home' },
-<<<<<<< HEAD
-    { label: 'Mi Almacen', icon: 'fas fa-warehouse', route: '/admin/almacen' },
-    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/empleados' },
-    { label: 'Configuración', icon: 'fas fa-cog', route: '/admin/configuracion' }
-=======
     { label: 'Facturas', icon: 'fas fa-file-invoice', route: '/admin/ordenes'},
-    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/registro' }
->>>>>>> a16892531ccad386ac8e8e9887a9636afc2f1085
+    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/empleados' },
+    { label: 'Configuración', icon: 'fas fa-cog', route: '/admin/configuracion' },
   ];
   
   navigateTo(route: string) {
