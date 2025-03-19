@@ -1,10 +1,9 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
-import { WerehouseComponent } from './werehouse/werehouse.component';
 import { RegisterComponent } from './register/register.component';
-import { ConfiguracionComponent } from './configuracion/configuracion.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { EmpleadosComponent } from './empleados/empleados.component';
+
 
 export const adminRoutes: Routes = [
     {
@@ -12,9 +11,8 @@ export const adminRoutes: Routes = [
         component: LayoutComponent, // Componente principal que contiene la sidebar
         children: [
             { path: 'home', component: DashboardComponent },
-            { path: 'almacen', component: WerehouseComponent },
             { path: 'empleados', component: EmpleadosComponent },
-            { path: 'configuracion', component: ConfiguracionComponent }
+            { path: 'registro', component: RegisterComponent }
         ]
     }
 ];
