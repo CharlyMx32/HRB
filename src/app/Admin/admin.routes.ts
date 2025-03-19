@@ -4,6 +4,7 @@ import { WerehouseComponent } from './werehouse/werehouse.component';
 import { RegisterComponent } from './register/register.component';
 import { ConfiguracionComponent } from './configuracion/configuracion.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { EmpleadosComponent } from './empleados/empleados.component';
 
 export const adminRoutes: Routes = [
     {
@@ -12,7 +13,7 @@ export const adminRoutes: Routes = [
         children: [
             { path: 'home', component: DashboardComponent },
             { path: 'almacen', component: WerehouseComponent },
-            { path: 'registro', component: RegisterComponent },
+            { path: 'empleados', component: EmpleadosComponent },
             { path: 'configuracion', component: ConfiguracionComponent }
         ]
     }

@@ -15,7 +15,7 @@ export class AdminSidebarComponent {
   menuItems = [
     { label: 'Dashboard', icon: 'fas fa-home', route: '/admin/home' },
     { label: 'Mi Almacen', icon: 'fas fa-warehouse', route: '/admin/almacen' },
-    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/registro' },
+    { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/empleados' },
     { label: 'Configuración', icon: 'fas fa-cog', route: '/admin/configuracion' }
   ];
   
