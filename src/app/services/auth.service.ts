@@ -10,6 +10,7 @@ export class AuthService {
 
   private apiUrl = 'http://127.0.0.1:8000/api'; 
 
+
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
@@ -17,7 +18,7 @@ export class AuthService {
   }
 
   sendPasswordRecoveryEmail(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/send-recovery-email`, { email });
+    return this.http.post(`${this.apiUrl}/send-reset-password-link`, { email });
   }
 
   checkEmailVerification(email: string): Observable<any> {
