@@ -6,6 +6,29 @@
   align-items: center;
   background-color: #141416;
   position: relative;
+  overflow: hidden; /* Para evitar que la línea se salga del contenedor */
+}
+
+.animated-line {
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  height: auto;
+  bottom: 0;
+}
+
+.animated-line path {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  animation: drawLine 2s ease-out forwards;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .login-container {
@@ -47,8 +70,8 @@ input {
 }
 
 input:focus {
-  border-color: #4caf50;
-  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+  border-color: hsl(225, 80%, 48%); /* Color que coincide con el hover del botón */
+  box-shadow: 0 0 8px hsla(225, 80%, 48%, 0.5); /* Sombra con el mismo color */
   outline: none;
 }
 
@@ -66,6 +89,7 @@ button{
   font-size: 15px;
   transition: all 0.5s ease;
 }
+
 button:hover{
   letter-spacing: 3px;
   background-color: hsl(225, 80%, 48%);
@@ -86,28 +110,6 @@ button:active{
   color: #EAEAEA;
   font-size: 22px;
   margin-top: 20px;
-}
-
-.animated-line {
-  position: absolute;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  height: auto;
-  bottom: 0;
-}
-
-.animated-line path {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: drawLine 2s ease-out forwards;
-}
-
-@keyframes drawLine {
-  to {
-    stroke-dashoffset: 0;
-  }
 }
 
 .error-message {
@@ -158,7 +160,7 @@ button:active{
 }
 
 .forgot-password:hover {
-  color: #4caf50;
+  color: hsl(225, 80%, 48%);
 }
 
 .fa-spinner {

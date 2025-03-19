@@ -1,61 +1,113 @@
-<div class="parent">
-    <!-- Accesos recientes -->
-    <div class="div1">
-        <app-cards 
-            [number]="'01.'"
-            [title]="'Accesos Recientes'"
-            [description]="'Últimos accesos registrados'"
-            [icon]="'fa-id-card'">
-        </app-cards>
+<div class="grid grid-cols-4 gap-3 h-full">
+    <!-- Primera fila -->
+    <!-- P/L: Luz y Puerta -->
+    <div class="bg-[#232328] rounded-lg shadow-md flex flex-col gap-2 p-2">
+        <!-- Estado de la Puerta -->
+        <div class="bg-[#1a1a1d] p-3 rounded-md flex flex-col justify-center items-center flex-1">
+            <h2 class="text-sm font-semibold text-[#EAEAEA]">Puerta</h2>
+            <p class="text-xs text-[#EAEAEA]"><i id="door-icon" class="fas fa-door-closed"></i> <span id="door">Cerrada</span></p>
+        </div>
+        <!-- Estado de la Luz -->
+        <div class="bg-[#1a1a1d] p-3 rounded-md flex flex-col justify-center items-center flex-1">
+            <h2 class="text-sm font-semibold text-[#EAEAEA]">Luz</h2>
+            <p class="text-xs text-[#EAEAEA]"><i id="light-icon" class="fas fa-lightbulb"></i> <span id="light">Apagada</span></p>
+        </div>
     </div>
 
-    <!-- Estado de la puerta -->
-    <div class="div2">
-        <app-cards 
-            [number]="'02.'"
-            [title]="'Estado de la Puerta'"
-            [description]="'Cerrada'" 
-            [icon]="'fa-door-closed'">
-        </app-cards>
+    <!-- HT: Humedad y Temperatura -->
+    <div class="bg-[#232328] p-3 rounded-lg shadow-md flex flex-col justify-center items-center">
+        <h2 class="text-sm font-semibold text-[#EAEAEA]">Temperatura & Humedad</h2>
+        <p class="text-xs text-[#EAEAEA]">🌡️ <span id="temp">--</span>°C</p>
+        <p class="text-xs text-[#EAEAEA]">💧 <span id="hum">--</span>%</p>
     </div>
 
-    <!-- Sensor de luz -->
-    <div class="div3">
-        <app-cards 
-            [number]="'03.'"
-            [title]="'Luz'"
-            [description]="'Apagada'" 
-            [icon]="'fa-lightbulb'">
-        </app-cards>
+    <!-- AC: Acceso RFID -->
+    <div class="bg-[#232328] p-3 rounded-lg shadow-md">
+        <h2 class="text-sm font-semibold text-[#EAEAEA]">Acceso RFID</h2>
+        <p class="text-xs text-[#EAEAEA]">📛 Último acceso: <span id="rfid">--</span></p>
     </div>
 
-    <!-- Facturas y pedidos -->
-    <div class="div4">
-        <app-cards 
-            [number]="'04.'"
-            [title]="'Facturas y Pedidos'"
-            [description]="'2 entregas pendientes'"
-            [icon]="'fa-file-invoice'">
-        </app-cards>
+    <!-- CA: Calendario -->
+    <div class="bg-[#232328] p-3 rounded-lg shadow-md">
+        <h2 class="text-sm font-semibold text-[#EAEAEA]">Calendario</h2>
+        <p class="text-xs text-[#EAEAEA]">[Aquí puedes integrar un calendario dinámico]</p>
     </div>
 
-    <!-- Temperatura y humedad -->
-    <div class="div5">
-        <app-cards 
-            [number]="'05.'"
-            [title]="'Temperatura & Humedad'"
-            [description]="'22°C - 65% HR'"
-            [icon]="'fa-temperature-half'">
-        </app-cards>
+    <!-- Segunda fila -->
+    <!-- Stock -->
+    <div class="col-span-2 bg-[#232328] shadow-lg rounded-lg p-4">
+        <div class="flex justify-between items-center pb-4">
+            <h2 class="text-lg font-semibold text-[#EAEAEA]">Stock</h2>
+            <!-- Zona de Filtros -->
+            <div class="flex gap-4 items-center">
+                <input type="text" placeholder="Buscar por producto..." [(ngModel)]="searchProducto" class="px-3 py-2 rounded-md text-sm bg-[#333333] text-[#EAEAEA] border-[#444444]" />
+                <select [(ngModel)]="searchAreaStock" class="px-3 py-2 rounded-md text-sm bg-[#333333] text-[#EAEAEA] border-[#444444]">
+                    <option value="">Seleccionar área</option>
+                    <option value="Electrónica">Electrónica</option>
+                    <option value="Cables">Cables</option>
+                </select>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-center text-[#EAEAEA]">
+                <thead>
+                    <tr class="bg-[#333333] text-[#EAEAEA] text-sm">
+                        <th class="p-3">Producto</th>
+                        <th class="p-3">Stock</th>
+                        <th class="p-3">Área</th>
+                        <th class="p-3">Última Actualización</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let producto of filteredStock(); let i = index" [ngClass]="{'bg-[#1A1A1A]': i % 2 === 0, 'bg-[#2C2C2C]': i % 2 !== 0}" class="border-b border-[#444444] hover:bg-[#4D4D4D] hover:shadow-lg transition-all duration-200">
+                        <td class="p-3">{{ producto.nombre }}</td>
+                        <td class="p-3">{{ producto.stock }}</td>
+                        <td class="p-3">{{ producto.area }}</td>
+                        <td class="p-3">{{ producto.ultima_actualizacion }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Sensor de peso -->
-    <div class="div6">
-        <app-cards 
-            [number]="'06.'"
-            [title]="'Peso Estanterías'"
-            [description]="'Cargando datos...'"
-            [icon]="'fa-weight-scale'">
-        </app-cards>
+    <!-- Facturas -->
+    <div class="col-span-2 bg-[#232328] shadow-lg rounded-lg p-4">
+        <div class="flex justify-between items-center pb-4">
+            <h2 class="text-lg font-semibold text-[#EAEAEA]">Facturas</h2>
+            <!-- Zona de Filtros -->
+            <div class="flex gap-4 items-center">
+                <input type="text" placeholder="Buscar por factura..." [(ngModel)]="searchFactura" class="px-3 py-2 rounded-md text-sm bg-[#333333] text-[#EAEAEA] border-[#444444]" />
+                <select [(ngModel)]="searchEstadoFactura" class="px-3 py-2 rounded-md text-sm bg-[#333333] text-[#EAEAEA] border-[#444444]">
+                    <option value="">Seleccionar estado</option>
+                    <option value="Completada">Completada</option>
+                    <option value="Pendiente">Pendiente</option>
+                </select>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-center text-[#EAEAEA]">
+                <thead>
+                    <tr class="bg-[#333333] text-[#EAEAEA] text-sm">
+                        <th class="p-3">N° Factura</th>
+                        <th class="p-3">Fecha</th>
+                        <th class="p-3">Total</th>
+                        <th class="p-3">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let factura of filteredFacturas(); let i = index" [ngClass]="{'bg-[#1A1A1A]': i % 2 === 0, 'bg-[#2C2C2C]': i % 2 !== 0}" class="border-b border-[#444444] hover:bg-[#4D4D4D] hover:shadow-lg transition-all duration-200">
+                        <td class="p-3">{{ factura.numero }}</td>
+                        <td class="p-3">{{ factura.fecha }}</td>
+                        <td class="p-3">{{ factura.total }}</td>
+                        <td class="p-3">
+                            <span class="text-xs font-semibold px-2 py-1 rounded-full"
+                                [ngClass]="{'bg-green-500': factura.estado === 'Completada', 'bg-yellow-500': factura.estado === 'Pendiente'}">
+                                {{ factura.estado }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
