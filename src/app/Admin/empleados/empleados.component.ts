@@ -26,13 +26,13 @@ export class EmpleadosComponent implements OnInit {
   ) {
     this.employeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
-      lastName: ['', [Validators.required, Validators.maxLength(255)]],
-      birthDate: ['', [Validators.required, this.ageValidator]],
+      last_name: ['', [Validators.required, Validators.maxLength(255)]],
+      birth_date: ['', [Validators.required, this.ageValidator]],
       phone: ['', [Validators.maxLength(20)]],
       email: ['', [Validators.required, Validators.email]],
-      rfid: ['', [Validators.maxLength(255)]],
-      rfc: ['', [Validators.maxLength(255)]],
-      nss: ['', [Validators.maxLength(255)]]
+      RFID: ['', [Validators.maxLength(255)]],
+      RFC: ['', [Validators.maxLength(255)]],
+      NSS: ['', [Validators.maxLength(255)]]
     });
   }
 

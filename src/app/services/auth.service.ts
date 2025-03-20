@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
 
-  private apiUrl = 'http://192.168.252.90:8000/api'; 
+  private apiUrl = 'https://6458-177-244-54-50.ngrok-free.app/api'; 
 
   constructor(private http: HttpClient) {}
 

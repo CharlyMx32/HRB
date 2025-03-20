@@ -16,19 +16,19 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="lastName">Apellido</label>
-                    <input type="text" id="lastName" formControlName="lastName" placeholder="Apellido">
-                    <div *ngIf="employeeForm.get('lastName')?.invalid && employeeForm.get('lastName')?.touched" class="text-danger">
-                        <div *ngIf="employeeForm.get('lastName')?.errors?.['required']">El apellido es requerido.</div>
-                        <div *ngIf="employeeForm.get('lastName')?.errors?.['maxlength']">El apellido no puede exceder 255 caracteres.</div>
+                    <label for="last_name">Apellido</label>
+                    <input type="text" id="last_name" formControlName="last_name" placeholder="Apellido">
+                    <div *ngIf="employeeForm.get('last_name')?.invalid && employeeForm.get('last_name')?.touched" class="text-danger">
+                        <div *ngIf="employeeForm.get('last_name')?.errors?.['required']">El apellido es requerido.</div>
+                        <div *ngIf="employeeForm.get('last_name')?.errors?.['maxlength']">El apellido no puede exceder 255 caracteres.</div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="birthDate">Fecha de nacimiento</label>
-                    <input type="date" id="birthDate" formControlName="birthDate" placeholder="Fecha de nacimiento">
-                    <div *ngIf="employeeForm.get('birthDate')?.invalid && employeeForm.get('birthDate')?.touched" class="text-danger">
-                        <div *ngIf="employeeForm.get('birthDate')?.errors?.['required']">La fecha de nacimiento es requerida.</div>
-                        <div *ngIf="employeeForm.get('birthDate')?.errors?.['ageInvalid']">El empleado debe tener al menos 18 años.</div>
+                    <label for="birth_date">Fecha de nacimiento</label>
+                    <input type="date" id="birth_date" formControlName="birth_date" placeholder="Fecha de nacimiento">
+                    <div *ngIf="employeeForm.get('birth_date')?.invalid && employeeForm.get('birth_date')?.touched" class="text-danger">
+                        <div *ngIf="employeeForm.get('birth_date')?.errors?.['required']">La fecha de nacimiento es requerida.</div>
+                        <div *ngIf="employeeForm.get('birth_date')?.errors?.['ageInvalid']">El empleado debe tener al menos 18 años.</div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -47,24 +47,24 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="rfid">RFID</label>
-                    <input type="text" id="rfid" formControlName="rfid" placeholder="RFID">
-                    <div *ngIf="employeeForm.get('rfid')?.invalid && employeeForm.get('rfid')?.touched" class="text-danger">
-                        <div *ngIf="employeeForm.get('rfid')?.errors?.['maxlength']">El RFID no puede exceder 255 caracteres.</div>
+                    <label for="RFID">RFID</label>
+                    <input type="text" id="RFID" formControlName="RFID" placeholder="RFID">
+                    <div *ngIf="employeeForm.get('RFID')?.invalid && employeeForm.get('RFID')?.touched" class="text-danger">
+                        <div *ngIf="employeeForm.get('RFID')?.errors?.['maxlength']">El RFID no puede exceder 255 caracteres.</div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="rfc">RFC</label>
-                    <input type="text" id="rfc" formControlName="rfc" placeholder="RFC">
-                    <div *ngIf="employeeForm.get('rfc')?.invalid && employeeForm.get('rfc')?.touched" class="text-danger">
-                        <div *ngIf="employeeForm.get('rfc')?.errors?.['maxlength']">El RFC no puede exceder 255 caracteres.</div>
+                    <label for="RFC">RFC</label>
+                    <input type="text" id="RFC" formControlName="RFC" placeholder="RFC">
+                    <div *ngIf="employeeForm.get('RFC')?.invalid && employeeForm.get('RFC')?.touched" class="text-danger">
+                        <div *ngIf="employeeForm.get('RFC')?.errors?.['maxlength']">El RFC no puede exceder 255 caracteres.</div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="nss">NSS</label>
-                    <input type="text" id="nss" formControlName="nss" placeholder="NSS">
-                    <div *ngIf="employeeForm.get('nss')?.invalid && employeeForm.get('nss')?.touched" class="text-danger">
-                        <div *ngIf="employeeForm.get('nss')?.errors?.['maxlength']">El NSS no puede exceder 255 caracteres.</div>
+                    <label for="NSS">NSS</label>
+                    <input type="text" id="NSS" formControlName="NSS" placeholder="NSS">
+                    <div *ngIf="employeeForm.get('NSS')?.invalid && employeeForm.get('NSS')?.touched" class="text-danger">
+                        <div *ngIf="employeeForm.get('NSS')?.errors?.['maxlength']">El NSS no puede exceder 255 caracteres.</div>
                     </div>
                 </div>
             </div>
