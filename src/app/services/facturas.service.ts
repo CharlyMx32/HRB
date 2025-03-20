@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FacturasService {
-  private apiUrl = 'http://192.168.253.67:8000/api/invoices'; // Cambia a la URL correcta
+  private apiUrl = 'http://192.168.253.13:8000/api/invoices'; // Cambia a la URL correcta
 
   constructor(private http: HttpClient) {}
 
