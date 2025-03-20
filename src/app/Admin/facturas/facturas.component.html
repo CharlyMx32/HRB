@@ -1,1 +1,15 @@
-<app-pdf-vista></app-pdf-vista>
+<div class="facturas-container">
+  <div class="card" *ngFor="let factura of facturas">
+    <a [href]="factura.URL" target="_blank">
+      <iframe [src]="sanitizarURL(factura.URL)" class="pdf-preview"></iframe>
+    </a>
+    <div class="card-body">
+      <p><strong>Status:</strong> {{ factura.status }}</p>
+      <!-- Botón para abrir el PDF -->
+      <a [href]="factura.URL" target="_blank">
+        <button class="btn btn-primary btn-custom">Ver Factura</button>
+      </a>
+      <button class="btn btn-secondary btn-custom" (click)="onButtonClick()">Botón sin función</button>
+    </div>
+  </div>
+</div>
