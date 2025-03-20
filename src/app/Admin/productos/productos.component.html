@@ -1,0 +1,100 @@
+<div class="product-list-container">
+    <h2>Lista de Productos</h2>
+    <button (click)="toggleForm()" class="btn btn-primary">Agregar Producto</button>
+  
+    <!-- Formulario para agregar producto -->
+    <div *ngIf="showForm" class="form-container">
+        <h3>Registrar Producto</h3>
+        <form [formGroup]="productForm" (ngSubmit)="register()">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="name">Nombre</label>
+                    <input type="text" id="name" formControlName="name" placeholder="Nombre">
+                    <div *ngIf="productForm.get('name')?.invalid && productForm.get('name')?.touched" class="text-danger">
+                        <div *ngIf="productForm.get('name')?.errors?.['required']">El nombre es requerido.</div>
+                        <div *ngIf="productForm.get('name')?.errors?.['maxlength']">El nombre no puede exceder 255 caracteres.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="description">Descripción</label>
+                    <input type="text" id="description" formControlName="description" placeholder="Descripción">
+                    <div *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched" class="text-danger">
+                        <div *ngIf="productForm.get('description')?.errors?.['required']">La descripción es requerida.</div>
+                        <div *ngIf="productForm.get('description')?.errors?.['maxlength']">La descripción no puede exceder 255 caracteres.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="stock_weight">Peso en Stock (kg)</label>
+                    <input type="number" id="stock_weight" formControlName="stock_weight" placeholder="Peso en Stock">
+                    <div *ngIf="productForm.get('stock_weight')?.invalid && productForm.get('stock_weight')?.touched" class="text-danger">
+                        <div *ngIf="productForm.get('stock_weight')?.errors?.['required']">El peso en stock es requerido.</div>
+                        <div *ngIf="productForm.get('stock_weight')?.errors?.['min']">El peso en stock debe ser un valor positivo.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exit_code">Código de Salida</label>
+                    <input type="text" id="exit_code" formControlName="exit_code" placeholder="Código de Salida">
+                    <div *ngIf="productForm.get('exit_code')?.invalid && productForm.get('exit_code')?.touched" class="text-danger">
+                        <div *ngIf="productForm.get('exit_code')?.errors?.['required']">El código de salida es requerido.</div>
+                        <div *ngIf="productForm.get('exit_code')?.errors?.['maxlength']">El código de salida no puede exceder 255 caracteres.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="image">Imagen</label>
+                    <input type="text" id="image" formControlName="image" placeholder="URL de la Imagen">
+                    <div *ngIf="productForm.get('image')?.invalid && productForm.get('image')?.touched" class="text-danger">
+                        <div *ngIf="productForm.get('image')?.errors?.['required']">La URL de la imagen es requerida.</div>
+                        <div *ngIf="productForm.get('image')?.errors?.['maxlength']">La URL de la imagen no puede exceder 255 caracteres.</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="area">Área</label>
+                    <input type="text" id="area" formControlName="area" placeholder="Área">
+                    <div *ngIf="productForm.get('area')?.invalid && productForm.get('area')?.touched" class="text-danger">
+                        <div *ngIf="productForm.get('area')?.errors?.['required']">El área es requerida.</div>
+                        <div *ngIf="productForm.get('area')?.errors?.['maxlength']">El área no puede exceder 255 caracteres.</div>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+            <button type="button" (click)="toggleForm()" class="btn btn-secondary">Cancelar</button>
+            <p *ngIf="errorMessage" class="error-message">
+                <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+                {{ errorMessage }}
+            </p>
+        </form>
+    </div>
+  
+    <!-- Mensaje de éxito -->
+    <div *ngIf="successMessage" class="success-message">
+        <i class="fa-solid fa-check-circle success-icon"></i>
+        {{ successMessage }}
+    </div>
+
+    <!-- Tabla de productos -->
+    <table *ngIf="!showForm && products.length > 0" class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Peso en Stock (gr)</th>
+                <th>Código de Salida</th>
+                <th>Imagen</th>
+                <th>Área</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let product of products">
+                <td>{{ product.name }}</td>
+                <td>{{ product.description }}</td>
+                <td>{{ product.stock_weight }} gr</td>
+                <td>{{ product.exit_code }}</td>
+                <td><img [src]="product.image" alt="{{ product.name }}" width="100"></td>
+                <td>{{ product.area }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="products.length === 0" class="no-products">
+        Sin productos existentes.
+    </div>
+</div>
