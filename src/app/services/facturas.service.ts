@@ -28,9 +28,16 @@ export class FacturasService {
     });
 
     const channel = pusher.subscribe('invoices');
+
     channel.bind('invoice.created', (data: any) => {
       let currentFacturas = this.facturasSubject.getValue();
-      this.facturasSubject.next([...currentFacturas, data.invoice]);
+      
+      // Verificar si ya existe la factura en la lista antes de añadirla
+      const existe = currentFacturas.some(factura => factura.URL === data.invoice.URL);
+
+      if (!existe) {
+        this.facturasSubject.next([...currentFacturas, data.invoice]);
+      }
     });
   }
 }
