@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { catchError } from 'rxjs/operators';
@@ -9,7 +9,7 @@ import { catchError } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private apiUrl = 'http://192.168.253.34:8000/api'; 
+  private apiUrl = 'https://17ca-187-190-56-49.ngrok-free.app/api'; 
 
   constructor(private http: HttpClient) {}
 
@@ -90,13 +90,25 @@ export class AuthService {
   }
 
   registerWorker(employeeData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register-worker`, employeeData).pipe(
+    return this.http.post<any>(`${this.apiUrl}/register`, employeeData).pipe(
       catchError(this.handleError)
     );
   }
 
   getEmployees(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/workers`);
+  }
+
+  updatePassword(passwordData: any): Observable<any> {
+    const token = this.getToken(); // Método para obtener el token
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: HttpErrorResponse) {
