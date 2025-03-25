@@ -1,23 +1,23 @@
 <div class="contenedor">
-    <div class="registration-container">
-        <i class="fa-solid fa-circle-user icono-usuario"></i>
-        <h2 class="etiquetas">Registrar Empleado</h2>
-        <form (ngSubmit)="register()">
-            <div class="form-grid">
-                <input type="email" name="email" [(ngModel)]="email" placeholder="Correo electrónico" required>
-                <input type="text" name="name" [(ngModel)]="name" placeholder="Nombre" required>
-                <input type="text" name="last_name" [(ngModel)]="last_name" placeholder="Apellido" required>
-                <input type="date" name="birth_date" [(ngModel)]="birth_date" placeholder="Fecha de nacimiento" required>
-                <input type="tel" name="phone" [(ngModel)]="phone" placeholder="Teléfono" required>
-                <input type="text" name="RFID" [(ngModel)]="RFID" placeholder="RFID">
-                <input type="text" name="RFC" [(ngModel)]="RFC" placeholder="RFC">
-                <input type="text" name="NSS" [(ngModel)]="NSS" placeholder="NSS">
-            </div>
-            <button type="submit">Registrar</button>
-            <p *ngIf="errorMessage" class="error-message">
-                <i class="fa-solid fa-triangle-exclamation error-icon"></i>
-                {{ errorMessage }}
-            </p>
-        </form>
-    </div>
+  <div class="registration-container">
+      <i class="fa-solid fa-circle-user icono-usuario"></i>
+      <h2 class="etiquetas">Registrar Empleado</h2>
+      <form (ngSubmit)="register()">
+          <div class="form-grid">
+              <input type="email" name="email" [(ngModel)]="email" placeholder="Correo electrónico" required>
+              <input type="text" name="name" [(ngModel)]="name" placeholder="Nombre" required>
+              <input type="text" name="last_name" [(ngModel)]="last_name" placeholder="Apellido" required>
+              <input type="date" name="birth_date" [(ngModel)]="birth_date" placeholder="Fecha de nacimiento" required>
+              <input type="tel" name="phone" [(ngModel)]="phone" placeholder="Teléfono" required>
+              <input type="text" name="RFID" [(ngModel)]="RFID" placeholder="RFID">
+              <input type="text" name="RFC" [(ngModel)]="RFC" placeholder="RFC">
+              <input type="text" name="NSS" [(ngModel)]="NSS" placeholder="NSS">
+          </div>
+          <button type="submit">Registrar</button>
+          <p *ngIf="errorMessage" class="error-message">
+              <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+              {{ errorMessage }}
+          </p>
+      </form>
+  </div>
 </div>
