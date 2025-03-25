@@ -104,7 +104,7 @@ export class OrdenesComponent {
 
   // Redirigir a nueva orden
   redirectToNuevaOrden() {
-    this.router.navigate(['/admin/facturas/nueva']);
+    this.router.navigate(['/admin/facturas']);
   }
 
   // Estilos para los estados
