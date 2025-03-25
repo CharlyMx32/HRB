@@ -1,4 +1,0 @@
-app-top-bar {
-    height: 60px; /* Altura fija de la top bar */
-    flex-shrink: 0; /* Evita que se encoja */
-}
