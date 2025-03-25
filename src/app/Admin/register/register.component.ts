@@ -8,7 +8,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrls: ['./register.component.css']
 })
 export class RegisterComponent {
   email: string = '';
@@ -20,6 +20,7 @@ export class RegisterComponent {
   RFC: string = '';
   NSS: string = '';
   errorMessage: string = '';
+  successMessage: string = '';
 
   constructor(private authService: AuthService) {}
 
@@ -63,4 +64,40 @@ export class RegisterComponent {
     this.NSS = '';
     this.errorMessage = '';
   }
-}
+
+  get email() {
+    return this.registerForm.get('email');
+  }
+  
+  get password() {
+    return this.registerForm.get('password');
+  }
+  
+  get name() {
+    return this.registerForm.get('name');
+  }
+  
+  get last_name() {
+    return this.registerForm.get('last_name');
+  }
+  
+  get birth_date() {
+    return this.registerForm.get('birth_date');
+  }
+  
+  get phone() {
+    return this.registerForm.get('phone');
+  }
+  
+  get RFID() {
+    return this.registerForm.get('RFID');
+  }
+  
+  get RFC() {
+    return this.registerForm.get('RFC');
+  }
+  
+  get NSS() {
+    return this.registerForm.get('NSS');
+  }
+}  

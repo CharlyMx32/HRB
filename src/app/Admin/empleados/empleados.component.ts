@@ -9,9 +9,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
   selector: 'app-empleados',
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './empleados.component.html',
-  styleUrls: ['./empleados.component.css'] // Corregido styleUrls
+  styleUrls: ['./empleados.component.css']
 })
-
 export class EmpleadosComponent implements OnInit {
   employees: any[] = [];
   showForm: boolean = false;
@@ -34,10 +33,10 @@ export class EmpleadosComponent implements OnInit {
       RFC: ['', [Validators.maxLength(255)]],
       NSS: ['', [Validators.maxLength(255)]]
     });
-  }
+  }    
 
   ngOnInit(): void {
-    this.getEmployees(); // Llamar al método getEmployees para cargar los empleados
+    this.getEmployees();
   }
 
   toggleForm(): void {
@@ -54,8 +53,7 @@ export class EmpleadosComponent implements OnInit {
       },
       error => {
         console.error('Error fetching employees:', error);
-        console.log('Error details:', error.message);
-        console.log('Error response:', error.error);
+        this.errorMessage = 'Error fetching employees. Please try again later.';
       }
     );
   }
@@ -77,12 +75,21 @@ export class EmpleadosComponent implements OnInit {
       return;
     }
 
-    const employeeData = this.employeeForm.value;
+    const employeeData = {
+      email: this.employeeForm.get('email')?.value,
+      name: this.employeeForm.get('name')?.value,
+      last_name: this.employeeForm.get('last_name')?.value,
+      birth_date: this.employeeForm.get('birth_date')?.value,
+      phone: this.employeeForm.get('phone')?.value,
+      RFID: this.employeeForm.get('RFID')?.value,
+      RFC: this.employeeForm.get('RFC')?.value,
+      NSS: this.employeeForm.get('NSS')?.value
+    };
 
     this.authService.registerWorker(employeeData).subscribe(
       response => {
         console.log('Empleado registrado:', response);
-        this.successMessage = 'Registro exitoso. Redirigiendo...';
+        this.successMessage = 'Registro exitoso. El empleado ha sido registrado correctamente.';
         this.errorMessage = '';
 
         // Limpiar el formulario después del registro
@@ -103,4 +110,14 @@ export class EmpleadosComponent implements OnInit {
       }
     );
   }
+
+  // Métodos para obtener los controles del formulario
+  get email() { return this.employeeForm.get('email'); }
+  get name() { return this.employeeForm.get('name'); }
+  get last_name() { return this.employeeForm.get('last_name'); }
+  get birth_date() { return this.employeeForm.get('birth_date'); }
+  get phone() { return this.employeeForm.get('phone'); }
+  get RFID() { return this.employeeForm.get('RFID'); }
+  get RFC() { return this.employeeForm.get('RFC'); }
+  get NSS() { return this.employeeForm.get('NSS'); }
 }

@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -66,7 +67,6 @@ export class AuthService {
     const token = this.getToken();
     return !!token && !this.isTokenExpired();
   }
-  
 
   getUser(): any {
     const token = this.getToken();
@@ -79,12 +79,47 @@ export class AuthService {
       return null;
     }
   }
-  
+
+  getProducts(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/products`);
+  }
+
+  registerProduct(productData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/products`, productData);
+  }
+
   registerWorker(employeeData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register-worker`, employeeData);
+    return this.http.post<any>(`${this.apiUrl}/register`, employeeData).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getEmployees(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/workers`);
+  }
+
+  updatePassword(passwordData: any): Observable<any> {
+    const token = this.getToken(); // Método para obtener el token
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+
+    return this.http.post<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Unknown error!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side errors
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side errors
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(errorMessage);
   }
 }
