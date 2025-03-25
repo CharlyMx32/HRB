@@ -83,7 +83,7 @@ export class EmpleadosComponent implements OnInit {
       phone: this.employeeForm.get('phone')?.value,
       RFID: this.employeeForm.get('RFID')?.value,
       RFC: this.employeeForm.get('RFC')?.value,
-      NSS: this.employeeForm.get('NSS')?.value
+      NSS: this.employeeForm.get('NSS')?.value,
     };
 
     this.authService.registerWorker(employeeData).subscribe(

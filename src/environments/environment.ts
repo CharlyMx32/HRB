@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://127.0.0.1:8000/api' // Tu IP para desarrollo
+  apiUrl: 'http://192.168.252.116:8000/api' // Tu IP para desarrollo
 };
