@@ -4,12 +4,10 @@ import { Observable, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
   private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}

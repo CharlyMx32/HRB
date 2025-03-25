@@ -10,43 +10,52 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
-  // Propiedades para los filtros
-  searchProducto: string = '';
-  searchAreaStock: string = '';
-  searchFactura: string = '';
-  searchEstadoFactura: string = '';
+  // Estado sensores
+  puertaAbierta = false;
+  luzEncendida = false;
+  pirStatus = 'Inactivo';
+  lastDetection = '--';
+  temperatura = 24.5;
+  humedad = 45;
+  ultimoCambioEstado = 'Hoy 09:15 AM';
 
-  // Datos de ejemplo para Stock
-  stock = [
-    { nombre: 'Resistencia 10kΩ', stock: 150, area: 'Electrónica', ultima_actualizacion: '2023-10-01' },
-    { nombre: 'Cable USB', stock: 200, area: 'Cables', ultima_actualizacion: '2023-10-02' },
-    { nombre: 'LED Rojo', stock: 500, area: 'Electrónica', ultima_actualizacion: '2023-10-03' },
-    { nombre: 'Conector HDMI', stock: 75, area: 'Cables', ultima_actualizacion: '2023-10-04' },
+  // Datos para las tablas
+  ultimosAccesos = [
+    { nombre: 'Operario #1', hora: '10:45 AM', tipo: 'RFID: A3F2B1' },
+    { nombre: 'Proveedor', hora: '09:30 AM', tipo: 'Tarjeta' },
+    { nombre: 'Transportista', hora: 'Ayer 5:30 PM', tipo: 'RFID: 7B2C9D' },
   ];
 
-  // Datos de ejemplo para Facturas
-  facturas = [
-    { numero: 1001, fecha: '2023-10-01', total: 150.75, estado: 'Completada' },
-    { numero: 1002, fecha: '2023-10-02', total: 200.50, estado: 'Pendiente' },
-    { numero: 1003, fecha: '2023-10-03', total: 300.00, estado: 'Completada' },
-    { numero: 1004, fecha: '2023-10-04', total: 450.25, estado: 'Pendiente' },
+  productosPesados = [
+    { nombre: 'Cajas electrónicas', peso: 12.5, hora: '10:20 AM', destino: 'Almacén B' },
+    { nombre: 'Componentes PC', peso: 8.2, hora: '09:45 AM', destino: 'Expedición' },
+    { nombre: 'Cables USB', peso: 5.7, hora: 'Ayer 4:15 PM', destino: 'Taller' },
   ];
 
-  // Filtrado para Stock
-  filteredStock() {
-    return this.stock.filter((producto) => {
-      const matchesProducto = producto.nombre.toLowerCase().includes(this.searchProducto.toLowerCase());
-      const matchesArea = this.searchAreaStock ? producto.area === this.searchAreaStock : true;
-      return matchesProducto && matchesArea;
-    });
-  }
+  eventosRecoleccion = [
+    { fecha: '28 Oct', producto: 'Resistencias 10kΩ', cantidad: 150, prioridad: 'alta' },
+    { fecha: '30 Oct', producto: 'LEDs RGB', cantidad: 300, prioridad: 'media' },
+    { fecha: '02 Nov', producto: 'Conectores HDMI', cantidad: 75, prioridad: 'baja' },
+  ];
 
-  // Filtrado para Facturas
-  filteredFacturas() {
-    return this.facturas.filter((factura) => {
-      const matchesFactura = factura.numero.toString().includes(this.searchFactura);
-      const matchesEstado = this.searchEstadoFactura ? factura.estado === this.searchEstadoFactura : true;
-      return matchesFactura && matchesEstado;
-    });
+  constructor() {
+    // Simular cambios de estado
+    setInterval(() => {
+      // Simular detección PIR aleatoria
+      this.pirStatus = Math.random() > 0.8 ? '¡Detección!' : 'Inactivo';
+      if (this.pirStatus === '¡Detección!') {
+        this.lastDetection = new Date().toLocaleTimeString();
+      }
+
+      // Simular cambios puerta/luz
+      if (Math.random() > 0.9) {
+        this.puertaAbierta = !this.puertaAbierta;
+        this.ultimoCambioEstado = new Date().toLocaleTimeString();
+      }
+      if (Math.random() > 0.9) {
+        this.luzEncendida = !this.luzEncendida;
+        this.ultimoCambioEstado = new Date().toLocaleTimeString();
+      }
+    }, 3000);
   }
 }
