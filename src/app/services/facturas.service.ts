@@ -7,7 +7,7 @@ import Pusher from 'pusher-js';
   providedIn: 'root'
 })
 export class FacturasService {
-  private apiUrl = 'http://127.0.0.1:8000/api/invoices';
+  private apiUrl = 'http://192.168.252.116:8000/api/invoices';
   private pusherKey = '06e2ac4b518dea780c81'; 
   private pusherCluster = 'us2';
 

@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
 
-  private apiUrl = 'http://127.0.0.1:8000/api'; 
+  private apiUrl = 'http://192.168.252.116:8000/api'; 
 
   constructor(private http: HttpClient) {}
 
