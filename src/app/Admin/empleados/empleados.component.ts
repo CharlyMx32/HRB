@@ -24,12 +24,12 @@ export class EmpleadosComponent implements OnInit {
     private router: Router
   ) {
     this.employeeForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
       name: ['', [Validators.required, Validators.maxLength(255)]],
-      last_name: ['', [Validators.required, Validators.maxLength(255)]], // Debe ser "last_name" en vez de "lastName"
+      last_name: ['', [Validators.required, Validators.maxLength(255)]],
       birth_date: ['', [Validators.required, this.ageValidator]],
       phone: ['', [Validators.maxLength(20)]],
-      RFID: ['', [Validators.maxLength(255)]],  // "RFID" debe ser "rfid"
+      email: ['', [Validators.required, Validators.email]],
+      RFID: ['', [Validators.maxLength(255)]],
       RFC: ['', [Validators.maxLength(255)]],
       NSS: ['', [Validators.maxLength(255)]]
     });

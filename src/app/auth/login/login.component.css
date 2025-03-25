@@ -43,6 +43,10 @@
   border-radius: 10px;
   background-color: #232328;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 @keyframes slideIn {
@@ -166,4 +170,12 @@ button:active{
 .fa-spinner {
   font-size: 16px;
   margin-right: 5px;
+}
+
+.logo {
+  max-width: 100%;
+  width: 80px; /* Tamaño máximo de la imagen */
+  height: auto; /* Mantiene la relación de aspecto de la imagen */
+  object-fit: contain; /* Ajusta la imagen sin distorsionarla */
+  margin-bottom: 2px; /* Ajusta el espacio entre la imagen y los demás elementos */
 }

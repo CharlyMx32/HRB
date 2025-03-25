@@ -65,7 +65,6 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     const token = this.getToken();
-    console.log('Verificando autenticación. Token:', token);
     return !!token && !this.isTokenExpired();
   }
 

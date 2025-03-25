@@ -1,118 +1,118 @@
 <div class="employee-list-container">
-    <h2>Lista de Empleados</h2>
-    <button (click)="toggleForm()" class="btn btn-primary">Agregar Empleado</button>
-  
-    <!-- Formulario para agregar empleado -->
-    <div *ngIf="showForm" class="form-container">
+  <h2>Lista de Empleados</h2>
+  <button (click)="toggleForm()" class="btn btn-primary">Agregar Empleado</button>
+
+  <!-- Formulario para agregar empleado -->
+  <div *ngIf="showForm" class="form-container">
       <h3>Registrar Empleado</h3>
       <form [formGroup]="employeeForm" (ngSubmit)="register()">
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="name">Nombre</label>
-            <input type="text" id="name" formControlName="name" placeholder="Nombre">
-            <div *ngIf="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched" class="text-danger">
-              <div *ngIf="employeeForm.get('name')?.errors?.['required']">El nombre es requerido.</div>
-              <div *ngIf="employeeForm.get('name')?.errors?.['maxlength']">El nombre no puede exceder 255 caracteres.</div>
-            </div>
+          <div class="form-grid">
+              <div class="form-group">
+                  <label for="name">Nombre</label>
+                  <input type="text" id="name" formControlName="name" placeholder="Nombre">
+                  <div *ngIf="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched" class="text-danger">
+                      <div *ngIf="employeeForm.get('name')?.errors?.['required']">El nombre es requerido.</div>
+                      <div *ngIf="employeeForm.get('name')?.errors?.['maxlength']">El nombre no puede exceder 255 caracteres.</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="last_name">Apellido</label>
+                  <input type="text" id="last_name" formControlName="last_name" placeholder="Apellido">
+                  <div *ngIf="employeeForm.get('last_name')?.invalid && employeeForm.get('last_name')?.touched" class="text-danger">
+                      <div *ngIf="employeeForm.get('last_name')?.errors?.['required']">El apellido es requerido.</div>
+                      <div *ngIf="employeeForm.get('last_name')?.errors?.['maxlength']">El apellido no puede exceder 255 caracteres.</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="birth_date">Fecha de nacimiento</label>
+                  <input type="date" id="birth_date" formControlName="birth_date" placeholder="Fecha de nacimiento">
+                  <div *ngIf="employeeForm.get('birth_date')?.invalid && employeeForm.get('birth_date')?.touched" class="text-danger">
+                      <div *ngIf="employeeForm.get('birth_date')?.errors?.['required']">La fecha de nacimiento es requerida.</div>
+                      <div *ngIf="employeeForm.get('birth_date')?.errors?.['ageInvalid']">El empleado debe tener al menos 18 años.</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="phone">Teléfono</label>
+                  <input type="tel" id="phone" formControlName="phone" placeholder="Teléfono">
+                  <div *ngIf="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched" class="text-danger">
+                      <div *ngIf="employeeForm.get('phone')?.errors?.['maxlength']">El teléfono no puede exceder 20 caracteres.</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="email">Correo electrónico</label>
+                  <input type="email" id="email" formControlName="email" placeholder="Correo electrónico">
+                  <div *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched" class="text-danger">
+                      <div *ngIf="employeeForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
+                      <div *ngIf="employeeForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="RFID">RFID</label>
+                  <input type="text" id="RFID" formControlName="RFID" placeholder="RFID">
+                  <div *ngIf="employeeForm.get('RFID')?.invalid && employeeForm.get('RFID')?.touched" class="text-danger">
+                      <div *ngIf="employeeForm.get('RFID')?.errors?.['maxlength']">El RFID no puede exceder 255 caracteres.</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="RFC">RFC</label>
+                  <input type="text" id="RFC" formControlName="RFC" placeholder="RFC">
+                  <div *ngIf="employeeForm.get('RFC')?.invalid && employeeForm.get('RFC')?.touched" class="text-danger">
+                      <div *ngIf="employeeForm.get('RFC')?.errors?.['maxlength']">El RFC no puede exceder 255 caracteres.</div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="NSS">NSS</label>
+                  <input type="text" id="NSS" formControlName="NSS" placeholder="NSS">
+                  <div *ngIf="employeeForm.get('NSS')?.invalid && employeeForm.get('NSS')?.touched" class="text-danger">
+                      <div *ngIf="employeeForm.get('NSS')?.errors?.['maxlength']">El NSS no puede exceder 255 caracteres.</div>
+                  </div>
+              </div>
           </div>
-          <div class="form-group">
-            <label for="last_name">Apellido</label>
-            <input type="text" id="last_name" formControlName="last_name" placeholder="Apellido">
-            <div *ngIf="employeeForm.get('last_name')?.invalid && employeeForm.get('last_name')?.touched" class="text-danger">
-              <div *ngIf="employeeForm.get('last_name')?.errors?.['required']">El apellido es requerido.</div>
-              <div *ngIf="employeeForm.get('last_name')?.errors?.['maxlength']">El apellido no puede exceder 255 caracteres.</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="birth_date">Fecha de nacimiento</label>
-            <input type="date" id="birth_date" formControlName="birth_date" placeholder="Fecha de nacimiento">
-            <div *ngIf="employeeForm.get('birth_date')?.invalid && employeeForm.get('birth_date')?.touched" class="text-danger">
-              <div *ngIf="employeeForm.get('birth_date')?.errors?.['required']">La fecha de nacimiento es requerida.</div>
-              <div *ngIf="employeeForm.get('birth_date')?.errors?.['ageInvalid']">El empleado debe tener al menos 18 años.</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="phone">Teléfono</label>
-            <input type="tel" id="phone" formControlName="phone" placeholder="Teléfono">
-            <div *ngIf="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched" class="text-danger">
-              <div *ngIf="employeeForm.get('phone')?.errors?.['maxlength']">El teléfono no puede exceder 20 caracteres.</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="email">Correo electrónico</label>
-            <input type="email" id="email" formControlName="email" placeholder="Correo electrónico">
-            <div *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched" class="text-danger">
-              <div *ngIf="employeeForm.get('email')?.errors?.['required']">El correo electrónico es requerido.</div>
-              <div *ngIf="employeeForm.get('email')?.errors?.['email']">El correo electrónico no es válido.</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="RFID">RFID</label>
-            <input type="text" id="RFID" formControlName="RFID" placeholder="RFID">
-            <div *ngIf="employeeForm.get('RFID')?.invalid && employeeForm.get('RFID')?.touched" class="text-danger">
-              <div *ngIf="employeeForm.get('RFID')?.errors?.['maxlength']">El RFID no puede exceder 255 caracteres.</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="RFC">RFC</label>
-            <input type="text" id="RFC" formControlName="RFC" placeholder="RFC">
-            <div *ngIf="employeeForm.get('RFC')?.invalid && employeeForm.get('RFC')?.touched" class="text-danger">
-              <div *ngIf="employeeForm.get('RFC')?.errors?.['maxlength']">El RFC no puede exceder 255 caracteres.</div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="NSS">NSS</label>
-            <input type="text" id="NSS" formControlName="NSS" placeholder="NSS">
-            <div *ngIf="employeeForm.get('NSS')?.invalid && employeeForm.get('NSS')?.touched" class="text-danger">
-              <div *ngIf="employeeForm.get('NSS')?.errors?.['maxlength']">El NSS no puede exceder 255 caracteres.</div>
-            </div>
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary">Registrar</button>
-        <button type="button" (click)="toggleForm()" class="btn btn-secondary">Cancelar</button>
-        <p *ngIf="errorMessage" class="error-message">
-          <i class="fa-solid fa-triangle-exclamation error-icon"></i>
-          {{ errorMessage }}
-        </p>
+          <button type="submit" class="btn btn-primary">Registrar</button>
+          <button type="button" (click)="toggleForm()" class="btn btn-secondary">Cancelar</button>
+          <p *ngIf="errorMessage" class="error-message">
+              <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+              {{ errorMessage }}
+          </p>
       </form>
-    </div>
-  
-    <!-- Mensaje de éxito -->
-    <div *ngIf="successMessage" class="success-message">
+  </div>
+
+  <!-- Mensaje de éxito -->
+  <div *ngIf="successMessage" class="success-message">
       <i class="fa-solid fa-check-circle success-icon"></i>
       {{ successMessage }}
-    </div>
-  
-    <!-- Tabla de empleados -->
-    <table *ngIf="!showForm && employees.length > 0" class="table">
+  </div>
+
+  <!-- Tabla de empleados -->
+  <table *ngIf="!showForm && employees.length > 0" class="table">
       <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Fecha de Nacimiento</th>
-          <th>Edad</th>
-          <th>Teléfono</th>
-          <th>RFID</th>
-          <th>RFC</th>
-          <th>NSS</th>
-          <!-- Agrega más columnas según sea necesario -->
-        </tr>
+          <tr>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Fecha de Nacimiento</th>
+              <th>Edad</th>
+              <th>Teléfono</th>
+              <th>RFID</th>
+              <th>RFC</th>
+              <th>NSS</th>
+              <!-- Agrega más columnas según sea necesario -->
+          </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let employee of employees">
-          <td>{{ employee.name }}</td>
-          <td>{{ employee.last_name }}</td>
-          <td>{{ employee.birth_date }}</td>
-          <td>{{ employee.age }}</td>
-          <td>{{ employee.phone }}</td>
-          <td>{{ employee.RFID }}</td>
-          <td>{{ employee.RFC }}</td>
-          <td>{{ employee.NSS }}</td>
-          <!-- Agrega más celdas según sea necesario -->
-        </tr>
+          <tr *ngFor="let employee of employees">
+              <td>{{ employee.name }}</td>
+              <td>{{ employee.last_name }}</td>
+              <td>{{ employee.birth_date }}</td>
+              <td>{{ employee.age }}</td>
+              <td>{{ employee.phone }}</td>
+              <td>{{ employee.RFID }}</td>
+              <td>{{ employee.RFC }}</td>
+              <td>{{ employee.NSS }}</td>
+              <!-- Agrega más celdas según sea necesario -->
+          </tr>
       </tbody>
-    </table>
-    <div *ngIf="employees.length === 0" class="no-employees">
+  </table>
+  <div *ngIf="employees.length === 0" class="no-employees">
       Sin empleados existentes.
-    </div>
   </div>
+</div>
