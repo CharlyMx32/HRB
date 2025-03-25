@@ -10,8 +10,8 @@ import { EditarPerfilComponent } from '../usuario/editar-perfil/editar-perfil.co
 
 export const adminRoutes: Routes = [
     {
-        path: '', // Ruta base del layout
-        component: LayoutComponent, // Componente principal que contiene la sidebar
+        path: '', 
+        component: LayoutComponent,
         children: [
             { path: 'home', component: DashboardComponent },
             { path: 'ordenes', component: OrdenesComponent },

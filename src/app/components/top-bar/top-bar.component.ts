@@ -14,7 +14,6 @@ export class TopBarComponent implements OnInit {
 
   ngOnInit() {
     const userData = this.authService.getUser();
-    console.log('User data:', userData);
     if (userData && userData.user && userData.user.email) {
       this.email = userData.user.email;
     } else {
