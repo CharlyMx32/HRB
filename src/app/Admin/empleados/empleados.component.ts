@@ -4,10 +4,11 @@ import { AuthService } from '../../services/auth.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-empleados',
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DatePipe],
   templateUrl: './empleados.component.html',
   styleUrls: ['./empleados.component.css']
 })
@@ -17,6 +18,9 @@ export class EmpleadosComponent implements OnInit {
   employeeForm: FormGroup;
   errorMessage: string = '';
   successMessage: string = '';
+  isLoading: boolean = false;
+  isLoadingEmployees: boolean = false;
+  private messageTimeout: any;
 
   constructor(
     private fb: FormBuilder,
@@ -41,19 +45,23 @@ export class EmpleadosComponent implements OnInit {
 
   toggleForm(): void {
     this.showForm = !this.showForm;
+    if (!this.showForm) {
+      this.employeeForm.reset();
+      this.clearMessages();
+    }
   }
 
   getEmployees(): void {
-    console.log('Fetching employees...');
+    this.isLoadingEmployees = true;
     this.authService.getEmployees().subscribe(
       data => {
-        console.log('Data received from API:', data);
         this.employees = data;
-        console.log('Employees:', this.employees);
+        this.isLoadingEmployees = false;
       },
       error => {
         console.error('Error fetching employees:', error);
-        this.errorMessage = 'Error fetching employees. Please try again later.';
+        this.showErrorMessage('Error al cargar empleados. Por favor intente nuevamente.');
+        this.isLoadingEmployees = false;
       }
     );
   }
@@ -71,9 +79,12 @@ export class EmpleadosComponent implements OnInit {
 
   register(): void {
     if (this.employeeForm.invalid) {
-      this.errorMessage = 'Por favor, corrija los errores en el formulario.';
+      this.showErrorMessage('Por favor, corrija los errores en el formulario.');
       return;
     }
+
+    this.isLoading = true;
+    this.clearMessages();
 
     const employeeData = {
       email: this.employeeForm.get('email')?.value,
@@ -88,30 +99,53 @@ export class EmpleadosComponent implements OnInit {
 
     this.authService.registerWorker(employeeData).subscribe(
       response => {
-        console.log('Empleado registrado:', response);
-        this.successMessage = 'Registro exitoso. El empleado ha sido registrado correctamente.';
-        this.errorMessage = '';
-
-        // Limpiar el formulario después del registro
+        this.showSuccessMessage('Empleado registrado exitosamente.');
+        this.isLoading = false;
         this.employeeForm.reset();
-
-        // Ocultar el formulario después del registro
-        this.toggleForm();
-
-        // Recargar la página después de 2 segundos
         setTimeout(() => {
-          location.reload();
-        }, 2000);
+          this.getEmployees();
+          this.toggleForm();
+        }, 1500);
       },
       error => {
         console.error('Error registrando empleado:', error);
-        this.errorMessage = 'Error registrando empleado. Por favor, inténtelo de nuevo.';
-        this.successMessage = '';
+        this.showErrorMessage(error.error?.message || 'Error al registrar empleado. Por favor intente nuevamente.');
+        this.isLoading = false;
       }
     );
   }
 
-  // Métodos para obtener los controles del formulario
+  private showSuccessMessage(message: string): void {
+    this.clearMessageTimeout();
+    this.successMessage = message;
+    this.errorMessage = '';
+    this.messageTimeout = setTimeout(() => {
+      this.successMessage = '';
+    }, 3000);
+  }
+
+  private showErrorMessage(message: string): void {
+    this.clearMessageTimeout();
+    this.errorMessage = message;
+    this.successMessage = '';
+    this.messageTimeout = setTimeout(() => {
+      this.errorMessage = '';
+    }, 3000);
+  }
+
+  private clearMessages(): void {
+    this.clearMessageTimeout();
+    this.errorMessage = '';
+    this.successMessage = '';
+  }
+
+  private clearMessageTimeout(): void {
+    if (this.messageTimeout) {
+      clearTimeout(this.messageTimeout);
+    }
+  }
+
+  // Getters para los controles del formulario
   get email() { return this.employeeForm.get('email'); }
   get name() { return this.employeeForm.get('name'); }
   get last_name() { return this.employeeForm.get('last_name'); }

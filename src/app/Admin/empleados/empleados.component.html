@@ -68,9 +68,14 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary">Registrar</button>
+            <button type="submit" class="btn btn-primary" [disabled]="isLoading">
+                <span *ngIf="!isLoading">Registrar</span>
+                <span *ngIf="isLoading" class="spinner-container">
+                    <span class="spinner"></span> Cargando...
+                </span>
+            </button>
             <button type="button" (click)="toggleForm()" class="btn btn-secondary">Cancelar</button>
-            <p *ngIf="errorMessage" class="error-message">
+            <p *ngIf="errorMessage" class="error-message" [class.hidden]="!errorMessage">
                 <i class="fa-solid fa-triangle-exclamation error-icon"></i>
                 {{ errorMessage }}
             </p>
@@ -78,41 +83,46 @@
     </div>
   
     <!-- Mensaje de éxito -->
-    <div *ngIf="successMessage" class="success-message">
+    <div *ngIf="successMessage" class="success-message" [class.hidden]="!successMessage">
         <i class="fa-solid fa-check-circle success-icon"></i>
         {{ successMessage }}
     </div>
 
+    <!-- Spinner de carga para la tabla -->
+    <div *ngIf="isLoadingEmployees" class="loading-container">
+        <span class="spinner"></span> Cargando empleados...
+    </div>
+
     <!-- Tabla de empleados -->
-    <table *ngIf="!showForm && employees.length > 0" class="table">
-        <thead>
-            <tr>
-                <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Fecha de Nacimiento</th>
-                <th>Edad</th>
-                <th>Teléfono</th>
-                <th>RFID</th>
-                <th>RFC</th>
-                <th>NSS</th>
-                <!-- Agrega más columnas según sea necesario -->
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let employee of employees">
-                <td>{{ employee.name }}</td>
-                <td>{{ employee.last_name }}</td>
-                <td>{{ employee.birth_date }}</td>
-                <td>{{ employee.age }}</td>
-                <td>{{ employee.phone }}</td>
-                <td>{{ employee.RFID }}</td>
-                <td>{{ employee.RFC }}</td>
-                <td>{{ employee.NSS }}</td>
-                <!-- Agrega más celdas según sea necesario -->
-            </tr>
-        </tbody>
-    </table>
-    <div *ngIf="employees.length === 0" class="no-employees">
+    <div *ngIf="!showForm && !isLoadingEmployees && employees.length > 0" class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Edad</th>
+                    <th>Teléfono</th>
+                    <th>RFID</th>
+                    <th>RFC</th>
+                    <th>NSS</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let employee of employees">
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.last_name }}</td>
+                    <td>{{ employee.birth_date | date }}</td>
+                    <td>{{ employee.age }}</td>
+                    <td>{{ employee.phone }}</td>
+                    <td>{{ employee.RFID }}</td>
+                    <td>{{ employee.RFC }}</td>
+                    <td>{{ employee.NSS }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="!isLoadingEmployees && employees.length === 0" class="no-employees">
         Sin empleados existentes.
     </div>
 </div>

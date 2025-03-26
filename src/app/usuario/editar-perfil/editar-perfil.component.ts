@@ -15,22 +15,41 @@ export class EditarPerfilComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
   formErrors: any = {};
+  isLoading: boolean = false; // Nueva propiedad para controlar el spinner
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.updatePasswordForm = this.fb.group({
       current_password: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirmation: ['', [Validators.required, Validators.minLength(6)]]
-    });
+    }, { validator: this.passwordMatchValidator }); // Agregamos validador personalizado
   }
 
   ngOnInit(): void {}
 
+  // Validador personalizado para confirmar que las contraseñas coincidan
+  passwordMatchValidator(form: FormGroup) {
+    return form.get('password')?.value === form.get('password_confirmation')?.value 
+      ? null 
+      : { mismatch: true };
+  }
+
   updatePassword(): void {
+    // Marcar todos los campos como touched para mostrar errores
+    this.updatePasswordForm.markAllAsTouched();
+
     if (this.updatePasswordForm.invalid) {
-      this.errorMessage = 'Por favor, corrija los errores en el formulario.';
+      if (this.updatePasswordForm.errors?.['mismatch']) {
+        this.errorMessage = 'Las contraseñas no coinciden.';
+      } else {
+        this.errorMessage = 'Por favor, corrija los errores en el formulario.';
+      }
       return;
     }
+
+    this.isLoading = true; // Activar spinner
+    this.errorMessage = '';
+    this.successMessage = '';
 
     const passwordData = {
       current_password: this.updatePasswordForm.get('current_password')?.value,
@@ -42,11 +61,9 @@ export class EditarPerfilComponent implements OnInit {
       response => {
         console.log('Contraseña actualizada:', response);
         this.successMessage = 'Contraseña actualizada exitosamente.';
-        this.errorMessage = '';
         this.formErrors = {};
-
-        // Limpiar el formulario después de la actualización
         this.updatePasswordForm.reset();
+        this.isLoading = false; // Desactivar spinner
       },
       error => {
         console.error('Error actualizando contraseña:', error);
@@ -56,6 +73,7 @@ export class EditarPerfilComponent implements OnInit {
           this.errorMessage = 'Error actualizando contraseña. Por favor, inténtelo de nuevo.';
         }
         this.successMessage = '';
+        this.isLoading = false; // Desactivar spinner
       }
     );
   }

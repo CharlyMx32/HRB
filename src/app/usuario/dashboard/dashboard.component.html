@@ -1,2 +1,171 @@
-<h1 class="welcome-message">Bienvenido, Usuario</h1>
+<div class="grid grid-cols-4 gap-4 h-full p-6 pb-8">
+    <!-- Primera fila -->
+    <!-- RFID -->
+    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-4 flex flex-col border border-[#333337] hover:border-[#00f2ff]/30 transition-colors">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-sm font-semibold text-[#EAEAEA]">Accesos RFID</h2>
+            <span class="text-xs text-[#00f2ff] bg-[#00f2ff]/10 px-2 py-1 rounded-full">3 nuevos</span>
+        </div>
+        <div class="flex-1 space-y-3 overflow-y-auto">
+            <div *ngFor="let acceso of ultimosAccesos" 
+                 class="bg-[#1a1a1d]/80 rounded-lg p-3 hover:bg-[#252529] transition-all border border-[#2a2a2e]">
+                <div class="flex justify-between items-center">
+                    <span class="font-medium text-sm text-[#EAEAEA]">{{acceso.nombre}}</span>
+                    <span class="text-[#00f2ff] text-xs">{{acceso.hora}}</span>
+                </div>
+                <div class="text-[#7d7d7d] text-xs mt-1">{{acceso.tipo}}</div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Presencia PIR -->
+    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-4 flex flex-col border border-[#333337]">
+        <h2 class="text-sm font-semibold text-[#EAEAEA] mb-3">Sensor Presencia</h2>
+        <div class="flex-1 flex flex-col items-center justify-center bg-[#1a1a1d]/80 rounded-lg p-4 border border-[#2a2a2e]">
+            <div class="flex items-center gap-2 mb-3">
+                <div class="relative">
+                    <i class="fas fa-user-secret text-2xl text-[#00f2ff]"></i>
+                    <div *ngIf="pirStatus === '¡Detección!'" 
+                         class="absolute inset-0 rounded-full bg-[#00f2ff]/20 animate-ping"></div>
+                </div>
+                <span id="pir" class="font-mono text-sm" 
+                      [class.text-[#00f2ff]]="pirStatus === '¡Detección!'"
+                      [class.text-[#7d7d7d]]="pirStatus === 'Inactivo'">
+                    {{pirStatus}}
+                </span>
+            </div>
+            <p class="text-xs text-[#7d7d7d]">Última detección: {{lastDetection}}</p>
+        </div>
+    </div>
+
+    <!-- Tabla de Pesos -->
+    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-4 col-span-2 flex flex-col border border-[#333337]">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-sm font-semibold text-[#EAEAEA]">Últimos Productos Pesados</h2>
+            <button class="text-xs text-[#00f2ff] hover:text-[#00c4ff] transition-colors">
+                Ver histórico <i class="fas fa-chevron-right ml-1"></i>
+            </button>
+        </div>
+        <div class="flex-1 overflow-auto">
+            <table class="w-full text-[#EAEAEA] text-xs">
+                <thead>
+                    <tr class="bg-[#1a1a1d] text-[#7d7d7d]">
+                        <th class="p-3 text-left rounded-l-lg">Producto</th>
+                        <th class="p-3 text-center">Peso (kg)</th>
+                        <th class="p-3 text-center">Hora</th>
+                        <th class="p-3 text-right rounded-r-lg">Destino</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-[#333333]">
+                    <tr *ngFor="let producto of productosPesados" 
+                        class="hover:bg-[#2a2a2e] transition-colors">
+                        <td class="p-3 text-left">{{producto.nombre}}</td>
+                        <td class="p-3 text-center font-mono">{{producto.peso}}</td>
+                        <td class="p-3 text-center">{{producto.hora}}</td>
+                        <td class="p-3 text-right">
+                            <span class="bg-[#333337] px-2 py-1 rounded-full text-xs">
+                                {{producto.destino}}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Segunda fila -->
+    <!-- Luz y Puerta en un solo card -->
+    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-4 flex flex-col border border-[#333337]">
+        <h2 class="text-sm font-semibold text-[#EAEAEA] mb-3">Estado</h2>
+        
+        <!-- Luz -->
+        <div class="bg-[#1a1a1d]/80 p-3 rounded-lg mb-3 flex items-center justify-between hover:bg-[#252529] transition-colors border border-[#2a2a2e]">
+            <div class="flex items-center">
+                <div class="relative mr-2">
+                    <i class="fas fa-lightbulb text-lg" 
+                       [class.text-yellow-400]="luzEncendida"
+                       [class.text-[#7d7d7d]]="!luzEncendida"></i>
+                    <div *ngIf="luzEncendida" 
+                         class="absolute inset-0 rounded-full bg-yellow-400/20 animate-pulse"></div>
+                </div>
+                <span class="text-xs">Luz</span>
+            </div>
+            <span class="text-xs" [class.text-green-400]="luzEncendida" [class.text-red-400]="!luzEncendida">
+                {{luzEncendida ? 'Encendida' : 'Apagada'}}
+            </span>
+        </div>
+        
+        <!-- Puerta -->
+        <div class="bg-[#1a1a1d]/80 p-3 rounded-lg flex items-center justify-between hover:bg-[#252529] transition-colors border border-[#2a2a2e]">
+            <div class="flex items-center">
+                <i class="fas fa-door-closed text-lg mr-2" 
+                   [class.text-green-400]="puertaAbierta"
+                   [class.text-red-400]="!puertaAbierta"></i>
+                <span class="text-xs">Puerta</span>
+            </div>
+            <span class="text-xs" [class.text-green-400]="puertaAbierta" [class.text-red-400]="!puertaAbierta">
+                {{puertaAbierta ? 'Abierta' : 'Cerrada'}}
+            </span>
+        </div>
+        
+        <div class="mt-3 text-xxs text-[#7d7d7d] bg-[#1a1a1d]/50 p-2 rounded-lg border border-[#2a2a2e]">
+            <i class="fas fa-clock mr-1"></i> Último cambio: {{ultimoCambioEstado}}
+        </div>
+    </div>
+
+    <!-- Temperatura/Humedad -->
+    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-4 flex flex-col border border-[#333337]">
+        <h2 class="text-sm font-semibold text-[#EAEAEA] mb-3">Ambiente</h2>
+        <div class="flex-1 flex flex-col justify-center bg-[#1a1a1d]/80 rounded-lg p-4 border border-[#2a2a2e]">
+            <div class="flex justify-between items-center mb-3">
+                <div class="flex items-center">
+                    <i class="fas fa-temperature-low text-[#EAEAEA] mr-2"></i>
+                    <span class="text-xs">Temperatura</span>
+                </div>
+                <span class="text-sm font-mono">{{temperatura}}°C</span>
+            </div>
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center">
+                    <i class="fas fa-tint text-[#EAEAEA] mr-2"></i>
+                    <span class="text-xs">Humedad</span>
+                </div>
+                <span class="text-sm font-mono">{{humedad}}%</span>
+            </div>
+            <div class="w-full bg-[#121215] h-2 rounded-full overflow-hidden">
+                <div class="bg-gradient-to-r from-[#00a2ff] to-[#00f2ff] h-full rounded-full" [style.width.%]="humedad"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendario de Recolección -->
+    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-4 col-span-2 flex flex-col border border-[#333337]">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="text-sm font-semibold text-[#EAEAEA]">Calendario de Recolección</h2>
+            <div class="flex space-x-2">
+                <button class="text-xs text-[#7d7d7d] hover:text-[#EAEAEA] transition-colors">
+                    <i class="fas fa-calendar-alt mr-1"></i> Ver mes
+                </button>
+                <button class="text-xs text-[#00f2ff] hover:text-[#00c4ff] transition-colors">
+                    <i class="fas fa-plus mr-1"></i> Agregar
+                </button>
+            </div>
+        </div>
+        <div class="flex-1 overflow-auto">
+            <div class="grid grid-cols-3 gap-3">
+                <div *ngFor="let evento of eventosRecoleccion" 
+                     class="bg-[#1a1a1d]/80 p-3 rounded-lg border-l-4 hover:bg-[#252529] transition-all h-24 flex flex-col justify-between border border-[#2a2a2e]"
+                     [class.border-[#00f2ff]]="evento.prioridad === 'alta'"
+                     [class.border-[#ffaa00]]="evento.prioridad === 'media'"
+                     [class.border-[#7d7d7d]]="evento.prioridad === 'baja'">
+                    <div>
+                        <div class="text-xs font-medium text-[#EAEAEA]">{{evento.fecha}}</div>
+                        <div class="text-xxs text-[#7d7d7d] mt-1">{{evento.producto}}</div>
+                    </div>
+                    <div class="text-xxs mt-2" [class.text-[#00f2ff]]="evento.prioridad === 'alta'">
+                        {{evento.cantidad}} unidades
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

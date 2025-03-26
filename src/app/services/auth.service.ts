@@ -9,12 +9,12 @@ import { catchError } from 'rxjs/operators';
 })
 export class AuthService {
 
-  private apiUrl = 'https://17ca-187-190-56-49.ngrok-free.app/api'; 
+  private apiUrl = 'https://bcb0-187-190-56-49.ngrok-free.app/api'; 
 
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+    return this.http.post(`${this.apiUrl}/login`, credentials); 
   }
 
   sendPasswordRecoveryEmail(email: string): Observable<any> {
