@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import Pusher from 'pusher-js';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FacturasService {
-  private apiUrl = 'http://192.168.252.116:8000/api/invoices';
+  private apiUrl = `${environment.apiUrl}/invoices`;
   private pusherKey = '06e2ac4b518dea780c81'; 
   private pusherCluster = 'us2';
 
@@ -32,7 +33,6 @@ export class FacturasService {
     channel.bind('invoice.created', (data: any) => {
       let currentFacturas = this.facturasSubject.getValue();
       
-      // Verificar si ya existe la factura en la lista antes de añadirla
       const existe = currentFacturas.some(factura => factura.URL === data.invoice.URL);
 
       if (!existe) {

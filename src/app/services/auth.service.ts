@@ -3,13 +3,13 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { catchError } from 'rxjs/operators';
-
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private apiUrl = 'https://bcb0-187-190-56-49.ngrok-free.app/api'; 
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
