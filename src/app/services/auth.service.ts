@@ -8,7 +8,7 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthService {
 
-  private apiUrl = 'http://192.168.252.90:8000/api'; 
+  private apiUrl = 'https://bcb0-187-190-56-49.ngrok-free.app/api'; 
 
   constructor(private http: HttpClient) {}
 
@@ -87,5 +87,12 @@ export class AuthService {
 
   getEmployees(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/workers`);
+  }
+
+  getEmployee(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/worker/${id}`);
+  }
+  updateEmployee(id: string, data:any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/worker/${id}`,{data });
   }
 }
