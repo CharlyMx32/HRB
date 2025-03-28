@@ -3,13 +3,12 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { catchError } from 'rxjs/operators';
-import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl;
+  private apiUrl = 'http://localhost:8000/api'; // Cambia esto a la URL de tu API
 
   constructor(private http: HttpClient) {}
 
@@ -97,6 +96,15 @@ export class AuthService {
   getEmployees(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/workers`);
   }
+
+  getEmployee(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/worker/${id}`);
+  }
+  
+  updateEmployee(id: string, data:any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/worker/${id}`, {data});
+  }
+  
 
   updatePassword(passwordData: any): Observable<any> {
     const token = this.getToken(); // Método para obtener el token
