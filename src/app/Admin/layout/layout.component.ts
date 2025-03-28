@@ -6,7 +6,7 @@ import { TopBarComponent } from '../../components/top-bar/top-bar.component';
 
 @Component({
   selector: 'app-layout',
-  imports: [AdminSidebarComponent, RouterModule, CommonModule, TopBarComponent],
+  imports: [AdminSidebarComponent, RouterModule, CommonModule],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css'
 })

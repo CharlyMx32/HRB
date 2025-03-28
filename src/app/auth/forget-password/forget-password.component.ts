@@ -22,25 +22,21 @@ export class ForgetPasswordComponent {
   emailVerified = false;
   successMessage: string | null = null;
   submitted: boolean = false;
-
+  passwordChanged = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
-    // Inicialización del formulario de recuperación de contraseña
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
 
-    // Inicialización del formulario de cambio de contraseña
     this.changePasswordForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
     }, {
-      // Validación para asegurarse de que las contraseñas coinciden
       validator: this.passwordMatchValidator
     });
   }
 
-  // Validador personalizado para comprobar que las contraseñas coinciden
   passwordMatchValidator(group: FormGroup) {
     const { newPassword, confirmPassword } = group.controls;
     if (newPassword.value !== confirmPassword.value) {
@@ -49,7 +45,6 @@ export class ForgetPasswordComponent {
     return null;
   }
 
-  // Enviar correo de recuperación
   onSubmit() {
     this.submitted = true;
   
@@ -64,50 +59,55 @@ export class ForgetPasswordComponent {
       (response) => {
         this.loading = false;
         this.successMessage = 'Correo enviado. Por favor, revisa tu bandeja de entrada.';
+        this.waitingForVerification = true;
         
         setTimeout(() => {
           this.successMessage = null;
-          this.router.navigate(['/auth/login']); 
+          this.checkEmailVerification(email);
         }, 3000);
       },
       (error) => {
         this.loading = false;
+        this.successMessage = null;
         console.error('Error al enviar el correo:', error);
       }
     );
   }
   
-
-  // Verificar si el correo fue confirmado
   checkEmailVerification(email: string) {
-    // Llamada a la API para verificar si el correo fue verificado
     const interval = setInterval(() => {
       this.authService.checkEmailVerification(email).subscribe(
         (response: any) => {
-          if (response.status === 200) { // Si el correo está verificado
+          if (response.status === 200) {
             this.waitingForVerification = false;
             this.emailVerified = true;
-            clearInterval(interval); // Detener la consulta
+            clearInterval(interval);
           }
         },
         (error) => console.error('Error verificando el correo:', error)
       );
-    }, 3000); // Haciendo la petición cada 3 segundos
+    }, 3000);
   }
 
-  // Cambiar la contraseña
   changePassword() {
-    if (this.changePasswordForm.invalid) {
-      return;
-    }
-    this.loading = true;
-    const newPassword = this.changePasswordForm.value.newPassword;
+    // this.submitted = true;
+    
+    // if (this.changePasswordForm.invalid) {
+    //   return;
+    // }
+    
+    // this.loading = true;
+    // const newPassword = this.changePasswordForm.value.newPassword;
 
-    // Aquí, enviarías la nueva contraseña al servidor
     // this.authService.changePassword(newPassword).subscribe(
     //   (response) => {
     //     this.loading = false;
-    //     this.successMessage = 'Contraseña cambiada exitosamente.';
+    //     this.passwordChanged = true;
+    //     this.successMessage = '¡Contraseña cambiada exitosamente!';
+        
+    //     setTimeout(() => {
+    //       this.router.navigate(['/auth/login']);
+    //     }, 3000);
     //   },
     //   (error) => {
     //     this.loading = false;

@@ -1,0 +1,99 @@
+/* Estilos para el modal */
+.modal-overlay {
+    backdrop-filter: blur(5px);
+    transition: opacity 0.3s ease;
+}
+
+.modal-content {
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay:not(.hidden) .modal-content {
+    transform: translateY(0);
+}
+
+/* Estilos para la tabla */
+.table-container {
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(68, 68, 68, 0.5);
+}
+
+.table-container table {
+    width: 100%;
+    color: #EAEAEA;
+    font-size: 0.875rem;
+}
+
+.table-container thead tr {
+    background-color: #1a1a1d;
+    color: #EAEAEA;
+}
+
+.table-container th, 
+.table-container td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(68, 68, 68, 0.5);
+}
+
+.table-container tr:hover {
+    background-color: rgba(42, 42, 46, 0.8);
+    transition: background-color 0.3s;
+}
+
+/* Estilos para los botones de acción */
+.action-button {
+    transition: color 0.3s;
+}
+
+.edit-button {
+    color: #00f2ff;
+}
+
+.edit-button:hover {
+    color: #00c4ff;
+}
+
+.delete-button {
+    color: #ef4444;
+}
+
+.delete-button:hover {
+    color: #f87171;
+}
+
+/* Estilos para los badges de zona */
+.zone-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    display: inline-block;
+}
+
+.zone-a {
+    background-color: rgba(24, 73, 220, 0.2);
+    color: #1849DC;
+}
+
+.zone-b {
+    background-color: rgba(76, 175, 80, 0.2);
+    color: #4CAF50;
+}
+
+/* Estilos para los inputs */
+.input-field {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #232328;
+    border: 1px solid rgba(68, 68, 68, 0.5);
+    color: #EAEAEA;
+}
+
+.input-field:focus {
+    border-color: rgba(0, 242, 255, 0.5);
+    outline: none;
+    box-shadow: 0 0 0 1px rgba(0, 242, 255, 0.3);
+}

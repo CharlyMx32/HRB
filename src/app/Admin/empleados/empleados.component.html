@@ -3,7 +3,7 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 mb-6 border-b border-[#444444]/50">
         <h2 class="text-xl font-semibold text-[#EAEAEA]">Gestión de Empleados</h2>
         <button (click)="toggleForm()" 
-                class="bg-[#1849DC] hover:bg-[#1a53f0] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                class="bg-[#00f2ff] hover:bg-[#00c4ff] text-[#0f1621] px-4 py-2 rounded-lg flex items-center gap-2 transition-colors font-medium">
             <i class="fas fa-user-plus"></i>
             <span>Agregar Empleado</span>
         </button>
@@ -17,7 +17,7 @@
             <div class="space-y-2">
                 <label for="name" class="block text-sm font-medium text-[#EAEAEA]">Nombre</label>
                 <input type="text" id="name" formControlName="name" placeholder="Nombre completo"
-                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                 <div *ngIf="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched" class="text-red-400 text-xs">
                     <div *ngIf="employeeForm.get('name')?.errors?.['required']">El nombre es requerido.</div>
                     <div *ngIf="employeeForm.get('name')?.errors?.['maxlength']">Máximo 255 caracteres.</div>
@@ -27,7 +27,7 @@
             <div class="space-y-2">
                 <label for="last_name" class="block text-sm font-medium text-[#EAEAEA]">Apellido</label>
                 <input type="text" id="last_name" formControlName="last_name" placeholder="Apellidos"
-                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                 <div *ngIf="employeeForm.get('last_name')?.invalid && employeeForm.get('last_name')?.touched" class="text-red-400 text-xs">
                     <div *ngIf="employeeForm.get('last_name')?.errors?.['required']">El apellido es requerido.</div>
                     <div *ngIf="employeeForm.get('last_name')?.errors?.['maxlength']">Máximo 255 caracteres.</div>
@@ -37,7 +37,7 @@
             <div class="space-y-2">
                 <label for="birth_date" class="block text-sm font-medium text-[#EAEAEA]">Fecha de Nacimiento</label>
                 <input type="date" id="birth_date" formControlName="birth_date"
-                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                 <div *ngIf="employeeForm.get('birth_date')?.invalid && employeeForm.get('birth_date')?.touched" class="text-red-400 text-xs">
                     <div *ngIf="employeeForm.get('birth_date')?.errors?.['required']">Fecha requerida.</div>
                     <div *ngIf="employeeForm.get('birth_date')?.errors?.['ageInvalid']">Debe tener al menos 18 años.</div>
@@ -47,7 +47,7 @@
             <div class="space-y-2">
                 <label for="email" class="block text-sm font-medium text-[#EAEAEA]">Correo Electrónico</label>
                 <input type="email" id="email" formControlName="email" placeholder="correo@empresa.com"
-                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                 <div *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched" class="text-red-400 text-xs">
                     <div *ngIf="employeeForm.get('email')?.errors?.['required']">Correo requerido.</div>
                     <div *ngIf="employeeForm.get('email')?.errors?.['email']">Formato inválido.</div>
@@ -56,18 +56,21 @@
 
             <div class="space-y-2">
                 <label for="phone" class="block text-sm font-medium text-[#EAEAEA]">Teléfono</label>
-                <input type="tel" id="phone" formControlName="phone" placeholder="+52 123 456 7890"
-                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+                <input type="tel" id="phone" formControlName="phone" placeholder="Teléfono (10 dígitos)"
+                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                 <div *ngIf="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched" class="text-red-400 text-xs">
-                    <div *ngIf="employeeForm.get('phone')?.errors?.['maxlength']">Máximo 20 caracteres.</div>
+                    <div *ngIf="employeeForm.get('phone')?.errors?.['required']">Teléfono requerido.</div>
+                    <div *ngIf="employeeForm.get('phone')?.errors?.['minlength']">Mínimo 10 dígitos.</div>
+                    <div *ngIf="employeeForm.get('phone')?.errors?.['maxlength']">Máximo 10 dígitos.</div>
                 </div>
             </div>
 
             <div class="space-y-2">
                 <label for="RFID" class="block text-sm font-medium text-[#EAEAEA]">RFID</label>
-                <input type="text" id="RFID" formControlName="RFID" placeholder="ID de tarjeta RFID"
-                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+                <input type="text" id="RFID" formControlName="RFID" placeholder="Tarjeta RFID"
+                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                 <div *ngIf="employeeForm.get('RFID')?.invalid && employeeForm.get('RFID')?.touched" class="text-red-400 text-xs">
+                    <div *ngIf="employeeForm.get('RFID')?.errors?.['required']">RFID requerido.</div>
                     <div *ngIf="employeeForm.get('RFID')?.errors?.['maxlength']">Máximo 255 caracteres.</div>
                 </div>
             </div>
@@ -75,29 +78,36 @@
             <div class="space-y-2">
                 <label for="RFC" class="block text-sm font-medium text-[#EAEAEA]">RFC</label>
                 <input type="text" id="RFC" formControlName="RFC" placeholder="RFC del empleado"
-                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                 <div *ngIf="employeeForm.get('RFC')?.invalid && employeeForm.get('RFC')?.touched" class="text-red-400 text-xs">
-                    <div *ngIf="employeeForm.get('RFC')?.errors?.['maxlength']">Máximo 255 caracteres.</div>
+                    <div *ngIf="employeeForm.get('RFC')?.errors?.['required']">RFC requerido.</div>
+                    <div *ngIf="employeeForm.get('RFC')?.errors?.['minlength']">Mínimo 12 caracteres.</div>
+                    <div *ngIf="employeeForm.get('RFC')?.errors?.['maxlength']">Máximo 13 caracteres.</div>
                 </div>
             </div>
 
             <div class="space-y-2">
                 <label for="NSS" class="block text-sm font-medium text-[#EAEAEA]">NSS</label>
-                <input type="text" id="NSS" formControlName="NSS" placeholder="Número de Seguro Social"
-                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+                <input type="text" id="NSS" formControlName="NSS" placeholder="Número de Seguro Social (11 dígitos)"
+                       class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                 <div *ngIf="employeeForm.get('NSS')?.invalid && employeeForm.get('NSS')?.touched" class="text-red-400 text-xs">
-                    <div *ngIf="employeeForm.get('NSS')?.errors?.['maxlength']">Máximo 255 caracteres.</div>
+                    <div *ngIf="employeeForm.get('NSS')?.errors?.['required']">NSS requerido.</div>
+                    <div *ngIf="employeeForm.get('NSS')?.errors?.['minlength']">Mínimo 11 dígitos.</div>
+                    <div *ngIf="employeeForm.get('NSS')?.errors?.['maxlength']">Máximo 11 dígitos.</div>
                 </div>
             </div>
 
             <!-- Botones del formulario -->
             <div class="flex items-end gap-3">
-                <button type="submit" 
-                        class="bg-[#1849DC] hover:bg-[#1a53f0] text-white px-4 py-2 rounded-lg transition-colors">
-                    Registrar Empleado
+                <button type="submit" [disabled]="loading"
+                        class="bg-[#00f2ff] hover:bg-[#00c4ff] text-[#0f1621] px-4 py-2 rounded-lg transition-colors font-medium flex items-center justify-center gap-2">
+                    <span *ngIf="!loading">Registrar Empleado</span>
+                    <span *ngIf="loading">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando...
+                    </span>
                 </button>
-                <button type="button" (click)="toggleForm()"
-                        class="bg-[#333337] hover:bg-[#444444] text-[#EAEAEA] px-4 py-2 rounded-lg transition-colors">
+                <button type="button" (click)="cancelForm()"
+                        class="bg-[#333337] hover:bg-[#444444] text-[#EAEAEA] px-4 py-2 rounded-lg transition-colors font-medium">
                     Cancelar
                 </button>
             </div>
