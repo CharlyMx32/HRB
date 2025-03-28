@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  
-  apiUrl: 'https://dab9-187-190-56-49.ngrok-free.app/api' // Tu IP para desarrollo
+
+  apiUrl: 'http://192.168.252.138:8000/api' // Tu IP para desarrollo
 
 };
