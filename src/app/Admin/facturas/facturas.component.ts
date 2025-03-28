@@ -32,5 +32,5 @@ export class FacturasComponent implements OnInit {
 
   sanitizarURL(url: string): SafeResourceUrl {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
+  }
 }
