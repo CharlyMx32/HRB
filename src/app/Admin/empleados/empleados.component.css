@@ -1,3 +1,65 @@
+.filter-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que los elementos se ajusten cuando el espacio es pequeño */
+    justify-content: flex-start; /* Alinea los elementos al inicio (izquierda) */
+    align-items: center; /* Alinea los elementos verticalmente al centro */
+    gap: 20px; /* Espacio entre los campos */
+    margin-bottom: 20px;
+}
+
+/* Título de la sección de filtros */
+.filter-container h2 {
+    font-size: 24px;
+    margin: 0;
+    flex: 1 1 auto; /* Asegura que el título no ocupe todo el ancho y se ajuste al espacio disponible */
+    text-align: left; /* Alineación a la izquierda */
+}
+
+/* Inputs de filtro */
+.filter-container input {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #444;
+    background-color: #141416;
+    color: #fff;
+    font-size: 14.5px;
+    width: 100%; /* Los inputs ocupan el 100% del ancho disponible */
+    max-width: 250px; /* Establecemos un ancho máximo para que no se estiren demasiado */
+    box-shadow: inset 2px 5px 10px rgb(5, 5, 5);
+    transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    flex-grow: 1; /* Permite que los inputs se encojan cuando el espacio es limitado */
+}
+
+/* Botón de búsqueda o filtro */
+.filter-container button {
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: rgb(0, 0, 0);
+    color: #fff;
+    font-size: 15px;
+    box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
+    transition: all 0.5s ease;
+    width: 100%; /* Asegura que el botón ocupe el 100% del ancho disponible */
+    max-width: 250px; /* Limita el tamaño máximo del botón */
+    flex-grow: 1; /* Permite que el botón se encoja cuando el espacio es limitado */
+}
+
+/* Hover y active del botón */
+.filter-container button:hover {
+    background-color: hsl(225, 80%, 48%);
+    color: #fff;
+    box-shadow: rgb(24, 86, 220) 0px 7px 29px 0px;
+}
+
+.filter-container button:active {
+    background-color: hsl(225, 80%, 48%);
+    color: #fff;
+    box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
+    transform: translateY(4px);
+    transition: 100ms;
+}
+
 .employee-list-container {
     width: 100%;
     max-width: 1200px; /* Ajusta el tamaño máximo */
@@ -17,7 +79,7 @@
 }
 
 .employee-list-container button {
-    padding: 10px 20px;
+    padding: 5px 10px;
     border-radius: 6px;
     cursor: pointer;
     border: 0;
@@ -26,7 +88,7 @@
     box-shadow: rgb(0 0 0 / 5%) 0 0 8px;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 12px;
     transition: all 0.5s ease;
     margin-bottom: 20px;
 }
@@ -46,12 +108,13 @@
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    font-size: 13px;
 }
 
 .employee-list-container th, .employee-list-container td {
-    padding: 15px;
+    padding: 8px;
     border: 1px solid #444;
-    text-align: left;
+    text-align: center;
 }
 
 .employee-list-container th {
@@ -69,6 +132,13 @@
 
 .employee-list-container tr:hover {
     background-color: #444;
+}
+
+.pagination-container{
+    display: flex;
+    justify-content: space-between; /* Empuja los botones a las orillas */
+    align-items: center; /* Centra los botones verticalmente si hay contenido extra */
+    margin-top: 20px; /* Espaciado arriba si lo necesitas */
 }
 
 .form-container {
@@ -228,5 +298,35 @@ button:active {
     }
     100% {
         transform: translateX(0);
+    }
+}
+/* Responsividad para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .filter-container {
+        justify-content: center; /* Alinea los elementos al centro */
+    }
+
+    .filter-container h2 {
+        text-align: center; /* Centra el título en pantallas pequeñas */
+    }
+
+    .filter-container input,
+    .filter-container button {
+        width: 100%; /* Los elementos ocupan todo el ancho disponible */
+        max-width: 100%; /* El ancho máximo se ajusta a la pantalla */
+    }
+}
+
+@media (max-width: 480px) {
+    .filter-container {
+        flex-direction: column; /* Cambia la dirección de los elementos a columna */
+        align-items: center; /* Centra los elementos */
+    }
+
+    .filter-container input,
+    .filter-container button {
+        width: 100%; /* Los elementos ocupan el 100% del ancho */
+        max-width: 100%; /* El ancho máximo se ajusta a la pantalla */
+        margin-bottom: 10px; /* Añadimos margen entre los elementos */
     }
 }

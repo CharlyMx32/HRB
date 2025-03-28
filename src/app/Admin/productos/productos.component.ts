@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../services/auth.service';
+import { ProductosService } from '../../services/productos.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -20,7 +20,7 @@ export class ProductosComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private productsService: ProductosService,
     private router: Router
   ) {
     this.productForm = this.fb.group({
@@ -43,7 +43,7 @@ export class ProductosComponent implements OnInit {
 
   getProducts(): void {
     console.log('Fetching products...');
-    this.authService.getProducts().subscribe(
+    this.productsService.getProducts().subscribe(
       data => {
         console.log('Data received from API:', data);
         this.products = data;
@@ -64,7 +64,7 @@ export class ProductosComponent implements OnInit {
 
     const productData = this.productForm.value;
 
-    this.authService.registerProduct(productData).subscribe(
+    this.productsService.registerProduct(productData).subscribe(
       response => {
         console.log('Producto registrado:', response);
         this.successMessage = 'Registro exitoso. Redirigiendo...';

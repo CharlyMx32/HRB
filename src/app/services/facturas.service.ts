@@ -8,7 +8,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class FacturasService {
-  private apiUrl = `${environment.apiUrl}/invoices`;
+  private apiUrl = environment.apiUrl;
   private pusherKey = '06e2ac4b518dea780c81'; 
   private pusherCluster = 'us2';
 
@@ -33,6 +33,7 @@ export class FacturasService {
     channel.bind('invoice.created', (data: any) => {
       let currentFacturas = this.facturasSubject.getValue();
       
+      // Verificar si ya existe la factura en la lista antes de añadirla
       const existe = currentFacturas.some(factura => factura.URL === data.invoice.URL);
 
       if (!existe) {

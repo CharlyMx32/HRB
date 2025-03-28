@@ -103,11 +103,11 @@ export class OrdenesComponent {
   }
 
   // Redirigir a nueva orden
-// En ordenes.component.ts
-redirectToNuevaOrden() {
-  // Usa la ruta completa como está definida en tu routing
-  this.router.navigate(['/admin/facturas']);
-}
+  // En ordenes.component.ts
+  redirectToNuevaOrden() {
+    // Usa la ruta completa como está definida en tu routing
+    this.router.navigate(['/admin/facturas']);
+  }
 
   // Estilos para los estados
   getEstadoColor(estado: string): string {

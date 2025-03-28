@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { WorkersService } from '../../services/workers.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -23,6 +24,7 @@ export class EmpleadosComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private workersService: WorkersService,
     private router: Router
   ) {
     this.employeeForm = this.fb.group({
@@ -60,7 +62,7 @@ export class EmpleadosComponent implements OnInit {
 
   getEmployees(): void {
     console.log('Fetching employees...');
-    this.authService.getEmployees().subscribe(
+    this.workersService.getEmployees().subscribe(
       data => {
         console.log('Data received from API:', data);
         this.employees = data;
@@ -127,14 +129,4 @@ export class EmpleadosComponent implements OnInit {
       }
     );
   }
-
-  // Métodos para obtener los controles del formulario
-  get email() { return this.employeeForm.get('email'); }
-  get name() { return this.employeeForm.get('name'); }
-  get last_name() { return this.employeeForm.get('last_name'); }
-  get birth_date() { return this.employeeForm.get('birth_date'); }
-  get phone() { return this.employeeForm.get('phone'); }
-  get RFID() { return this.employeeForm.get('RFID'); }
-  get RFC() { return this.employeeForm.get('RFC'); }
-  get NSS() { return this.employeeForm.get('NSS'); }
 }

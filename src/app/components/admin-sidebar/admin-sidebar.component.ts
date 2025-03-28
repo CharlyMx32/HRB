@@ -18,6 +18,7 @@ export class AdminSidebarComponent {
     { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/empleados' },
     { label: 'Productos', icon: 'fas fa-box', route: '/admin/productos' },
     { label: 'Dispositivos', icon: 'fas fa-mobile-alt', route: '/admin/dispositivos' }
+
   ];
   
   navigateTo(route: string) {

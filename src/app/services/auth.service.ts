@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -92,10 +93,6 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/register`, employeeData).pipe(
       catchError(this.handleError)
     );
-  }
-
-  getEmployees(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/workers`);
   }
 
   updatePassword(passwordData: any): Observable<any> {

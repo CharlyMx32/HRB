@@ -7,6 +7,7 @@ import { FacturasComponent } from './facturas/facturas.component';
 import { ProductosComponent } from './productos/productos.component';
 import { DispositivosComponent } from './dispositivos/dispositivos.component';
 
+
 export const adminRoutes: Routes = [
     {
         path: '', 
