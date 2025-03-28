@@ -142,7 +142,7 @@ export class EmpleadosComponent implements OnInit {
         console.log('Error response:', error.error);
       }
 
-     });
+      });
   }
 
     totalPages(): void {
@@ -258,5 +258,5 @@ interface Employee {
   name: string
   last_name: string
   phone: number
-  RFID: string
+  RFID: string
 }
