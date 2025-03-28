@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DeliveriesService } from '../../services/deliveries.service';
 
 @Component({
   selector: 'app-ordenes',
@@ -10,56 +11,9 @@ import { Router } from '@angular/router';
   templateUrl: './ordenes.component.html',
   styleUrls: ['./ordenes.component.css']
 })
-export class OrdenesComponent {
-  // Iconos
-  // Datos de ejemplo
-  facturas = [
-    { 
-      nombre: 'ORD-2023-1234', 
-      fecha_emision: '02/03/2025', 
-      area_producto: 'Electrónica', 
-      productos: ['Sensores RFID', 'Lectores de huella'], 
-      estado: 'Pendiente', 
-      transportista: 'DHL Express', 
-      fecha_entrega: '05/03/2025' 
-    },
-    { 
-      nombre: 'ORD-2023-1235', 
-      fecha_emision: '01/03/2025', 
-      area_producto: 'Cables', 
-      productos: ['Cable de red CAT6'], 
-      estado: 'Pagado', 
-      transportista: 'UPS', 
-      fecha_entrega: '03/03/2025' 
-    },
-    { 
-      nombre: 'ORD-2023-1236', 
-      fecha_emision: '28/02/2025', 
-      area_producto: 'Cables', 
-      productos: ['Cable inalámbrico', 'Cable de cobre'], 
-      estado: 'Cancelado', 
-      transportista: 'FedEx', 
-      fecha_entrega: '02/03/2025' 
-    },
-    { 
-      nombre: 'ORD-2023-1237', 
-      fecha_emision: '27/02/2025', 
-      area_producto: 'Electrónica', 
-      productos: ['Placas Arduino', 'Sensores'], 
-      estado: 'Pagado', 
-      transportista: 'Estafeta', 
-      fecha_entrega: '01/03/2025' 
-    },
-    { 
-      nombre: 'ORD-2023-1238', 
-      fecha_emision: '26/02/2025', 
-      area_producto: 'Componentes', 
-      productos: ['Resistencias', 'Capacitores'], 
-      estado: 'Pendiente', 
-      transportista: 'DHL', 
-      fecha_entrega: '28/02/2025' 
-    }
-  ];
+export class OrdenesComponent implements OnInit {
+  // Datos que serán cargados desde el backend
+  facturas: any[] = [];
 
   // Filtros
   searchFactura: string = '';
@@ -70,7 +24,30 @@ export class OrdenesComponent {
   currentPage: number = 1;
   itemsPerPage: number = 5;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private deliveriesService: DeliveriesService) {}
+
+  ngOnInit() {
+    this.loadFacturas(); // Cargar las facturas al iniciar el componente
+  }
+
+  // Método para cargar las facturas desde el servicio
+  loadFacturas() {
+    this.deliveriesService.getDeliveries().subscribe(
+      (response: any) => {
+        this.facturas = response.data.map((delivery: any) => ({
+          nombre: `ORD-${delivery.invoice_id}`,
+          fecha_entrega: delivery.delivery_date,
+          productos: delivery.products.split(', '),
+          trabajador_asignado: delivery.worker_name,
+          transportista: delivery.carrier,
+          estado: delivery.status,
+        }));
+      },
+      (error) => {
+        console.error('Error al obtener las entregas', error);
+      }
+    );
+  }
 
   // Filtrar facturas
   filteredFacturas() {
@@ -103,27 +80,21 @@ export class OrdenesComponent {
   }
 
   // Redirigir a nueva orden
-  // En ordenes.component.ts
   redirectToNuevaOrden() {
-    // Usa la ruta completa como está definida en tu routing
     this.router.navigate(['/admin/facturas']);
   }
 
   // Estilos para los estados
   getEstadoColor(estado: string): string {
     switch (estado) {
-      case 'Pendiente': 
+      case 'Pending': 
         return 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20';
-      case 'Pagado': 
+      case 'Completed': 
         return 'bg-green-500/10 text-green-400 border-green-500/20';
-      case 'Cancelado': 
-        return 'bg-red-500/10 text-red-400 border-red-500/20';
       default: 
         return 'bg-gray-500/10 text-gray-400 border-gray-500/20';
     }
   }
-
-  // Iconos para los estados
 
   // Total de páginas
   get totalPages(): number {
