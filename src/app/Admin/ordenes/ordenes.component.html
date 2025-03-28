@@ -45,10 +45,9 @@
                     <td class="p-4 text-center">
                         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold"
                             [ngClass]="getEstadoColor(factura.estado)">
-                            <span class="w-2 h-2 rounded-full mr-2" 
-									[ngClass]="{'bg-green-400': factura.estado === 'Completed', 
+                            <span class="w-2 h-2 rounded-full mr-2" [ngClass]="{'bg-green-400': factura.estado === 'Completed', 
                                             'bg-yellow-400': factura.estado === 'Pending'}"></span>
-                            {{ factura.estado }}
+                            {{ getEstadoTraducido(factura.estado) }}
                         </span>
                     </td>
                     <td class="p-4 text-left">

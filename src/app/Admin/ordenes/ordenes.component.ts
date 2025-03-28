@@ -96,6 +96,15 @@ export class OrdenesComponent implements OnInit {
     }
   }
 
+  getEstadoTraducido(estado: string): string {
+    const traducciones: { [key: string]: string } = {
+      Pending: 'Pendiente',
+      Completed: 'Completado',
+      Canceled: 'Cancelado'
+    };
+    return traducciones[estado] || estado; // Devuelve la traducción o el estado original si no hay traducción
+  }
+
   // Total de páginas
   get totalPages(): number {
     return Math.ceil(this.filteredFacturas().length / this.itemsPerPage);
