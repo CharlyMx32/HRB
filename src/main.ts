@@ -13,6 +13,7 @@ bootstrapApplication(AppComponent, {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])), 
     importProvidersFrom(FormsModule),
-    importProvidersFrom(BrowserAnimationsModule) 
+    importProvidersFrom(BrowserAnimationsModule),
+
   ]
 }).catch(err => console.error(err));

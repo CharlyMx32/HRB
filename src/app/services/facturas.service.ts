@@ -7,7 +7,7 @@ import Pusher from 'pusher-js';
   providedIn: 'root'
 })
 export class FacturasService {
-  private apiUrl = 'http://192.168.252.116:8000/api/invoices';
+  private apiUrl = 'http://127.0.0.1:8000/api/invoices';
   private pusherKey = '06e2ac4b518dea780c81'; 
   private pusherCluster = 'us2';
 
@@ -16,10 +16,14 @@ export class FacturasService {
 
   constructor(private http: HttpClient) {
     this.initializeWebSocket();
+    this.loadInitialFacturas();
   }
 
-  getFacturas(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+   loadInitialFacturas(): void {
+    this.http.get<any[]>(this.apiUrl).subscribe(data => {
+      this.facturasSubject.next([]); 
+      this.facturasSubject.next(data);
+        });
   }
 
   private initializeWebSocket() {
@@ -30,12 +34,10 @@ export class FacturasService {
     const channel = pusher.subscribe('invoices');
 
     channel.bind('invoice.created', (data: any) => {
-      let currentFacturas = this.facturasSubject.getValue();
-      
-      // Verificar si ya existe la factura en la lista antes de añadirla
-      const existe = currentFacturas.some(factura => factura.URL === data.invoice.URL);
+      const currentFacturas = this.facturasSubject.getValue();
 
-      if (!existe) {
+      // Evita duplicados
+      if (!currentFacturas.some(factura => factura.URL === data.invoice.URL)) {
         this.facturasSubject.next([...currentFacturas, data.invoice]);
       }
     });

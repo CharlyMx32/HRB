@@ -137,35 +137,16 @@
         </div>
     </div>
 
-    <!-- Calendario de Recolección -->
-    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-4 col-span-2 flex flex-col border border-[#333337]">
+    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-4 col-span-2 flex flex-col border border-[#333337] min-h-[600px]">
         <div class="flex justify-between items-center mb-3">
-            <h2 class="text-sm font-semibold text-[#EAEAEA]">Calendario de Recolección</h2>
-            <div class="flex space-x-2">
-                <button class="text-xs text-[#7d7d7d] hover:text-[#EAEAEA] transition-colors">
-                    <i class="fas fa-calendar-alt mr-1"></i> Ver mes
-                </button>
-                <button class="text-xs text-[#00f2ff] hover:text-[#00c4ff] transition-colors">
-                    <i class="fas fa-plus mr-1"></i> Agregar
-                </button>
-            </div>
+            <h2 class="text-sm font-semibold text-[#EAEAEA]">Calendario de Facturas</h2>
+            <button (click)="actualizarCalendario()" 
+                    class="text-xs text-[#00f2ff] hover:text-[#00c4ff] transition-colors">
+                <i class="fas fa-sync-alt mr-1"></i> Actualizar
+            </button>
         </div>
-        <div class="flex-1 overflow-auto">
-            <div class="grid grid-cols-3 gap-3">
-                <div *ngFor="let evento of eventosRecoleccion" 
-                     class="bg-[#1a1a1d]/80 p-3 rounded-lg border-l-4 hover:bg-[#252529] transition-all h-24 flex flex-col justify-between border border-[#2a2a2e]"
-                     [class.border-[#00f2ff]]="evento.prioridad === 'alta'"
-                     [class.border-[#ffaa00]]="evento.prioridad === 'media'"
-                     [class.border-[#7d7d7d]]="evento.prioridad === 'baja'">
-                    <div>
-                        <div class="text-xs font-medium text-[#EAEAEA]">{{evento.fecha}}</div>
-                        <div class="text-xxs text-[#7d7d7d] mt-1">{{evento.producto}}</div>
-                    </div>
-                    <div class="text-xxs mt-2" [class.text-[#00f2ff]]="evento.prioridad === 'alta'">
-                        {{evento.cantidad}} unidades
-                    </div>
-                </div>
-            </div>
+        <div class="flex-1 h-full">
+            <app-calendar class="h-full"></app-calendar>
         </div>
     </div>
 </div>
