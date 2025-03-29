@@ -81,14 +81,6 @@ export class AuthService {
     }
   }
 
-  getProducts(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/products`);
-  }
-
-  registerProduct(productData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/products`, productData);
-  }
-
   registerWorker(employeeData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/register`, employeeData).pipe(
       catchError(this.handleError)

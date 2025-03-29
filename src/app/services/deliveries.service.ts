@@ -8,12 +8,15 @@ import { environment } from '../../environments/environment';
 })
 export class DeliveriesService {
 
-  private apiUrl = `${environment.apiUrl}/deliveries`;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
-  // Método para obtener los detalles de las entregas
   getDeliveries(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+    return this.http.get<any>(`${this.apiUrl}/deliveries`);
+  }
+
+  makeDelivery(deliveryData: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/delivery`, deliveryData);
   }
 }
