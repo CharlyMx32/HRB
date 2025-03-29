@@ -1,15 +1,19 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { CalendarComponent } from '../../components/calendar/calendar.component';
+import { FacturasService } from '../../services/facturas.service';
 @Component({
   selector: 'app-dashboard',
   standalone: true, // Asegúrate de que esté marcado como standalone
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, CalendarComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
+  actualizarCalendario() {
+    this.facturasService.loadInitialFacturas();
+  }
   // Estado sensores
   puertaAbierta = false;
   luzEncendida = false;
@@ -38,7 +42,7 @@ export class DashboardComponent {
     { fecha: '02 Nov', producto: 'Conectores HDMI', cantidad: 75, prioridad: 'baja' },
   ];
 
-  constructor() {
+  constructor(private facturasService: FacturasService) {
     // Simular cambios de estado
     setInterval(() => {
       // Simular detección PIR aleatoria

@@ -1,14 +1,9 @@
 <div class="facturas-container">
-  <div class="card" *ngFor="let factura of facturas">
-    <a [href]="factura.URL" target="_blank">
-      <iframe [src]="sanitizarURL(factura.URL)" class="pdf-preview"></iframe>
-    </a>
+  <div class="card" *ngFor="let factura of facturas$ | async; trackBy: trackByFn">
+    <iframe [src]="sanitizarURL(factura.URL)" class="pdf-preview"></iframe>
     <div class="card-body">
       <p><strong>Status:</strong> {{ factura.status }}</p>
-      <!-- Botón para abrir el PDF -->
-      <a [href]="factura.URL" target="_blank">
-        <button class="btn btn-primary btn-custom">Ver Factura</button>
-      </a>
+      <button class="btn btn-primary btn-custom" (click)="verFactura(factura.URL)">Ver Factura</button>
     </div>
   </div>
 </div>
