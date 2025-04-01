@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { WorkersService } from '../../services/workers.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-empleados',
+  standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './empleados.component.html',
   styleUrls: ['./empleados.component.css']
@@ -17,21 +19,23 @@ export class EmpleadosComponent implements OnInit {
   employeeForm: FormGroup;
   errorMessage: string = '';
   successMessage: string = '';
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
+    private workersService: WorkersService,
     private router: Router
   ) {
     this.employeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
       last_name: ['', [Validators.required, Validators.maxLength(255)]],
       birth_date: ['', [Validators.required, this.ageValidator]],
-      phone: ['', [Validators.maxLength(20)]],
+      phone: ['', [Validators.required, Validators.minLength(10) ,Validators.maxLength(10)]],
       email: ['', [Validators.required, Validators.email]],
-      RFID: ['', [Validators.maxLength(255)]],
-      RFC: ['', [Validators.maxLength(255)]],
-      NSS: ['', [Validators.maxLength(255)]]
+      RFID: ['', [Validators.required, Validators.maxLength(255)]],
+      RFC: ['', [Validators.required, Validators.minLength(12) ,Validators.maxLength(13)]],
+      NSS: ['', [Validators.required, Validators.minLength(11) ,Validators.maxLength(11)]],
     });
   }    
 
@@ -41,11 +45,24 @@ export class EmpleadosComponent implements OnInit {
 
   toggleForm(): void {
     this.showForm = !this.showForm;
+    if (!this.showForm) {
+      this.resetForm();
+    }
+  }
+
+  cancelForm(): void {
+    this.showForm = false;
+    this.resetForm();
+    this.errorMessage = '';
+  }
+
+  resetForm(): void {
+    this.employeeForm.reset();
   }
 
   getEmployees(): void {
     console.log('Fetching employees...');
-    this.authService.getEmployees().subscribe(
+    this.workersService.getEmployees().subscribe(
       data => {
         console.log('Data received from API:', data);
         this.employees = data;
@@ -75,6 +92,10 @@ export class EmpleadosComponent implements OnInit {
       return;
     }
 
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
     const employeeData = {
       email: this.employeeForm.get('email')?.value,
       name: this.employeeForm.get('name')?.value,
@@ -83,41 +104,29 @@ export class EmpleadosComponent implements OnInit {
       phone: this.employeeForm.get('phone')?.value,
       RFID: this.employeeForm.get('RFID')?.value,
       RFC: this.employeeForm.get('RFC')?.value,
-      NSS: this.employeeForm.get('NSS')?.value
+      NSS: this.employeeForm.get('NSS')?.value,
     };
 
     this.authService.registerWorker(employeeData).subscribe(
       response => {
         console.log('Empleado registrado:', response);
         this.successMessage = 'Registro exitoso. El empleado ha sido registrado correctamente.';
-        this.errorMessage = '';
-
+        this.loading = false;
+        
         // Limpiar el formulario después del registro
-        this.employeeForm.reset();
-
+        this.resetForm();
+        
         // Ocultar el formulario después del registro
-        this.toggleForm();
-
-        // Recargar la página después de 2 segundos
-        setTimeout(() => {
-          location.reload();
-        }, 2000);
+        this.showForm = false;
+        
+        // Recargar la lista de empleados
+        this.getEmployees();
       },
       error => {
         console.error('Error registrando empleado:', error);
         this.errorMessage = 'Error registrando empleado. Por favor, inténtelo de nuevo.';
-        this.successMessage = '';
+        this.loading = false;
       }
     );
   }
-
-  // Métodos para obtener los controles del formulario
-  get email() { return this.employeeForm.get('email'); }
-  get name() { return this.employeeForm.get('name'); }
-  get last_name() { return this.employeeForm.get('last_name'); }
-  get birth_date() { return this.employeeForm.get('birth_date'); }
-  get phone() { return this.employeeForm.get('phone'); }
-  get RFID() { return this.employeeForm.get('RFID'); }
-  get RFC() { return this.employeeForm.get('RFC'); }
-  get NSS() { return this.employeeForm.get('NSS'); }
 }

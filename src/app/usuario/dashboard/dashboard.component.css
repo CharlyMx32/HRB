@@ -1,155 +1,53 @@
-/* Contenedor principal */
-.user-dashboard {
+.grid > div {
   display: flex;
-  height: 100vh;
+  flex-direction: column;
 }
 
-/* Barra Lateral */
-.sidebar {
-  width: 250px;
-  background-color: #1a73e8;
-  color: white;
+/* Estilo para tarjetas de eventos */
+.evento-calendario {
+  height: 96px; /* Igual que h-24 en Tailwind */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 20px;
 }
 
-.sidebar .logo img {
-  width: 100%;
-  margin-bottom: 30px;
+/* Scrollbar personalizada para calendario */
+.calendario-container::-webkit-scrollbar {
+  width: 4px;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
-}
-
-.sidebar ul li {
-  margin: 15px 0;
-}
-
-.sidebar ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.sidebar ul li a:hover {
-  text-decoration: underline;
-}
-
-/* Contenido principal */
-.content {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #f4f4f4;
-}
-
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.header h1 {
-  font-size: 24px;
-  color: #333;
-}
-
-.logout-btn {
-  background-color: #ff4081;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.logout-btn:hover {
-  background-color: #e03571;
-}
-
-/* Cards */
-.dashboard-info .cards-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.card {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.card h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.card p {
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  .user-dashboard {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 10px;
-  }
-
-  .content {
-    padding: 10px;
-  }
-
-  .dashboard-info .cards-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-@keyframes slideIn {
+/* Efecto para detección PIR */
+@keyframes pulse {
   0% {
-    opacity: 0;
-    transform: translateY(-50px);
+      opacity: 1;
   }
+
+  50% {
+      opacity: 0.5;
+  }
+
   100% {
-    opacity: 1;
-    transform: translateY(0);
+      opacity: 1;
   }
 }
 
-.welcome-message {
-  font-size: 36px;
-  color: #1a73e8;
-  font-weight: bold;
-  animation: slideIn 1s ease-out;
+.deteccion-activa {
+  animation: pulse 1s infinite;
 }
 
-
-
-.welcome-message {
-  animation: slideIn 1s ease-out, colorChange 2s ease-in-out infinite;
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
+::-webkit-scrollbar-thumb {
+  background: #444444;
+  border-radius: 3px;
 }
 
-.header h1 {
-  font-size: 24px;
-  color: #333;
+/* Transiciones suaves */
+tr,
+.evento-calendario {
+  transition: all 0.2s ease;
 }
-

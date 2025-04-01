@@ -17,7 +17,8 @@ export class AdminSidebarComponent {
     { label: 'Facturas', icon: 'fas fa-file-invoice', route: '/admin/ordenes'},
     { label: 'Registro trabajadores', icon: 'fas fa-user', route: '/admin/empleados' },
     { label: 'Productos', icon: 'fas fa-box', route: '/admin/productos' },
-    { label: 'Configuración', icon: 'fas fa-cog', route: '/admin/configuracion' },
+    { label: 'Dispositivos', icon: 'fas fa-mobile-alt', route: '/admin/dispositivos' }
+
   ];
   
   navigateTo(route: string) {

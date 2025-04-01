@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, throwError } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials);
+    return this.http.post(`${this.apiUrl}/login`, credentials); 
   }
 
   sendPasswordRecoveryEmail(email: string): Observable<any> {
@@ -92,10 +93,6 @@ export class AuthService {
     return this.http.post<any>(`${this.apiUrl}/register`, employeeData).pipe(
       catchError(this.handleError)
     );
-  }
-
-  getEmployees(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/workers`);
   }
 
   updatePassword(passwordData: any): Observable<any> {

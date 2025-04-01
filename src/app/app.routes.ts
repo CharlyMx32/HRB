@@ -5,13 +5,15 @@ import { adminRoutes } from './Admin/admin.routes';
 import { AuthGuard } from './guards/auth.guard';
 import { ForgetPasswordComponent } from './auth/forget-password/forget-password.component';
 import { NewPasswordComponent } from './auth/new-password/new-password.component';
+import { EmpleadosComponent } from './Admin/empleados/empleados.component';
 
 export const routes: Routes = [
     { path: 'worker', children: UsuarioRoutes, canActivate: [AuthGuard] },  
     { path: 'admin', children: adminRoutes, canActivate: [AuthGuard] },
     { path: 'forget-password', component: ForgetPasswordComponent },
     { path: 'new-password', component: NewPasswordComponent },
-    { path: 'login', component: LoginComponent },    
+    { path: 'login', component: LoginComponent },
+    { path: 'empleados', component: EmpleadosComponent },
     { path: '**', redirectTo: '/login' }
 
 ];
