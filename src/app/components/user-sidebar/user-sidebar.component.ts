@@ -14,8 +14,9 @@ export class UserSidebarComponent {
   isCollapsed = true;
   menuItems = [
     { label: 'Dashboard', icon: 'fas fa-home', route: '/worker/dashboard' },
-    { label: 'Mi Almacen', icon: 'fas fa-warehouse', route: '/admin/almacen' },
-    { label: 'Configuración', icon: 'fas fa-cog', route: '/admin/configuracion' }
+    { label: 'Ordenes', icon: 'fas fa-box', route: '/worker/ordenes' },
+    { label: 'Productos', icon: 'fas fa-cubes', route: '/worker/productos' },
+    { label: 'Configuración', icon: 'fas fa-cog', route: '/worker/editar-perfil' }
   ];
   
   navigateTo(route: string) {

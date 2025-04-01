@@ -1,7 +1,45 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
-html, body {
+html,
+body {
     overflow: hidden;
     height: 100%;
 }
+
+/* Animaciones mejoradas */
+@keyframes float {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    50% {
+        transform: translate(40px, -25px) scale(1.05);
+    }
+
+    100% {
+        transform: translate(-20px, 15px) scale(1);
+    }
+}
+
+.animate-float {
+    animation: float 18s ease-in-out infinite alternate;
+    filter: brightness(1.2);
+}
+
+.animate-float-slow {
+    animation: float 24s ease-in-out infinite alternate-reverse;
+    filter: brightness(1.1);
+}
+
+.full-calendar-modal .mat-dialog-container {
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+}
+
+.full-calendar-modal {
+    background: #232328;
+    border-radius: 16px;
+}
+

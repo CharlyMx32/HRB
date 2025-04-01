@@ -1,155 +1,103 @@
-/* Contenedor principal */
-.user-dashboard {
-  display: flex;
-  height: 100vh;
-}
-
-/* Barra Lateral */
-.sidebar {
-  width: 250px;
-  background-color: #1a73e8;
-  color: white;
+/* Estilos base */
+.grid > div {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 20px;
 }
 
-.sidebar .logo img {
-  width: 100%;
-  margin-bottom: 30px;
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.sidebar ul {
-  list-style: none;
-  padding: 0;
+::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
 }
 
-.sidebar ul li {
-  margin: 15px 0;
-}
-
-.sidebar ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.sidebar ul li a:hover {
-  text-decoration: underline;
-}
-
-/* Contenido principal */
-.content {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #f4f4f4;
-}
-
-/* Header */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.header h1 {
-  font-size: 24px;
-  color: #333;
-}
-
-.logout-btn {
-  background-color: #ff4081;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-}
-
-.logout-btn:hover {
-  background-color: #e03571;
-}
-
-/* Cards */
-.dashboard-info .cards-container {
+/* Calendario compacto */
+.compact-calendar-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  flex: 1;
 }
 
-.card {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.compact-day-header {
+  text-align: center;
+  font-size: 0.6rem;
+  padding: 4px 0;
+  color: #7d7d7d;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
-.card h3 {
-  font-size: 20px;
-  margin-bottom: 10px;
-}
-
-.card p {
-  font-size: 16px;
-}
-
-@media (max-width: 768px) {
-  .user-dashboard {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    height: auto;
-    flex-direction: row;
-    justify-content: space-around;
-    padding: 10px;
-  }
-
-  .content {
-    padding: 10px;
-  }
-
-  .dashboard-info .cards-container {
-    grid-template-columns: 1fr;
-  }
-}
-
-@keyframes slideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-50px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.welcome-message {
-  font-size: 36px;
-  color: #1a73e8;
-  font-weight: bold;
-  animation: slideIn 1s ease-out;
-}
-
-
-
-.welcome-message {
-  animation: slideIn 1s ease-out, colorChange 2s ease-in-out infinite;
-}
-
-.header {
+.compact-day-cell {
+  aspect-ratio: 1;
+  position: relative;
+  background: #1a1a1d;
+  border-radius: 3px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  justify-content: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-.header h1 {
-  font-size: 24px;
-  color: #333;
+.compact-day-cell:hover {
+  background: #252529;
 }
 
+.compact-day-cell.current-month {
+  background: #1e1e22;
+}
+
+.compact-day-cell.has-events::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  background: #00f2ff;
+  border-radius: 50%;
+}
+
+.compact-day-number {
+  font-size: 0.65rem;
+  color: #EAEAEA;
+  font-weight: 400;
+}
+
+.compact-day-cell.current-month .compact-day-number {
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid {
+      grid-template-columns: 1fr !important;
+      padding: 1rem;
+      gap: 1rem;
+  }
+
+  .compact-day-header {
+      font-size: 0.55rem;
+      padding: 2px 0;
+  }
+  
+  .compact-day-number {
+      font-size: 0.6rem;
+  }
+}
+
+/* Estilos para el modal del calendario completo */
+.full-calendar-modal .mat-dialog-container {
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+.full-calendar-modal {
+  background: #232328;
+  border-radius: 16px;
+}

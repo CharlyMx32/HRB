@@ -1,1 +1,9 @@
-<app-pdf-vista></app-pdf-vista>
+<div class="facturas-container">
+  <div class="card" *ngFor="let factura of facturas$ | async; trackBy: trackByFn">
+    <iframe [src]="sanitizarURL(factura.URL)" class="pdf-preview"></iframe>
+    <div class="card-body">
+      <p><strong>Status:</strong> {{ factura.status }}</p>
+      <button class="btn btn-primary btn-custom" (click)="verFactura(factura.URL)">Ver Factura</button>
+    </div>
+  </div>
+</div>

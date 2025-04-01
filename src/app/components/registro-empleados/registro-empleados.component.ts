@@ -1,14 +1,15 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-register',
-  imports: [FormsModule, CommonModule],
-  templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  selector: 'app-registro-empleados',
+  imports: [ CommonModule, FormsModule ],
+  templateUrl: './registro-empleados.component.html',
+  styleUrl: './registro-empleados.component.css'
 })
-export class RegisterComponent {
+export class RegistroEmpleadosComponent {
   email: string = '';
   password: string = '';
   name: string = '';
@@ -19,6 +20,8 @@ export class RegisterComponent {
   rfc: string = '';
   nss: string = '';
   errorMessage: string = '';
+
+  constructor(private router: Router) { }
 
   register() {
     // Aquí puedes agregar la lógica para registrar al empleado
@@ -51,5 +54,31 @@ export class RegisterComponent {
     this.rfc = '';
     this.nss = '';
     this.errorMessage = '';
+  }
+
+  goBack() {
+    console.log('Navigating back to /admin/empleados');
+    this.router.navigate(['admin/empleados']).then(success => {
+      if (success) {
+        console.log('Navigation to /admin/empleados successful');
+      } else {
+        console.log('Navigation to /admin/empleados failed');
+      }
+    }).catch(error => {
+      console.error('Navigation error:', error);
+    });
+  }
+
+  navigate(path: string) {
+    console.log(`Navigating to ${path}`);
+    this.router.navigate([path]).then(success => {
+      if (success) {
+        console.log(`Navigation to ${path} successful`);
+      } else {
+        console.log(`Navigation to ${path} failed`);
+      }
+    }).catch(err => {
+      console.error('Navigation error:', err);
+    });
   }
 }
