@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-editar-perfil',
-  imports: [CommonModule, ReactiveFormsModule], 
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './editar-perfil.component.html',
   styleUrls: ['./editar-perfil.component.css']
 })
@@ -25,12 +25,12 @@ export class EditarPerfilComponent implements OnInit {
     }, { validator: this.passwordMatchValidator }); // Agregamos validador personalizado
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   // Validador personalizado para confirmar que las contraseñas coincidan
   passwordMatchValidator(form: FormGroup) {
-    return form.get('password')?.value === form.get('password_confirmation')?.value 
-      ? null 
+    return form.get('password')?.value === form.get('password_confirmation')?.value
+      ? null
       : { mismatch: true };
   }
 
@@ -44,6 +44,12 @@ export class EditarPerfilComponent implements OnInit {
       } else {
         this.errorMessage = 'Por favor, corrija los errores en el formulario.';
       }
+
+      // Limpiar el mensaje de error después de 5 segundos
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 5000);
+
       return;
     }
 
@@ -64,6 +70,11 @@ export class EditarPerfilComponent implements OnInit {
         this.formErrors = {};
         this.updatePasswordForm.reset();
         this.isLoading = false; // Desactivar spinner
+
+        // Limpiar el mensaje de éxito después de 5 segundos
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 5000);
       },
       error => {
         console.error('Error actualizando contraseña:', error);
@@ -74,6 +85,11 @@ export class EditarPerfilComponent implements OnInit {
         }
         this.successMessage = '';
         this.isLoading = false; // Desactivar spinner
+
+        // Limpiar el mensaje de error después de 5 segundos
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 5000);
       }
     );
   }

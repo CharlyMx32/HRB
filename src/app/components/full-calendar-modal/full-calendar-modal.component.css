@@ -1,0 +1,142 @@
+.calendar-container {
+  background: transparent !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.calendar-full {
+  width: 600px;
+  max-height: 90vh;
+  background: #232328;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #333337;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #333337;
+  margin-bottom: 10px;
+}
+
+.header h2 {
+  color: #EAEAEA;
+  font-size: 1.1rem;
+  margin: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.nav-button {
+  background: transparent;
+  border: none;
+  color: #00f2ff;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 5px 10px;
+  transition: all 0.2s;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-button:hover {
+  color: #00c4ff;
+  background: rgba(0, 242, 255, 0.1);
+}
+
+.close-button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  color: #7d7d7d;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.close-button:hover {
+  color: #EAEAEA;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: minmax(50px, auto);
+  gap: 8px;
+}
+
+.day {
+  min-height: 50px;
+  padding: 10px;
+  border: 1px solid #333337;
+  border-radius: 8px;
+  background: #1a1a1d;
+  position: relative;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.day:hover {
+  background: #252529;
+  transform: translateY(-2px);
+}
+
+.day.current-month {
+  background: #1e1e22;
+}
+
+.day.today {
+  border: 1px solid #00f2ff;
+}
+
+.day.today .day-number {
+  color: #00f2ff;
+  font-weight: bold;
+}
+
+.day-number {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  color: #EAEAEA;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.day-header {
+  color: #7d7d7d;
+  text-align: center;
+  font-size: 0.85rem;
+  padding: 5px 0;
+  text-transform: uppercase;
+  font-weight: 600;
+}

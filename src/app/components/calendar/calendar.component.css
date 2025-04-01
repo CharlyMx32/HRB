@@ -1,111 +1,31 @@
-.calendar-container {
+.calendar-mini {
     background: #232328;
-    border: 1px solid #333337;
     border-radius: 12px;
     padding: 16px;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 1rem;
-    color: #EAEAEA;
-}
-
-.calendar-grid {
+    margin: 1rem;
+  }
+  
+  .days-of-week {
     display: grid;
-    grid-template-columns: repeat(7, minmax(40px, 1fr));
-    grid-auto-rows: 1fr;
-    gap: 4px;
-    flex: 1;
-    min-height: 500px;
-}
-
-.day-header {
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 1rem;
+  }
+  
+  .day-header {
     text-align: center;
-    padding: 8px;
+    padding: 12px 8px;
     font-weight: 500;
     color: #7d7d7d;
     background: #1a1a1d;
-    border-radius: 4px;
+    border-radius: 8px;
     text-transform: uppercase;
-    font-size: 0.75rem;
-}
-
-.day {
-    min-height: 80px;
-    padding: 8px;
-    border: 1px solid #333337;
-    border-radius: 6px;
-    background: #1a1a1d;
+    font-size: 0.8rem;
+  }
+  
+  .header {
     display: flex;
-    flex-direction: column;
-    position: relative;
-    transition: all 0.2s ease;
-}
-
-.day:hover {
-    background: #252529;
-    transform: scale(1.02);
-    z-index: 1;
-}
-
-.current-month .day-number {
+    align-items: center;
+    justify-content: space-between;
     color: #EAEAEA;
-    font-weight: 600;
-}
-
-.day-number {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    color: #7d7d7d;
-    font-size: 0.9rem;
-}
-
-.has-events {
-    border-color: #00f2ff;
-    box-shadow: 0 0 8px rgba(0, 242, 255, 0.1);
-}
-
-.events {
-    margin-top: 24px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3px;
-    justify-content: center;
-    padding: 0 4px;
-}
-
-.event-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    border: 1px solid rgba(0, 242, 255, 0.3);
-    box-shadow: 0 0 4px rgba(0, 242, 255, 0.2);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .calendar-grid {
-        grid-template-columns: repeat(7, minmax(30px, 1fr));
-        min-height: 400px;
-    }
-    
-    .day {
-        min-height: 60px;
-    }
-    
-    .day-number {
-        font-size: 0.75rem;
-    }
-    
-    .event-dot {
-        width: 8px;
-        height: 8px;
-    }
-}
+  }

@@ -22,6 +22,11 @@ export class WorkersService {
     }
 
     updateEmployee(id: string, data: any): Observable<any> {
-      return this.http.put<any>(`${this.apiUrl}/worker/${id}`, {data});
+      return this.http.put<any>(`${this.apiUrl}/worker/${id}`, data).pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error en la solicitud PUT:', error);
+          return throwError(() => error);
+        })
+      );
     }
 }

@@ -16,7 +16,10 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 export class EmpleadosComponent implements OnInit {
   employees: any[] = [];
   showForm: boolean = false;
+  editFormVisible: boolean = false; // Controla la visibilidad del formulario de edición
+  selectedEmployeeId: string | null = null; // Almacena el ID del empleado seleccionado para edición
   employeeForm: FormGroup;
+  editEmployeeForm: FormGroup; // Formulario para editar empleados
   errorMessage: string = '';
   successMessage: string = '';
   loading: boolean = false;
@@ -27,17 +30,26 @@ export class EmpleadosComponent implements OnInit {
     private workersService: WorkersService,
     private router: Router
   ) {
+    // Formulario para agregar empleados
     this.employeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
       last_name: ['', [Validators.required, Validators.maxLength(255)]],
       birth_date: ['', [Validators.required, this.ageValidator]],
-      phone: ['', [Validators.required, Validators.minLength(10) ,Validators.maxLength(10)]],
+      phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       email: ['', [Validators.required, Validators.email]],
       RFID: ['', [Validators.required, Validators.maxLength(255)]],
-      RFC: ['', [Validators.required, Validators.minLength(12) ,Validators.maxLength(13)]],
-      NSS: ['', [Validators.required, Validators.minLength(11) ,Validators.maxLength(11)]],
+      RFC: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(13)]],
+      NSS: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
     });
-  }    
+
+    // Formulario para editar empleados
+    this.editEmployeeForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(255)]],
+      last_name: ['', [Validators.required, Validators.maxLength(255)]],
+      phone: ['', [Validators.required, Validators.maxLength(20)]],
+      RFID: ['', [Validators.required, Validators.maxLength(50)]],
+    });
+  }
 
   ngOnInit(): void {
     this.getEmployees();
@@ -96,31 +108,21 @@ export class EmpleadosComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
-    const employeeData = {
-      email: this.employeeForm.get('email')?.value,
-      name: this.employeeForm.get('name')?.value,
-      last_name: this.employeeForm.get('last_name')?.value,
-      birth_date: this.employeeForm.get('birth_date')?.value,
-      phone: this.employeeForm.get('phone')?.value,
-      RFID: this.employeeForm.get('RFID')?.value,
-      RFC: this.employeeForm.get('RFC')?.value,
-      NSS: this.employeeForm.get('NSS')?.value,
-    };
+    const employeeData = this.employeeForm.value;
 
     this.authService.registerWorker(employeeData).subscribe(
       response => {
         console.log('Empleado registrado:', response);
         this.successMessage = 'Registro exitoso. El empleado ha sido registrado correctamente.';
         this.loading = false;
-        
-        // Limpiar el formulario después del registro
+
         this.resetForm();
-        
-        // Ocultar el formulario después del registro
         this.showForm = false;
-        
-        // Recargar la lista de empleados
         this.getEmployees();
+
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 5000);
       },
       error => {
         console.error('Error registrando empleado:', error);
@@ -128,5 +130,57 @@ export class EmpleadosComponent implements OnInit {
         this.loading = false;
       }
     );
+  }
+
+  // Métodos para editar empleados
+  openEditForm(employee: any): void {
+    this.selectedEmployeeId = employee.id; // Guarda el ID del empleado seleccionado
+    this.editFormVisible = true; // Muestra el formulario de edición
+
+    // Precarga los datos del empleado en el formulario
+    this.editEmployeeForm.patchValue({
+      name: employee.name,
+      last_name: employee.last_name,
+      phone: employee.phone,
+      RFID: employee.RFID,
+    });
+  }
+
+  updateEmployee(): void {
+    if (this.editEmployeeForm.invalid) {
+      this.errorMessage = 'Por favor, corrija los errores en el formulario.';
+      return;
+    }
+
+    const updatedData = this.editEmployeeForm.value;
+
+    if (this.selectedEmployeeId) {
+      this.loading = true;
+      this.workersService.updateEmployee(this.selectedEmployeeId, updatedData).subscribe(
+        response => {
+          console.log('Empleado actualizado:', response);
+          this.successMessage = 'El empleado ha sido actualizado correctamente.';
+          this.loading = false;
+          this.editFormVisible = false; // Oculta el formulario de edición
+          this.selectedEmployeeId = null; // Limpia el ID seleccionado
+          this.getEmployees(); // Actualiza la lista de empleados
+
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
+        },
+        error => {
+          console.error('Error actualizando empleado:', error);
+          this.errorMessage = 'Error actualizando empleado. Por favor, inténtelo de nuevo.';
+          this.loading = false;
+        }
+      );
+    }
+  }
+
+  cancelEdit(): void {
+    this.editFormVisible = false; // Oculta el formulario de edición
+    this.selectedEmployeeId = null; // Limpia el ID seleccionado
+    this.errorMessage = '';
   }
 }
