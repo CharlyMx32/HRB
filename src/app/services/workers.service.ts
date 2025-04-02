@@ -7,6 +7,8 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class WorkersService {
+  successMessage: string = '';
+  errorMessage: string = '';
 
   private apiUrl = environment.apiUrl;
 
@@ -25,6 +27,15 @@ export class WorkersService {
       return this.http.put<any>(`${this.apiUrl}/worker/${id}`, data).pipe(
         catchError((error: HttpErrorResponse) => {
           console.error('Error en la solicitud PUT:', error);
+          return throwError(() => error);
+        })
+      );
+    }
+
+    desactivateUser(userId: string): Observable<any> {
+      return this.http.post(`${this.apiUrl}/user/${userId}/desactivate`, {}).pipe(
+        catchError((error: HttpErrorResponse) => {
+          console.error('Error desactivando la cuenta:', error);
           return throwError(() => error);
         })
       );
