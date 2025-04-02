@@ -3,29 +3,7 @@
     <iframe [src]="sanitizarURL(factura.URL)" class="pdf-preview"></iframe>
     <div class="card-body">
       <p><strong>Status:</strong> {{ factura.status }}</p>
-      <a [href]="factura.URL" target="_blank">
-        <button class="btn btn-primary btn-custom">Ver Factura</button>
-      </a>
-      <button class="btn btn-success btn-custom" (click)="iniciarOrden(factura)">Iniciar Orden</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal -->
-<div *ngIf="showModal" class="modal-overlay">
-  <div class="modal-content">
-    <h3>Asignar Entrega</h3>
-    <p><strong>Factura ID:</strong> {{ selectedFactura?.id }}</p>
-
-    <label>Asignar Trabajador:</label>
-    <input type="text" [(ngModel)]="workerId" placeholder="Ingrese ID del trabajador" class="form-control"/>
-
-    <label>Transportista:</label>
-    <input type="text" [(ngModel)]="carrier" placeholder="Ingrese nombre del transportista" class="form-control"/>
-
-    <div class="modal-buttons">
-      <button class="btn btn-primary" (click)="confirmarEntrega()">Confirmar</button>
-      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+      <button class="btn btn-primary btn-custom" (click)="verFactura(factura.URL)">Ver Factura</button>
     </div>
   </div>
 </div>
