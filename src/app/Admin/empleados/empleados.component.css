@@ -170,12 +170,6 @@ input {
     transition: border 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
-input:focus {
-    border-color: #4caf50;
-    box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
-    outline: none;
-}
-
 button {
     padding: 10px 20px; /* Reducimos el padding */
     border-radius: 6px;

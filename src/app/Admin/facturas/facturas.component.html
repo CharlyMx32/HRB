@@ -1,8 +1,6 @@
 <div class="facturas-container">
-  <div class="card" *ngFor="let factura of facturas">
-    <a [href]="factura.URL" target="_blank">
-      <iframe [src]="sanitizarURL(factura.URL)" class="pdf-preview"></iframe>
-    </a>
+  <div class="card" *ngFor="let factura of facturas$ | async; trackBy: trackByFn">
+    <iframe [src]="sanitizarURL(factura.URL)" class="pdf-preview"></iframe>
     <div class="card-body">
       <p><strong>Status:</strong> {{ factura.status }}</p>
       <a [href]="factura.URL" target="_blank">

@@ -8,6 +8,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 
 @Component({
   selector: 'app-empleados',
+  standalone: true,
   imports: [CommonModule, FormsModule, ReactiveFormsModule],
   templateUrl: './empleados.component.html',
   styleUrls: ['./empleados.component.css']
@@ -15,9 +16,13 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 export class EmpleadosComponent implements OnInit {
   employees: any[] = [];
   showForm: boolean = false;
+  editFormVisible: boolean = false; // Controla la visibilidad del formulario de edición
+  selectedEmployeeId: string | null = null; // Almacena el ID del empleado seleccionado para edición
   employeeForm: FormGroup;
+  editEmployeeForm: FormGroup; // Formulario para editar empleados
   errorMessage: string = '';
   successMessage: string = '';
+  loading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,17 +30,26 @@ export class EmpleadosComponent implements OnInit {
     private workersService: WorkersService,
     private router: Router
   ) {
+    // Formulario para agregar empleados
     this.employeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(255)]],
       last_name: ['', [Validators.required, Validators.maxLength(255)]],
       birth_date: ['', [Validators.required, this.ageValidator]],
-      phone: ['', [Validators.maxLength(20)]],
+      phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       email: ['', [Validators.required, Validators.email]],
-      RFID: ['', [Validators.maxLength(255)]],
-      RFC: ['', [Validators.maxLength(255)]],
-      NSS: ['', [Validators.maxLength(255)]]
+      RFID: ['', [Validators.required, Validators.maxLength(255)]],
+      RFC: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(13)]],
+      NSS: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
     });
-  }    
+
+    // Formulario para editar empleados
+    this.editEmployeeForm = this.fb.group({
+      name: ['', [Validators.required, Validators.maxLength(255)]],
+      last_name: ['', [Validators.required, Validators.maxLength(255)]],
+      phone: ['', [Validators.required, Validators.maxLength(20)]],
+      RFID: ['', [Validators.required, Validators.maxLength(50)]],
+    });
+  }
 
   ngOnInit(): void {
     this.getEmployees();
@@ -43,6 +57,19 @@ export class EmpleadosComponent implements OnInit {
 
   toggleForm(): void {
     this.showForm = !this.showForm;
+    if (!this.showForm) {
+      this.resetForm();
+    }
+  }
+
+  cancelForm(): void {
+    this.showForm = false;
+    this.resetForm();
+    this.errorMessage = '';
+  }
+
+  resetForm(): void {
+    this.employeeForm.reset();
   }
 
   getEmployees(): void {
@@ -77,39 +104,83 @@ export class EmpleadosComponent implements OnInit {
       return;
     }
 
-    const employeeData = {
-      email: this.employeeForm.get('email')?.value,
-      name: this.employeeForm.get('name')?.value,
-      last_name: this.employeeForm.get('last_name')?.value,
-      birth_date: this.employeeForm.get('birth_date')?.value,
-      phone: this.employeeForm.get('phone')?.value,
-      RFID: this.employeeForm.get('RFID')?.value,
-      RFC: this.employeeForm.get('RFC')?.value,
-      NSS: this.employeeForm.get('NSS')?.value,
-    };
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    const employeeData = this.employeeForm.value;
 
     this.authService.registerWorker(employeeData).subscribe(
       response => {
         console.log('Empleado registrado:', response);
         this.successMessage = 'Registro exitoso. El empleado ha sido registrado correctamente.';
-        this.errorMessage = '';
+        this.loading = false;
 
-        // Limpiar el formulario después del registro
-        this.employeeForm.reset();
+        this.resetForm();
+        this.showForm = false;
+        this.getEmployees();
 
-        // Ocultar el formulario después del registro
-        this.toggleForm();
-
-        // Recargar la página después de 2 segundos
         setTimeout(() => {
-          location.reload();
-        }, 2000);
+          this.successMessage = '';
+        }, 5000);
       },
       error => {
         console.error('Error registrando empleado:', error);
         this.errorMessage = 'Error registrando empleado. Por favor, inténtelo de nuevo.';
-        this.successMessage = '';
+        this.loading = false;
       }
     );
+  }
+
+  // Métodos para editar empleados
+  openEditForm(employee: any): void {
+    this.selectedEmployeeId = employee.id; // Guarda el ID del empleado seleccionado
+    this.editFormVisible = true; // Muestra el formulario de edición
+
+    // Precarga los datos del empleado en el formulario
+    this.editEmployeeForm.patchValue({
+      name: employee.name,
+      last_name: employee.last_name,
+      phone: employee.phone,
+      RFID: employee.RFID,
+    });
+  }
+
+  updateEmployee(): void {
+    if (this.editEmployeeForm.invalid) {
+      this.errorMessage = 'Por favor, corrija los errores en el formulario.';
+      return;
+    }
+
+    const updatedData = this.editEmployeeForm.value;
+
+    if (this.selectedEmployeeId) {
+      this.loading = true;
+      this.workersService.updateEmployee(this.selectedEmployeeId, updatedData).subscribe(
+        response => {
+          console.log('Empleado actualizado:', response);
+          this.successMessage = 'El empleado ha sido actualizado correctamente.';
+          this.loading = false;
+          this.editFormVisible = false; // Oculta el formulario de edición
+          this.selectedEmployeeId = null; // Limpia el ID seleccionado
+          this.getEmployees(); // Actualiza la lista de empleados
+
+          setTimeout(() => {
+            this.successMessage = '';
+          }, 5000);
+        },
+        error => {
+          console.error('Error actualizando empleado:', error);
+          this.errorMessage = 'Error actualizando empleado. Por favor, inténtelo de nuevo.';
+          this.loading = false;
+        }
+      );
+    }
+  }
+
+  cancelEdit(): void {
+    this.editFormVisible = false; // Oculta el formulario de edición
+    this.selectedEmployeeId = null; // Limpia el ID seleccionado
+    this.errorMessage = '';
   }
 }
