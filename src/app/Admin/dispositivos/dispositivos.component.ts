@@ -23,7 +23,7 @@ export class DispositivosComponent {
   devices = signal<Device[]>([
     {
       id: 'DEV-001',
-      name: 'SIKRASEXO',
+      name: 'SIKRA',
       type: 'Lector RFID',
       readTime: 500,
       responseTime: 200,

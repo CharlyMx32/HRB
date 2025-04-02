@@ -15,14 +15,22 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 })
 export class EmpleadosComponent implements OnInit {
   employees: any[] = [];
-  showForm: boolean = false;
-  editFormVisible: boolean = false; // Controla la visibilidad del formulario de edición
-  selectedEmployeeId: string | null = null; // Almacena el ID del empleado seleccionado para edición
+  
+  // Modal states
+  showAddModal: boolean = false;
+  showEditModal: boolean = false;
+  
+  selectedEmployeeId: string | null = null;
+  
   employeeForm: FormGroup;
-  editEmployeeForm: FormGroup; // Formulario para editar empleados
+  editEmployeeForm: FormGroup;
+  
   errorMessage: string = '';
   successMessage: string = '';
+  editErrorMessage: string = '';
+  
   loading: boolean = false;
+  editLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -30,24 +38,31 @@ export class EmpleadosComponent implements OnInit {
     private workersService: WorkersService,
     private router: Router
   ) {
-    // Formulario para agregar empleados
+
     this.employeeForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(255)]],
-      last_name: ['', [Validators.required, Validators.maxLength(255)]],
+      name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+      last_name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       birth_date: ['', [Validators.required, this.ageValidator]],
-      phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+      phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]+$')]],
       email: ['', [Validators.required, Validators.email]],
       RFID: ['', [Validators.required, Validators.maxLength(255)]],
       RFC: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(13)]],
-      NSS: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
+      NSS: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11), Validators.pattern('^[0-9]+$')]],
     });
-
-    // Formulario para editar empleados
+  
     this.editEmployeeForm = this.fb.group({
-      name: ['', [Validators.required, Validators.maxLength(255)]],
-      last_name: ['', [Validators.required, Validators.maxLength(255)]],
-      phone: ['', [Validators.required, Validators.maxLength(20)]],
-      RFID: ['', [Validators.required, Validators.maxLength(50)]],
+      name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+      last_name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
+      phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+      RFID: ['', [Validators.required, Validators.maxLength(255)]],
+    });
+  
+    this.employeeForm.statusChanges.subscribe(() => {
+      this.errorMessage = ''; 
+    });
+  
+    this.editEmployeeForm.statusChanges.subscribe(() => {
+      this.editErrorMessage = ''; 
     });
   }
 
@@ -55,89 +70,21 @@ export class EmpleadosComponent implements OnInit {
     this.getEmployees();
   }
 
-  toggleForm(): void {
-    this.showForm = !this.showForm;
-    if (!this.showForm) {
-      this.resetForm();
-    }
-  }
-
-  cancelForm(): void {
-    this.showForm = false;
-    this.resetForm();
+  openAddModal(): void {
+    this.showAddModal = true;
     this.errorMessage = '';
-  }
-
-  resetForm(): void {
     this.employeeForm.reset();
   }
 
-  getEmployees(): void {
-    console.log('Fetching employees...');
-    this.workersService.getEmployees().subscribe(
-      data => {
-        console.log('Data received from API:', data);
-        this.employees = data;
-        console.log('Employees:', this.employees);
-      },
-      error => {
-        console.error('Error fetching employees:', error);
-        this.errorMessage = 'Error fetching employees. Please try again later.';
-      }
-    );
+  closeAddModal(): void {
+    this.showAddModal = false;
   }
 
-  ageValidator(control: any): { [key: string]: boolean } | null {
-    const birthDate = new Date(control.value);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age >= 18 ? null : { 'ageInvalid': true };
-  }
+  openEditModal(employee: any): void {
+    this.selectedEmployeeId = employee.id;
+    this.showEditModal = true;
+    this.editErrorMessage = '';
 
-  register(): void {
-    if (this.employeeForm.invalid) {
-      this.errorMessage = 'Por favor, corrija los errores en el formulario.';
-      return;
-    }
-
-    this.loading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
-
-    const employeeData = this.employeeForm.value;
-
-    this.authService.registerWorker(employeeData).subscribe(
-      response => {
-        console.log('Empleado registrado:', response);
-        this.successMessage = 'Registro exitoso. El empleado ha sido registrado correctamente.';
-        this.loading = false;
-
-        this.resetForm();
-        this.showForm = false;
-        this.getEmployees();
-
-        setTimeout(() => {
-          this.successMessage = '';
-        }, 5000);
-      },
-      error => {
-        console.error('Error registrando empleado:', error);
-        this.errorMessage = 'Error registrando empleado. Por favor, inténtelo de nuevo.';
-        this.loading = false;
-      }
-    );
-  }
-
-  // Métodos para editar empleados
-  openEditForm(employee: any): void {
-    this.selectedEmployeeId = employee.id; // Guarda el ID del empleado seleccionado
-    this.editFormVisible = true; // Muestra el formulario de edición
-
-    // Precarga los datos del empleado en el formulario
     this.editEmployeeForm.patchValue({
       name: employee.name,
       last_name: employee.last_name,
@@ -146,41 +93,102 @@ export class EmpleadosComponent implements OnInit {
     });
   }
 
-  updateEmployee(): void {
-    if (this.editEmployeeForm.invalid) {
-      this.errorMessage = 'Por favor, corrija los errores en el formulario.';
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.selectedEmployeeId = null;
+  }
+
+  // Employee operations
+  getEmployees(): void {
+    this.workersService.getEmployees().subscribe({
+      next: (data) => this.employees = data,
+      error: (error) => {
+        console.error('Error fetching employees:', error);
+        this.errorMessage = 'Error al cargar los empleados';
+      }
+    });
+  }
+
+  register(): void {
+    if (this.employeeForm.invalid) {
+      this.errorMessage = 'Por favor complete todos los campos correctamente';
       return;
     }
 
-    const updatedData = this.editEmployeeForm.value;
+    this.loading = true;
+    this.errorMessage = '';
 
-    if (this.selectedEmployeeId) {
-      this.loading = true;
-      this.workersService.updateEmployee(this.selectedEmployeeId, updatedData).subscribe(
-        response => {
-          console.log('Empleado actualizado:', response);
-          this.successMessage = 'El empleado ha sido actualizado correctamente.';
-          this.loading = false;
-          this.editFormVisible = false; // Oculta el formulario de edición
-          this.selectedEmployeeId = null; // Limpia el ID seleccionado
+    this.authService.registerWorker(this.employeeForm.value).subscribe({
+      next: () => {
+        this.successMessage = 'Empleado registrado correctamente';
+        this.loading = false;
+        this.showAddModal = false;
+        this.getEmployees();
+        setTimeout(() => this.successMessage = '', 5000);
+      },
+      error: (error) => {
+        this.errorMessage = error.error?.message || 'Error al registrar empleado';
+        this.loading = false;
+      }
+    });
+  }
+
+  updateEmployee(): void {
+    if (this.editEmployeeForm.invalid || !this.selectedEmployeeId) {
+      this.editErrorMessage = 'Por favor complete todos los campos';
+      return;
+    }
+
+    this.editLoading = true;
+    this.editErrorMessage = '';
+
+    this.workersService.updateEmployee(
+      this.selectedEmployeeId, 
+      this.editEmployeeForm.value
+    ).subscribe({
+      next: () => {
+        this.successMessage = 'Empleado actualizado correctamente';
+        this.editLoading = false;
+        this.showEditModal = false;
+        this.getEmployees();
+        setTimeout(() => this.successMessage = '', 5000);
+      },
+      error: (error) => {
+        this.editErrorMessage = error.error?.message || 'Error al actualizar empleado';
+        this.editLoading = false;
+      }
+    });
+  }
+
+  // Validator
+  ageValidator(control: any): { [key: string]: boolean } | null {
+    const birthDate = new Date(control.value);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    
+    return age >= 18 ? null : { 'ageInvalid': true };
+  }
+
+  desactivateUser(userId: string): void {
+    if (confirm('¿Estás seguro de que deseas desactivar esta cuenta?')) {
+      this.workersService.desactivateUser(userId).subscribe({
+        next: () => {
+          this.successMessage = 'La cuenta ha sido desactivada exitosamente.';
           this.getEmployees(); // Actualiza la lista de empleados
-
-          setTimeout(() => {
-            this.successMessage = '';
-          }, 5000);
+          setTimeout(() => (this.successMessage = ''), 5000);
         },
-        error => {
-          console.error('Error actualizando empleado:', error);
-          this.errorMessage = 'Error actualizando empleado. Por favor, inténtelo de nuevo.';
-          this.loading = false;
+        error: (error) => {
+          console.error('Error desactivando la cuenta:', error);
+          this.errorMessage = 'Error al desactivar la cuenta. Por favor, inténtelo de nuevo.';
+          setTimeout(() => (this.errorMessage = ''), 5000);
         }
-      );
+      });
     }
   }
-
-  cancelEdit(): void {
-    this.editFormVisible = false; // Oculta el formulario de edición
-    this.selectedEmployeeId = null; // Limpia el ID seleccionado
-    this.errorMessage = '';
-  }
+  
 }

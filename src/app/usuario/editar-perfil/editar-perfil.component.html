@@ -22,37 +22,52 @@
     <!-- Contraseña Actual -->
     <div class="space-y-2">
       <label for="current_password" class="block text-sm font-medium text-[#EAEAEA]">Contraseña Actual</label>
-      <input type="password" id="current_password" formControlName="current_password" placeholder="Contraseña Actual"
-        class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+      <div class="relative">
+        <input [type]="showCurrentPassword ? 'text' : 'password'" id="current_password" formControlName="current_password"
+          placeholder="Contraseña Actual"
+          class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+        <button type="button" (click)="toggleCurrentPasswordVisibility()"
+          class="absolute inset-y-0 right-3 text-[#7d7d7d] hover:text-[#EAEAEA]">
+          <i [class]="showCurrentPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+        </button>
+      </div>
       <div *ngIf="updatePasswordForm.get('current_password')?.invalid && updatePasswordForm.get('current_password')?.touched"
         class="text-red-400 text-xs">
         <div *ngIf="updatePasswordForm.get('current_password')?.errors?.['required']">La contraseña actual es requerida.</div>
-      </div>
-      <div *ngIf="formErrors.current_password" class="text-red-400 text-xs">
-        <div *ngFor="let error of formErrors.current_password">{{ error }}</div>
       </div>
     </div>
 
     <!-- Nueva Contraseña -->
     <div class="space-y-2">
       <label for="password" class="block text-sm font-medium text-[#EAEAEA]">Nueva Contraseña</label>
-      <input type="password" id="password" formControlName="password" placeholder="Nueva Contraseña (mínimo 6 caracteres)"
-        class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+      <div class="relative">
+        <input [type]="showNewPassword ? 'text' : 'password'" id="password" formControlName="password"
+          placeholder="Nueva Contraseña (mínimo 6 caracteres)"
+          class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+        <button type="button" (click)="toggleNewPasswordVisibility()"
+          class="absolute inset-y-0 right-3 text-[#7d7d7d] hover:text-[#EAEAEA]">
+          <i [class]="showNewPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+        </button>
+      </div>
       <div *ngIf="updatePasswordForm.get('password')?.invalid && updatePasswordForm.get('password')?.touched"
         class="text-red-400 text-xs">
         <div *ngIf="updatePasswordForm.get('password')?.errors?.['required']">La nueva contraseña es requerida.</div>
         <div *ngIf="updatePasswordForm.get('password')?.errors?.['minlength']">La nueva contraseña debe tener al menos 6 caracteres.</div>
-      </div>
-      <div *ngIf="formErrors.password" class="text-red-400 text-xs">
-        <div *ngFor="let error of formErrors.password">{{ error }}</div>
       </div>
     </div>
 
     <!-- Confirmar Nueva Contraseña -->
     <div class="space-y-2">
       <label for="password_confirmation" class="block text-sm font-medium text-[#EAEAEA]">Confirmar Nueva Contraseña</label>
-      <input type="password" id="password_confirmation" formControlName="password_confirmation" placeholder="Confirmar Nueva Contraseña"
-        class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+      <div class="relative">
+        <input [type]="showPasswordConfirmation ? 'text' : 'password'" id="password_confirmation"
+          formControlName="password_confirmation" placeholder="Confirmar Nueva Contraseña"
+          class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
+        <button type="button" (click)="togglePasswordConfirmationVisibility()"
+          class="absolute inset-y-0 right-3 text-[#7d7d7d] hover:text-[#EAEAEA]">
+          <i [class]="showPasswordConfirmation ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+        </button>
+      </div>
       <div *ngIf="updatePasswordForm.get('password_confirmation')?.invalid && updatePasswordForm.get('password_confirmation')?.touched"
         class="text-red-400 text-xs">
         <div *ngIf="updatePasswordForm.get('password_confirmation')?.errors?.['required']">La confirmación de la nueva contraseña es requerida.</div>

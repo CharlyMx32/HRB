@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
 
-  apiUrl: 'https://backend.smartgames.tech/api' 
+  apiUrl: 'http://3.145.47.172/api' 
 
 };

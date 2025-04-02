@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://backend.smartgames.tech/api' 
+  apiUrl: 'http://192.168.253.50:8000/api' 
 };
