@@ -1,0 +1,41 @@
+<div class="calendar-container">
+  <mat-card class="calendar-full">
+    <mat-card-header>
+      <div class="header">
+        <button mat-icon-button (click)="calendarioService.prevMonth()" class="nav-button">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+        <h2>{{ (calendarioService.currentDate$ | async) | date:'MMMM y' }}</h2>
+        <button mat-icon-button (click)="calendarioService.nextMonth()" class="nav-button">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+        <button mat-icon-button (click)="closeModal()" class="close-button">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </mat-card-header>
+  
+    <mat-card-content>
+      <div class="calendar-grid">
+        <div class="day-header" *ngFor="let day of daysOfWeek">
+          {{ day }}
+        </div>
+        
+        <ng-container *ngFor="let week of calendarioService.weeks$ | async">
+          <div 
+            *ngFor="let day of week" 
+            class="day"
+            [class.current-month]="day.getMonth() === (calendarioService.currentDate$ | async)?.getMonth()"
+            [class.has-events]="calendarioService.hasEvents(day)"
+            [class.today]="calendarioService.isToday(day)">
+            
+            <div class="day-number">{{ day.getDate() }}</div>
+            <div class="events-indicator" *ngIf="calendarioService.hasEvents(day)">
+              <i class="fas fa-circle"></i>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

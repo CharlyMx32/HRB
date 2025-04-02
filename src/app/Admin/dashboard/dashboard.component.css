@@ -1,9 +1,10 @@
-/* Elimina todos los estilos anteriores y deja solo estos */
+/* Estilos base */
 .grid > div {
     display: flex;
     flex-direction: column;
 }
 
+/* Scrollbar personalizada */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -14,13 +15,89 @@
     border-radius: 3px;
 }
 
+/* Calendario compacto */
+.compact-calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 2px;
+    flex: 1;
+}
+
+.compact-day-header {
+    text-align: center;
+    font-size: 0.6rem;
+    padding: 4px 0;
+    color: #7d7d7d;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+.compact-day-cell {
+    aspect-ratio: 1;
+    position: relative;
+    background: #1a1a1d;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.compact-day-cell:hover {
+    background: #252529;
+}
+
+.compact-day-cell.current-month {
+    background: #1e1e22;
+}
+
+.compact-day-cell.has-events::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    width: 4px;
+    height: 4px;
+    background: #00f2ff;
+    border-radius: 50%;
+}
+
+.compact-day-number {
+    font-size: 0.65rem;
+    color: #EAEAEA;
+    font-weight: 400;
+}
+
+.compact-day-cell.current-month .compact-day-number {
+    font-weight: 500;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
     .grid {
         grid-template-columns: 1fr !important;
         padding: 1rem;
+        gap: 1rem;
+    }
+
+    .compact-day-header {
+        font-size: 0.55rem;
+        padding: 2px 0;
     }
     
-    .min-h-600px {
-        min-height: 400px;
+    .compact-day-number {
+        font-size: 0.6rem;
     }
+}
+
+/* Estilos para el modal del calendario completo */
+.full-calendar-modal .mat-dialog-container {
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+}
+
+.full-calendar-modal {
+    background: #232328;
+    border-radius: 16px;
 }

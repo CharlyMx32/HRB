@@ -1,41 +1,18 @@
-<mat-card class="calendar-container">
-    <mat-card-header>
-      <div class="header">
-        <button mat-icon-button (click)="prevMonth()">
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-        <h2>{{ currentDate | date:'MMMM y' }}</h2>
-        <button mat-icon-button (click)="nextMonth()">
-          <mat-icon>chevron_right</mat-icon>
-        </button>
-      </div>
-    </mat-card-header>
+<mat-card class="calendar-mini">
+  <mat-card-header>
+    <div class="header">
+      <h2>Vista Rápida del Calendario</h2>
+      <button mat-raised-button color="primary" (click)="openFullCalendar()">
+        Ver Calendario Completo
+      </button>
+    </div>
+  </mat-card-header>
   
-    <mat-card-content>
-      <div class="calendar-grid">
-        <div class="day-header" *ngFor="let day of ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']">
-          {{ day }}
-        </div>
-        
-        <ng-container *ngFor="let week of weeks">
-          <div 
-            *ngFor="let day of week" 
-            class="day"
-            [class.current-month]="day.getMonth() === currentDate.getMonth()"
-            [class.has-events]="hasEvents(day)"
-            (click)="addEvent(day)">
-            
-            <div class="day-number">{{ day.getDate() }}</div>
-            
-            <div class="events">
-              <div 
-                class="event-dot" 
-                *ngFor="let event of getEventsForDay(day)"
-                [style.background-color]="event.color">
-              </div>
-            </div>
-          </div>
-        </ng-container>
+  <mat-card-content>
+    <div class="days-of-week">
+      <div class="day-header" *ngFor="let day of daysOfWeek">
+        {{ day }}
       </div>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </mat-card-content>
+</mat-card>

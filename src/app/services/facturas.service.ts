@@ -8,7 +8,8 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class FacturasService {
-  private apiUrl = 'http://127.0.0.1:8000/api/invoices';
+  private apiUrl = environment.apiUrl;
+
   private pusherKey = '06e2ac4b518dea780c81'; 
   private pusherCluster = 'us2';
 

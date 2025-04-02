@@ -39,8 +39,17 @@ export class ProductosComponent implements OnInit {
 
   toggleForm(): void {
     this.showForm = !this.showForm;
+  
+    // Limpiar los mensajes de error y éxito al abrir o cerrar el formulario
+    this.errorMessage = '';
+    this.successMessage = '';
+  
+    // Opcional: Reiniciar el formulario al abrir el formulario
+    if (this.showForm) {
+      this.productForm.reset();
+    }
   }
-
+  
   getProducts(): void {
     console.log('Fetching products...');
     this.productsService.getProducts().subscribe(

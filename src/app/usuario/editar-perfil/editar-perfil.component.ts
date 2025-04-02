@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-editar-perfil',
-  imports: [CommonModule, ReactiveFormsModule], 
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './editar-perfil.component.html',
   styleUrls: ['./editar-perfil.component.css']
 })
@@ -15,27 +15,35 @@ export class EditarPerfilComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
   formErrors: any = {};
-  isLoading: boolean = false; // Nueva propiedad para controlar el spinner
+  isLoading: boolean = false;
+
+  // Variables para controlar la visibilidad de las contraseñas
+  showCurrentPassword: boolean = false;
+  showNewPassword: boolean = false;
+  showPasswordConfirmation: boolean = false;
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.updatePasswordForm = this.fb.group({
       current_password: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirmation: ['', [Validators.required, Validators.minLength(6)]]
-    }, { validator: this.passwordMatchValidator }); // Agregamos validador personalizado
+    }, { validator: this.passwordMatchValidator });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.updatePasswordForm.statusChanges.subscribe(() => {
+      this.errorMessage = '';
+      this.formErrors = {};
+    });
+  }
 
-  // Validador personalizado para confirmar que las contraseñas coincidan
   passwordMatchValidator(form: FormGroup) {
-    return form.get('password')?.value === form.get('password_confirmation')?.value 
-      ? null 
+    return form.get('password')?.value === form.get('password_confirmation')?.value
+      ? null
       : { mismatch: true };
   }
 
   updatePassword(): void {
-    // Marcar todos los campos como touched para mostrar errores
     this.updatePasswordForm.markAllAsTouched();
 
     if (this.updatePasswordForm.invalid) {
@@ -44,10 +52,15 @@ export class EditarPerfilComponent implements OnInit {
       } else {
         this.errorMessage = 'Por favor, corrija los errores en el formulario.';
       }
+
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 5000);
+
       return;
     }
 
-    this.isLoading = true; // Activar spinner
+    this.isLoading = true;
     this.errorMessage = '';
     this.successMessage = '';
 
@@ -59,22 +72,35 @@ export class EditarPerfilComponent implements OnInit {
 
     this.authService.updatePassword(passwordData).subscribe(
       response => {
-        console.log('Contraseña actualizada:', response);
         this.successMessage = 'Contraseña actualizada exitosamente.';
-        this.formErrors = {};
         this.updatePasswordForm.reset();
-        this.isLoading = false; // Desactivar spinner
+        this.isLoading = false;
+
+        setTimeout(() => {
+          this.successMessage = '';
+        }, 5000);
       },
       error => {
-        console.error('Error actualizando contraseña:', error);
-        if (error.error && error.error.errors) {
-          this.formErrors = error.error.errors;
-        } else {
-          this.errorMessage = 'Error actualizando contraseña. Por favor, inténtelo de nuevo.';
-        }
-        this.successMessage = '';
-        this.isLoading = false; // Desactivar spinner
+        this.errorMessage = 'Error actualizando contraseña. Por favor, inténtelo de nuevo.';
+        this.isLoading = false;
+
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 5000);
       }
     );
+  }
+
+  // Métodos para alternar la visibilidad de cada campo
+  toggleCurrentPasswordVisibility(): void {
+    this.showCurrentPassword = !this.showCurrentPassword;
+  }
+
+  toggleNewPasswordVisibility(): void {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  togglePasswordConfirmationVisibility(): void {
+    this.showPasswordConfirmation = !this.showPasswordConfirmation;
   }
 }
