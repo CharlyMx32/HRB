@@ -7,8 +7,16 @@ import { environment } from '../../environments/environment';
 @Injectable({
     providedIn: 'root'
 })
-export class AuthService {
+export class SensoresService {
     private apiUrl = environment.apiUrl;
     constructor(private http: HttpClient) {}
+
+    getLastLightStatus(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/light-sensor`);
+    }
+
+    getLastTHSensorData(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/temperature-humidity-sensor`);
+    }
 
 }
