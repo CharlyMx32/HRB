@@ -61,25 +61,23 @@ export class FacturasComponent implements OnInit {
 
   // Método para asignar la factura al empleado seleccionado
   asignarFactura(): void {
-    if (this.selectedEmployeeId) {
-      const payload = { worker_id: this.selectedEmployeeId }; // Cambiar 'workerId' por 'worker_id' para coincidir con el backend
-      console.log('Payload enviado:', payload); // Debugging
-      this.deliveriesService.assignInvoice(this.facturaSeleccionadaId, payload).subscribe({
-        next: (response) => {
-          console.log('Factura asignada exitosamente:', response);
-          this.cerrarModal(); // Cierra el modal tras éxito
-          setTimeout(() => {
-            this.router.navigate(['/admin/ordenes']); // Redirige después de 2 segundos
-          }, 2000);
-        },
-        error: (error) => {
-          console.error('Error al asignar factura:', error);
-          alert('Hubo un error al asignar la factura. Por favor, verifica los datos.');
-        }
-      });
-    } else {
+    if (!this.selectedEmployeeId) {
       alert('Por favor, seleccione un empleado válido.');
+      return;
     }
+
+    const payload = { worker_id: this.selectedEmployeeId };
+    this.deliveriesService.assignInvoice(this.facturaSeleccionadaId, payload).subscribe({
+      next: () => {
+        console.log('Factura asignada exitosamente');
+        this.cerrarModal();
+        this.router.navigate(['/admin/ordenes'], { replaceUrl: true });
+      },
+      error: (error) => {
+        console.error('Error al asignar factura:', error);
+        alert('Hubo un error al asignar la factura. Por favor, verifica los datos.');
+      }
+    });
   }
 
   // Otros métodos del componente
