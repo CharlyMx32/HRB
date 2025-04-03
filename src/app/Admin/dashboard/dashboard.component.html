@@ -107,19 +107,18 @@
             class="bg-[#1a1a1d]/80 p-2 rounded-lg mb-2 flex items-center justify-between hover:bg-[#252529] transition-colors border border-[#2a2a2e]">
             <div class="flex items-center">
                 <div class="relative mr-2">
-                    <i class="fas fa-lightbulb text-base" [class.text-yellow-400]="luzEncendida"
-                        [class.text-[#7d7d7d]]="!luzEncendida"></i>
-                    <div *ngIf="luzEncendida" class="absolute inset-0 rounded-full bg-yellow-400/20 animate-pulse">
-                    </div>
+                  <i class="fas fa-lightbulb text-base" [class.text-yellow-400]="luzEncendida"
+                     [class.text-[#7d7d7d]]="!luzEncendida"></i>
+                  <div *ngIf="luzEncendida" class="absolute inset-0 rounded-full bg-yellow-400/20 animate-pulse"></div>
+                  <div *ngIf="checkLightStatus" class="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
                 </div>
                 <span class="text-xs">Luz</span>
-            </div>
+              </div>
             <span class="text-xs" [class.text-green-400]="luzEncendida" [class.text-red-400]="!luzEncendida">
                 {{luzEncendida ? 'Encendida' : 'Apagada'}}
             </span>
         </div>
 
-        <!-- Puerta -->
         <div
             class="bg-[#1a1a1d]/80 p-2 rounded-lg flex items-center justify-between hover:bg-[#252529] transition-colors border border-[#2a2a2e]">
             <div class="flex items-center">
@@ -137,30 +136,66 @@
         </div>
     </div>
 
-    <!-- Ambiente -->
-    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
-        <h2 class="text-sm font-semibold text-[#EAEAEA] mb-2">Ambiente</h2>
-        <div class="flex-1 flex flex-col justify-center bg-[#1a1a1d]/80 rounded-lg p-3 border border-[#2a2a2e]">
-            <div class="flex justify-between items-center mb-2">
-                <div class="flex items-center">
-                    <i class="fas fa-temperature-low text-[#EAEAEA] mr-2"></i>
-                    <span class="text-xs">Temperatura</span>
-                </div>
-                <span class="text-sm font-mono">{{temperatura}}°C</span>
+   <!-- Ambiente -->
+<div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
+    <div class="flex justify-between items-center mb-2">
+        <h2 class="text-sm font-semibold text-[#EAEAEA]">Ambiente</h2>
+        <div *ngIf="isCheckingTHStatus" class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+    </div>
+    <div class="flex-1 flex flex-col justify-center bg-[#1a1a1d]/80 rounded-lg p-3 border border-[#2a2a2e]">
+        <!-- Temperatura -->
+        <div class="flex justify-between items-center mb-2">
+            <div class="flex items-center">
+                <i class="fas fa-temperature-low mr-2" 
+                   [class.text-red-400]="temperatura > 30" 
+                   [class.text-yellow-400]="temperatura > 25 && temperatura <= 30"
+                   [class.text-green-400]="temperatura <= 25"></i>
+                <span class="text-xs">Temperatura</span>
             </div>
-            <div class="flex justify-between items-center mb-3">
-                <div class="flex items-center">
-                    <i class="fas fa-tint text-[#EAEAEA] mr-2"></i>
-                    <span class="text-xs">Humedad</span>
-                </div>
-                <span class="text-sm font-mono">{{humedad}}%</span>
+            <span class="text-sm font-mono" 
+                  [class.text-red-400]="temperatura > 30" 
+                  [class.text-yellow-400]="temperatura > 25 && temperatura <= 30"
+                  [class.text-green-400]="temperatura <= 25">
+                {{temperatura}}°C
+                <span *ngIf="thConnectionError" class="text-red-500 text-xs ml-1">!</span>
+            </span>
+        </div>
+        
+        <!-- Humedad -->
+        <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center">
+                <i class="fas fa-tint mr-2" 
+                   [class.text-blue-400]="humedad < 30 || humedad > 70" 
+                   [class.text-green-400]="humedad >= 30 && humedad <= 70"></i>
+                <span class="text-xs">Humedad</span>
             </div>
-            <div class="w-full bg-[#121215] h-1.5 rounded-full overflow-hidden">
-                <div class="bg-gradient-to-r from-[#00a2ff] to-[#00f2ff] h-full rounded-full" [style.width.%]="humedad">
-                </div>
+            <span class="text-sm font-mono" 
+                  [class.text-blue-400]="humedad < 30 || humedad > 70" 
+                  [class.text-green-400]="humedad >= 30 && humedad <= 70">
+                {{humedad}}%
+                <span *ngIf="thConnectionError" class="text-red-500 text-xs ml-1">!</span>
+            </span>
+        </div>
+        
+        <!-- Barra de humedad -->
+        <div class="w-full bg-[#121215] h-1.5 rounded-full overflow-hidden mb-1">
+            <div class="h-full rounded-full" 
+                 [class.bg-gradient-to-r]="humedad >= 30 && humedad <= 70"
+                 [class.from-[#00a2ff]]="humedad >= 30 && humedad <= 70"
+                 [class.to-[#00f2ff]]="humedad >= 30 && humedad <= 70"
+                 [class.bg-red-500]="humedad < 30 || humedad > 70"
+                 [style.width.%]="humedad > 100 ? 100 : humedad">
             </div>
         </div>
+        
+        <!-- Indicadores de rango óptimo -->
+        <div class="flex justify-between text-[0.6rem] text-[#7d7d7d]">
+            <span>0%</span>
+            <span class="text-green-400" *ngIf="humedad >= 30 && humedad <= 70">Óptimo</span>
+            <span>100%</span>
+        </div>
     </div>
+</div>
 
     <!-- Últimos Productos Pesados (extendido) -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-2">
