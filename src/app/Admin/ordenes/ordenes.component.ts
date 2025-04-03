@@ -1,8 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { interval, Subscription } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DeliveriesService } from '../../services/deliveries.service';
+import { NotificationService } from '../../services/notification.service'; 
 
 @Component({
   selector: 'app-ordenes',
@@ -11,9 +14,11 @@ import { DeliveriesService } from '../../services/deliveries.service';
   templateUrl: './ordenes.component.html',
   styleUrls: ['./ordenes.component.css']
 })
-export class OrdenesComponent implements OnInit {
+export class OrdenesComponent implements OnInit, OnDestroy {
   // Datos que serán cargados desde el backend
   facturas: any[] = [];
+  private pollingSubscription!: Subscription;
+  private readonly POLLING_INTERVAL = 15000;
 
   // Filtros
   searchFactura: string = '';
@@ -24,12 +29,37 @@ export class OrdenesComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 5;
 
-  constructor(private router: Router, private deliveriesService: DeliveriesService) {}
+  newInvoicesCount: number = 0;
+
+
+  constructor(private router: Router, private deliveriesService: DeliveriesService, private notificationService: NotificationService) {}
 
   ngOnInit() {
-    this.loadFacturas(); // Cargar las facturas al iniciar el componente
+    this.loadFacturas();
+    this.notificationService.resetInvoicesCount();
+    this.startPolling();
   }
 
+  ngOnDestroy(): void {
+    this.stopPolling();
+  }
+
+  private startPolling(): void {
+    this.pollingSubscription = interval(this.POLLING_INTERVAL)
+      .pipe(
+        startWith(0), // Ejecutar inmediatamente al iniciar
+      )
+      .subscribe(() => {
+        this.loadFacturas();
+      });
+  }
+
+  private stopPolling(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+    }
+  }
+  
   // Método para cargar las facturas desde el servicio
   loadFacturas() {
     this.deliveriesService.getDeliveries().subscribe(
@@ -42,6 +72,10 @@ export class OrdenesComponent implements OnInit {
           transportista: delivery.carrier,
           estado: delivery.status,
         }));
+        
+        // Actualizar contador de facturas pendientes
+        const pendientes = this.facturas.filter(f => f.estado === 'Pending').length;
+        this.notificationService.updateInvoicesCount(pendientes);
       },
       (error) => {
         console.error('Error al obtener las entregas', error);
@@ -79,9 +113,18 @@ export class OrdenesComponent implements OnInit {
     this.currentPage = page;
   }
 
+  redirectAndMarkOrders(): void {
+    this.notificationService.resetInvoicesCount();
+    this.redirectToNuevaOrden();
+  }
+
   // Redirigir a nueva orden
   redirectToNuevaOrden() {
     this.router.navigate(['/admin/facturas']);
+  }
+
+  markOrdersAsSeen(): void {
+    this.notificationService.resetInvoicesCount(); // Resetea el contador de facturas
   }
 
   // Estilos para los estados
@@ -114,4 +157,6 @@ export class OrdenesComponent implements OnInit {
   get pageNumbers(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
+
+  
 }

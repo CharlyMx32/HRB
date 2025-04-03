@@ -1,61 +1,88 @@
 <div class="contenedor">
-  <svg class="animated-line" viewBox="0 0 1000 200" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg class="animated-line" viewBox="0 0 1000 200" preserveAspectRatio="none" fill="none"
+    xmlns="http://www.w3.org/2000/svg">
     <defs>
       <!-- Filtro de neón -->
       <filter id="neon-glow" x="-40%" y="-40%" width="180%" height="180%">
-        <feGaussianBlur stdDeviation="3" result="blur"/>
-        <feComposite in="blur" in2="SourceGraphic" operator="over"/>
+        <feGaussianBlur stdDeviation="3" result="blur" />
+        <feComposite in="blur" in2="SourceGraphic" operator="over" />
       </filter>
-      
+
       <!-- Gradiente para línea base -->
       <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#00f2ff" stop-opacity="0.4"/>
-        <stop offset="50%" stop-color="#008cff" stop-opacity="0.6"/>
-        <stop offset="100%" stop-color="#00f2ff" stop-opacity="0.4"/>
+        <stop offset="0%" stop-color="#00f2ff" stop-opacity="0.4" />
+        <stop offset="50%" stop-color="#008cff" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="#00f2ff" stop-opacity="0.4" />
       </linearGradient>
-      
+
       <!-- Gradiente para línea animada -->
       <linearGradient id="energy-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#00f2ff" stop-opacity="0"/>
-        <stop offset="15%" stop-color="#00f2ff" stop-opacity="0.8"/>
-        <stop offset="85%" stop-color="#00f2ff" stop-opacity="0.8"/>
-        <stop offset="100%" stop-color="#00f2ff" stop-opacity="0"/>
+        <stop offset="0%" stop-color="#00f2ff" stop-opacity="0" />
+        <stop offset="15%" stop-color="#00f2ff" stop-opacity="0.8" />
+        <stop offset="85%" stop-color="#00f2ff" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#00f2ff" stop-opacity="0" />
       </linearGradient>
     </defs>
-    
+
     <!-- Línea base estática -->
-    <path class="base-line" d="M 0 150 Q 500 50, 1000 150" 
-          stroke="url(#line-gradient)" 
-          stroke-width="0.6" 
-          fill="transparent"/>
-    
+    <path class="base-line" d="M 0 150 Q 500 50, 1000 150" stroke="url(#line-gradient)" stroke-width="0.6"
+      fill="transparent" />
+
     <!-- Línea animada -->
-    <path class="energy-line" d="M 0 150 Q 500 50, 1000 150" 
-          stroke="url(#energy-gradient)" 
-          stroke-width="2" 
-          fill="transparent"
-          filter="url(#neon-glow)"
-          stroke-linecap="round"
-          stroke-dasharray="200"
-          stroke-dashoffset="0"/>
+    <path class="energy-line" d="M 0 150 Q 500 50, 1000 150" stroke="url(#energy-gradient)" stroke-width="2"
+      fill="transparent" filter="url(#neon-glow)" stroke-linecap="round" stroke-dasharray="200" stroke-dashoffset="0" />
   </svg>
 
   <div class="login-container">
     <i class="fa-solid fa-circle-user fa-2xl" style="color: #fff;"></i>
     <h2 class="etiquetas">Iniciar Sesión</h2>
-    <form (ngSubmit)="login()">
-      <input type="email" name="email" [(ngModel)]="email" placeholder="Correo electrónico" required>
-      <input type="password" name="password" [(ngModel)]="password" placeholder="Contraseña" required>
-      <button type="submit" [disabled]="isLoading">
-        <span *ngIf="!isLoading">Ingresar</span>
+    <form (ngSubmit)="login()" class="left-align-form" [formGroup]="loginForm">
+      <!-- Campo de email -->
+      <div class="form-group">
+        <label for="email" class="input-label">Correo electrónico</label>
+        <input type="email" id="email" formControlName="email" placeholder="Ingresa tu correo electrónico"
+          class="form-input"
+          [ngClass]="{'input-error': loginForm.get('email')?.invalid && loginForm.get('email')?.touched}">
+        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error-message">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span *ngIf="loginForm.get('email')?.errors?.['required']">El correo electrónico es requerido</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">Ingresa un correo electrónico válido</span>
+        </div>
+      </div>
+
+      <!-- Campo de contraseña -->
+      <div class="form-group">
+        <label for="password" class="input-label">Contraseña</label>
+        <div class="password-input-container">
+          <input [type]="isPasswordVisible ? 'text' : 'password'" id="password" formControlName="password"
+            placeholder="Ingresa tu contraseña" class="form-input"
+            [ngClass]="{'input-error': loginForm.get('password')?.invalid && loginForm.get('password')?.touched}">
+          <i class="fa-solid password-toggle-icon"
+            [ngClass]="{'fa-eye': isPasswordVisible, 'fa-eye-slash': !isPasswordVisible}"
+            (click)="togglePasswordVisibility()">
+          </i>
+        </div>
+        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+          <i class="fa-solid fa-circle-exclamation"></i>
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">La contraseña debe tener al menos 6
+            caracteres</span>
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="isLoading" class="submit-button">
+        <span *ngIf="!isLoading">INGRESAR</span>
         <span *ngIf="isLoading">
           <i class="fa fa-spinner fa-spin"></i> Cargando...
         </span>
       </button>
-      <p *ngIf="errorMessage" class="error-message">
-        <i class="fa-solid fa-triangle-exclamation error-icon"></i>
+
+      <!-- Mensaje de error general -->
+      <div *ngIf="errorMessage" class="error-message general-error">
+        <i class="fa-solid fa-triangle-exclamation"></i>
         {{ errorMessage }}
-      </p>
+      </div>
+
       <p class="forgot-password">
         <a [routerLink]="['/forget-password']">¿Olvidaste tu contraseña?</a>
       </p>
