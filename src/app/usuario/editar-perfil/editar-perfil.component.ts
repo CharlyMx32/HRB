@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router'; // Importa el servicio Router
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -22,7 +23,11 @@ export class EditarPerfilComponent implements OnInit {
   showNewPassword: boolean = false;
   showPasswordConfirmation: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router // Inyecta el servicio Router
+  ) {
     this.updatePasswordForm = this.fb.group({
       current_password: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -78,7 +83,8 @@ export class EditarPerfilComponent implements OnInit {
 
         setTimeout(() => {
           this.successMessage = '';
-        }, 5000);
+          this.router.navigate(['/worker/dashboard']); // Redirige al dashboard
+        }, 3000);
       },
       error => {
         this.errorMessage = 'Error actualizando contraseña. Por favor, inténtelo de nuevo.';

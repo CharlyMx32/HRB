@@ -90,6 +90,7 @@ export class EmpleadosComponent implements OnInit {
       last_name: employee.last_name,
       phone: employee.phone,
       RFID: employee.RFID,
+      
     });
   }
 
@@ -98,7 +99,6 @@ export class EmpleadosComponent implements OnInit {
     this.selectedEmployeeId = null;
   }
 
-  // Employee operations
   getEmployees(): void {
     this.workersService.getEmployees().subscribe({
       next: (data) => this.employees = data,
@@ -174,21 +174,35 @@ export class EmpleadosComponent implements OnInit {
     return age >= 18 ? null : { 'ageInvalid': true };
   }
 
-  desactivateUser(userId: string): void {
-    if (confirm('¿Estás seguro de que deseas desactivar esta cuenta?')) {
-      this.workersService.desactivateUser(userId).subscribe({
-        next: () => {
-          this.successMessage = 'La cuenta ha sido desactivada exitosamente.';
-          this.getEmployees(); // Actualiza la lista de empleados
-          setTimeout(() => (this.successMessage = ''), 5000);
-        },
-        error: (error) => {
-          console.error('Error desactivando la cuenta:', error);
-          this.errorMessage = 'Error al desactivar la cuenta. Por favor, inténtelo de nuevo.';
-          setTimeout(() => (this.errorMessage = ''), 5000);
-        }
-      });
-    }
+  desactivateAccount(id: number): void {
+    this.authService.desactivateAccount(id).subscribe({
+      next: (response) => {
+        alert(response.message);
+        this.employees = this.employees.map(emp => 
+          emp.id === id ? { ...emp, activate: true } : emp
+        );
+        this.getEmployees()
+      },
+      error: (err) => {
+        console.error('Error al desactivar la cuenta:', err);
+        alert(err.error?.message || 'No se pudo desactivar la cuenta.');
+      }
+    });
   }
-  
+
+  activateAccount(id: number): void {
+    this.authService.activateAccount(id).subscribe({
+      next: (response) => {
+        alert(response.message);
+        this.employees = this.employees.map(emp => 
+          emp.id === id ? { ...emp, activate: false } : emp
+        );
+        this.getEmployees()
+      },
+      error: (err) => {
+        console.error('Error al activar la cuenta:', err);
+        alert(err.error?.message || 'No se pudo activar la cuenta.');
+      }
+    });
+  }
 }

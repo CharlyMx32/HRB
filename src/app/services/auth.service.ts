@@ -81,14 +81,6 @@ export class AuthService {
     }
   }
 
-  getProducts(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/products`);
-  }
-
-  registerProduct(productData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/products`, productData);
-  }
-
   registerWorker(employeeData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/register`, employeeData).pipe(
       catchError(this.handleError)
@@ -96,15 +88,23 @@ export class AuthService {
   }
 
   updatePassword(passwordData: any): Observable<any> {
-    const token = this.getToken(); // Método para obtener el token
+    const token = this.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
+    return this.http.put<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
       catchError(this.handleError)
     );
+  }
+
+  desactivateAccount(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/user/desactivate`, { id });
+  }
+
+  activateAccount(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/user/activate`, { id });
   }
 
   private handleError(error: HttpErrorResponse) {
