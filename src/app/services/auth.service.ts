@@ -88,13 +88,13 @@ export class AuthService {
   }
 
   updatePassword(passwordData: any): Observable<any> {
-    const token = this.getToken(); // Método para obtener el token
+    const token = this.getToken();
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
+    return this.http.put<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
       catchError(this.handleError)
     );
   }

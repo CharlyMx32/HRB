@@ -4,6 +4,25 @@
     <div class="card-body">
       <p><strong>Status:</strong> {{ factura.status }}</p>
       <button class="btn btn-primary btn-custom" (click)="verFactura(factura.URL)">Ver Factura</button>
+      <button class="btn btn-secondary btn-custom btn-iniciar-orden" (click)="abrirModal(factura.id)">Asignar Factura</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" *ngIf="modalVisible">
+  <div class="modal-content">
+    <span class="modal-close" (click)="cerrarModal()">&times;</span>
+    <h3>Asignar Factura: {{ facturaSeleccionadaId }}</h3>
+    <label for="employeeSelect">Seleccionar Empleado:</label>
+    <select [(ngModel)]="selectedEmployeeId" id="employeeSelect" class="form-control">
+      <option *ngFor="let employee of employees" [value]="employee.id">
+        {{ employee.name }} {{ employee.last_name }}
+      </option>
+    </select>
+    <div class="modal-buttons">
+      <button class="btn btn-primary" (click)="asignarFactura()">Asignar</button>
+      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
     </div>
   </div>
 </div>

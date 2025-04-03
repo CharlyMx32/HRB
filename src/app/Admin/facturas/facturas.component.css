@@ -187,3 +187,64 @@
   color: #fff;
   cursor: pointer;
 }
+
+select.form-control {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #007bff;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+select.form-control:focus {
+  outline: none;
+  border-color: #0056b3;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Estilo del select */
+select.form-control {
+  appearance: none; /* Eliminamos el estilo por defecto */
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  font-size: 16px;
+  background-color: #222; /* Fondo oscuro */
+  color: #fff; /* Texto claro */
+  border: 1px solid #007bff; /* Borde azul */
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.2); /* Sombra ligera */
+  cursor: pointer;
+}
+
+/* Efecto al pasar el mouse sobre el select */
+select.form-control:hover {
+  border-color: #0056b3; /* Azul más oscuro */
+}
+
+/* Efecto al enfocar el select */
+select.form-control:focus {
+  outline: none;
+  border-color: #00c1ff; /* Azul brillante */
+  box-shadow: 0 0 10px rgba(0, 193, 255, 0.5); /* Sombra azul */
+  background-color: #333; /* Fondo un poco más claro */
+}
+
+/* Estilo para las opciones del combo box */
+select.form-control option {
+  background-color: #222; /* Mantiene el fondo oscuro */
+  color: #fff; /* Texto claro */
+}
+
+/* Ajuste de la etiqueta */
+label {
+  font-size: 14px;
+  color: #aaa; /* Color gris claro */
+  font-weight: bold;
+}
+
+/* Estilo para el contenedor del select */
+.modal-content select {
+  margin-bottom: 20px;
+}

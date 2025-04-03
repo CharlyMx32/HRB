@@ -16,7 +16,7 @@ export class DeliveriesService {
     return this.http.get<any>(`${this.apiUrl}/deliveries`);
   }
 
-  makeDelivery(deliveryData: any): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/delivery`, deliveryData);
+  assignInvoice(id: number, payload: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/invoices/${id}/assign`, payload);
   }
 }
