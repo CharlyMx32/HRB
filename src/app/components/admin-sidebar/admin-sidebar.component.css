@@ -113,3 +113,104 @@ li:active {
 .Btn.collapsed .text {
     display: none;
 }
+
+/* Estilo para el badge de notificación */
+.bg-red-500 {
+    background-color: #ef4444;
+  }
+  
+  .absolute {
+    position: absolute;
+  }
+  
+  .-top-1 {
+    top: -0.25rem;
+  }
+  
+  .-right-1 {
+    right: -0.25rem;
+  }
+  
+  .rounded-full {
+    border-radius: 9999px;
+  }
+  
+  .w-5 {
+    width: 1.25rem;
+  }
+  
+  .h-5 {
+    height: 1.25rem;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .items-center {
+    align-items: center;
+  }
+  
+  .justify-center {
+    justify-content: center;
+  }
+  
+  .text-xs {
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .notification-badge {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+ 
+  /* Asegúrate que los items del sidebar tengan posición relativa */
+  .sidebar li {
+    position: relative;
+  }
+
+  /* Estilo para el icono de notificación */
+.text-red-500 {
+    color: #ef4444;
+  }
+  
+  /* Estilo para el badge de notificación */
+  .notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ef4444;
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: bold;
+    z-index: 10;
+  }
+  
+  /* Efecto de parpadeo para llamar la atención */
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+  
+  .has-new-orders {
+    animation: pulse 2s infinite;
+  }
