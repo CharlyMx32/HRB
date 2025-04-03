@@ -21,6 +21,7 @@ export class FacturasComponent implements OnInit {
   modalVisible = false;
   facturaSeleccionadaId!: number; // ID de la factura seleccionada
   selectedEmployeeId!: number; // ID del empleado seleccionado en el combo box
+  loading = false; // Nuevo flag para saber si estamos cargando
 
   constructor(
     private facturasService: FacturasService,
@@ -64,9 +65,13 @@ export class FacturasComponent implements OnInit {
     if (this.selectedEmployeeId) {
       const payload = { worker_id: this.selectedEmployeeId }; // Cambiar 'workerId' por 'worker_id' para coincidir con el backend
       console.log('Payload enviado:', payload); // Debugging
+
+      this.loading = true; // Activar el loader
+
       this.deliveriesService.assignInvoice(this.facturaSeleccionadaId, payload).subscribe({
         next: (response) => {
           console.log('Factura asignada exitosamente:', response);
+          this.loading = false; // Desactivar el loader
           this.cerrarModal(); // Cierra el modal tras éxito
           setTimeout(() => {
             this.router.navigate(['/admin/ordenes']); // Redirige después de 2 segundos
@@ -74,6 +79,7 @@ export class FacturasComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al asignar factura:', error);
+          this.loading = false; // Desactivar el loader
           alert('Hubo un error al asignar la factura. Por favor, verifica los datos.');
         }
       });

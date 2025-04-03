@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
   currentDate = new Date();
   daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   weeks: Date[][] = [];
-  lightCheckInterval = 5000; // 5 segundos
+  lightCheckInterval = 10000; // 5 segundos
 
   thCheckInterval = 5000; // 5 segundos para actualizar humedad/temperatura
 thConnectionError = false;
@@ -69,8 +69,8 @@ isCheckingTHStatus = false;
   luzEncendida = false;
   pirStatus = 'Inactivo';
   lastDetection = '--';
-  temperatura = 24.5;
-  humedad = 45;
+  temperatura = 0;
+  humedad = 0;
   ultimoCambioEstado = 'Hoy 09:15 AM';
 
   // Datos para las tablas
@@ -93,10 +93,10 @@ isCheckingTHStatus = false;
   ) {}
 
   ngOnInit() {
+    this.actualizarDatosAmbiente();
+    this.actualizarEstadoLuz();
     this.generateCalendar();
 
-    this.actualizarEstadoLuz();
-  this.actualizarDatosAmbiente();
   
   setInterval(() => {
     this.actualizarEstadoLuz();
