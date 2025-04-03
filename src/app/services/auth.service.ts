@@ -99,6 +99,14 @@ export class AuthService {
     );
   }
 
+  desactivateAccount(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/user/desactivate`, { id });
+  }
+
+  activateAccount(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/user/activate`, { id });
+  }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Unknown error!';
     if (error.error instanceof ErrorEvent) {

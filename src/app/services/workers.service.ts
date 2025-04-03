@@ -31,13 +31,4 @@ export class WorkersService {
         })
       );
     }
-
-    desactivateUser(userId: string): Observable<any> {
-      return this.http.post(`${this.apiUrl}/user/${userId}/desactivate`, {}).pipe(
-        catchError((error: HttpErrorResponse) => {
-          console.error('Error desactivando la cuenta:', error);
-          return throwError(() => error);
-        })
-      );
-    }
 }
