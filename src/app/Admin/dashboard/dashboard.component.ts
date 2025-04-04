@@ -64,8 +64,8 @@ export class DashboardComponent implements OnInit {
   luzEncendida = false;
   pirStatus = 'Inactivo';
   lastDetection = '--';
-  temperatura = 24.5;
-  humedad = 45;
+  temperatura = 0;
+  humedad = 0;
   ultimoCambioEstado = 'Hoy 09:15 AM';
 
   ultimosAccesos = [
@@ -87,6 +87,9 @@ export class DashboardComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.actualizarDatosAmbiente();
+    this.actualizarEstadoLuz();
+    this.actualizarEstadoPir(); 
     this.generateCalendar();
 
     this.actualizarEstadoLuz();
@@ -145,7 +148,6 @@ export class DashboardComponent implements OnInit {
         if (nuevoEstado !== this.luzEncendida) {
           this.luzEncendida = nuevoEstado;
           this.ultimoCambioEstado = this.formatLastChangeTime(fechaEvento);
-
           this.agregarEventoAuditoria(
             'Cambio estado luz',
             fechaEvento.toLocaleTimeString(),
@@ -158,16 +160,16 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-
+  
   actualizarDatosAmbiente() {
     this.isCheckingTHStatus = true;
     this.sensoresService.getLastTHSensorData().subscribe(
       (data) => {
         this.thConnectionError = false;
         const fechaEvento = new Date(data.event_date);
-
         if (Math.abs(data.temperature_c - this.temperatura) > 0.5) {
           this.temperatura = data.temperature_c;
+          changed = true;
           this.agregarEventoAuditoria(
             'Cambio temperatura',
             fechaEvento.toLocaleTimeString(),
@@ -177,6 +179,7 @@ export class DashboardComponent implements OnInit {
 
         if (Math.abs(data.humidity_percent - this.humedad) > 1) {
           this.humedad = data.humidity_percent;
+          changed = true;
           this.agregarEventoAuditoria(
             'Cambio humedad',
             fechaEvento.toLocaleTimeString(),
@@ -243,7 +246,6 @@ export class DashboardComponent implements OnInit {
       this.currentDate.getMonth() - 1,
       1
     );
-    this.generateCalendar();
   }
 
   nextMonth() {
@@ -252,7 +254,6 @@ export class DashboardComponent implements OnInit {
       this.currentDate.getMonth() + 1,
       1
     );
-    this.generateCalendar();
   }
 
   hasEvents(day: Date): boolean {
