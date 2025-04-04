@@ -105,6 +105,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/reset-password`, { email });
   }
 
+  resendMail(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/resend-email`, { email });
+  }
+
   desactivateAccount(id: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/user/desactivate`, { id });
   }

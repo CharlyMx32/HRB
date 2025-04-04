@@ -16,7 +16,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class FacturasComponent implements OnInit {
   facturas$!: Observable<any[]>;
-  employees: Array<{ id: number; name: string; last_name: string }> = [];
+
+  employees: Array<{ id: number; name: string; last_name: string; assigned_orders: number}> = [];
+
   modalVisible = false;
   facturaSeleccionadaId!: number;
   selectedEmployeeId!: number;
@@ -53,9 +55,9 @@ export class FacturasComponent implements OnInit {
       },
       (error) => {
         console.error('Error al obtener las empleados', error);
-      }
-    );
-  }
+      }
+    );
+  }
 
   // Abrir la URL de la factura en una nueva pestaña
   verFactura(url: string): void {
