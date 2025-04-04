@@ -21,7 +21,7 @@ export class FacturasService {
     this.loadInitialFacturas();
   }
 
-   loadInitialFacturas(): void {
+  loadInitialFacturas(): void {
     this.http.get<any[]>(`${this.apiUrl}/invoices`).subscribe(data => {
       this.facturasSubject.next([]); 
       this.facturasSubject.next(data);

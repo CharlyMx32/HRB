@@ -16,7 +16,7 @@ export class WorkersService {
 
   
     getEmployees(): Observable<any[]> {
-      return this.http.get<any[]>(`${this.apiUrl}/workers`);
+      return this.http.get<any>(`${this.apiUrl}/workers`);
     }
   
     getEmployee(id: string): Observable<any> {

@@ -1,76 +1,36 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service'; // Ajusta la ruta si es diferente
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-forget-password',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './forget-password.component.html',
   styleUrls: ['./forget-password.component.css']
 })
 export class ForgetPasswordComponent {
-  forgotPasswordForm: FormGroup;
-  loading = false;
-  waitingForVerification = false;
-  emailVerified = false;
-  successMessage: string | null = null;
-  submitted: boolean = false;
+  email: string = '';
+  mensaje: string = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
-    this.forgotPasswordForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-    });
-  }
+  constructor(private authService: AuthService) {}
 
-  onSubmit() {
-    this.submitted = true;
-
-    if (this.forgotPasswordForm.invalid) {
-      setTimeout(() => {
-        this.submitted = false;
-      }, 5000);
+  enviarEnlace() {
+    if (!this.email) {
+      this.mensaje = 'Por favor ingresa un correo válido.';
       return;
     }
 
-    this.loading = true;
-    const email = this.forgotPasswordForm.value.email;
-
-    this.authService.sendPasswordRecoveryEmail(email).subscribe(
-      (response) => {
-        this.loading = false;
-        this.successMessage = 'Correo enviado. Por favor, revisa tu bandeja de entrada.';
-        this.waitingForVerification = true;
-
-        setTimeout(() => {
-          this.successMessage = null;
-          this.checkEmailVerification(email);
-        }, 3000);
+    this.authService.resetPassword(this.email).subscribe({
+      next: () => {
+        this.mensaje = 'Se ha enviado el correo exitosamente, revisa tu bandeja de entrada.';
       },
-      (error) => {
-        this.loading = false;
-        this.successMessage = null;
-        console.error('Error al enviar el correo:', error);
+      error: (err) => {
+        this.mensaje = 'Hubo un error al enviar el enlace. Intenta de nuevo.';
+        console.error(err);
       }
-    );
-  }
-
-  checkEmailVerification(email: string) {
-    const interval = setInterval(() => {
-      this.authService.checkEmailVerification(email).subscribe(
-        (response: any) => {
-          if (response.status === 200) {
-            this.waitingForVerification = false;
-            this.emailVerified = true;
-            clearInterval(interval);
-          }
-        },
-        (error) => console.error('Error verificando el correo:', error)
-      );
-    }, 3000);
+    });
   }
 }
