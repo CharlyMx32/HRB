@@ -1,6 +1,5 @@
 <div class="facturas-container">
   <div class="card" *ngFor="let factura of facturas$ | async; trackBy: trackByFn">
-    <iframe [src]="sanitizarURL(factura.URL)" class="pdf-preview"></iframe>
     <div class="card-body">
       <p><strong>Status:</strong> {{ factura.status }}</p>
       <button class="btn btn-primary btn-custom" (click)="verFactura(factura.URL)">Ver Factura</button>
@@ -16,10 +15,12 @@
     <h3>Asignar Factura: {{ facturaSeleccionadaId }}</h3>
     <label for="employeeSelect">Seleccionar Empleado:</label>
     <select [(ngModel)]="selectedEmployeeId" id="employeeSelect" class="form-control">
-      <option *ngFor="let employee of employees" [value]="employee.id">
-        {{ employee.name }} {{ employee.last_name }}
-      </option>
-    </select>
+      <ng-container *ngFor="let employee of employees">
+        <option *ngIf="employee.assigned_orders <= 10" [value]="employee.id">
+          {{ employee.name }} {{ employee.last_name }}
+        </option>
+      </ng-container>
+    </select>    
     <div class="modal-buttons">
       <button class="btn btn-primary" (click)="asignarFactura()">Asignar</button>
       <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
