@@ -1,170 +1,179 @@
-/* Estilos base */
-.grid > div {
-    display: flex;
-    flex-direction: column;
+.grid>div {
+  display: flex;
+  flex-direction: column;
 }
 
-/* Scrollbar personalizada */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 3px;
+  background: #444;
+  border-radius: 3px;
 }
 
-/* Calendario compacto */
 .compact-calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 2px;
-    flex: 1;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+  flex: 1;
 }
 
 .compact-day-header {
-    text-align: center;
-    font-size: 0.6rem;
-    padding: 4px 0;
-    color: #7d7d7d;
-    text-transform: uppercase;
-    font-weight: 500;
+  text-align: center;
+  font-size: 0.6rem;
+  padding: 4px 0;
+  color: #7d7d7d;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
 .compact-day-cell {
-    aspect-ratio: 1;
-    position: relative;
-    background: #1a1a1d;
-    border-radius: 3px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    cursor: pointer;
+  aspect-ratio: 1;
+  position: relative;
+  background: #1a1a1d;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 .compact-day-cell:hover {
-    background: #252529;
+  background: #252529;
 }
 
 .compact-day-cell.current-month {
-    background: #1e1e22;
+  background: #1e1e22;
 }
 
 .compact-day-cell.has-events::after {
-    content: '';
-    position: absolute;
-    bottom: 2px;
-    width: 4px;
-    height: 4px;
-    background: #00f2ff;
-    border-radius: 50%;
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  width: 4px;
+  height: 4px;
+  background: #00f2ff;
+  border-radius: 50%;
 }
 
 .compact-day-number {
-    font-size: 0.65rem;
-    color: #EAEAEA;
-    font-weight: 400;
+  font-size: 0.65rem;
+  color: #EAEAEA;
+  font-weight: 400;
 }
 
 .compact-day-cell.current-month .compact-day-number {
-    font-weight: 500;
+  font-weight: 500;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
-    .grid {
-        grid-template-columns: 1fr !important;
-        padding: 1rem;
-        gap: 1rem;
-    }
+  .grid {
+    grid-template-columns: 1fr !important;
+    padding: 1rem;
+    gap: 1rem;
+  }
 
-    .compact-day-header {
-        font-size: 0.55rem;
-        padding: 2px 0;
-    }
-    
-    .compact-day-number {
-        font-size: 0.6rem;
-    }
+  .compact-day-header {
+    font-size: 0.55rem;
+    padding: 2px 0;
+  }
+
+  .compact-day-number {
+    font-size: 0.6rem;
+  }
 }
 
-/* Estilos para el modal del calendario completo */
 .full-calendar-modal .mat-dialog-container {
-    padding: 0;
-    overflow: hidden;
-    background: transparent;
+  padding: 0;
+  overflow: hidden;
+  background: transparent;
 }
 
 .full-calendar-modal {
-    background: #232328;
-    border-radius: 16px;
+  background: #232328;
+  border-radius: 16px;
 }
 
-/* Añade estas nuevas reglas al final de tu CSS */
-
-/* Estilos para indicadores de sensor */
 .sensor-status {
-    transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.sensor-warning {
+  animation: pulse-warning 1.5s infinite;
+}
+
+@keyframes pulse-warning {
+  0% {
+    opacity: 1;
   }
-  
-  .sensor-warning {
-    animation: pulse-warning 1.5s infinite;
+
+  50% {
+    opacity: 0.5;
   }
-  
-  @keyframes pulse-warning {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+
+  100% {
+    opacity: 1;
   }
-  
-  /* Estilos para la barra de humedad */
-  .humidity-bar {
-    transition: width 0.5s ease;
-  }
-  
-  /* Estilos para los indicadores de rango */
-  .range-indicator {
-    font-size: 0.6rem;
-  }
-  
-  /* Estilos para el estado de conexión */
-  .connection-error {
-    position: relative;
-  }
-  
-  .connection-error::after {
-    content: '!';
-    position: absolute;
-    top: -3px;
-    right: -5px;
-    width: 12px;
-    height: 12px;
-    background: #ff4757;
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.5rem;
-    font-weight: bold;
-  }
-  
-  /* Mejoras para la sección de ambiente */
+}
+
+.humidity-bar {
+  transition: width 0.5s ease;
+}
+
+.range-indicator {
+  font-size: 0.6rem;
+}
+
+.connection-error {
+  position: relative;
+}
+
+.connection-error::after {
+  content: '!';
+  position: absolute;
+  top: -3px;
+  right: -5px;
+  width: 12px;
+  height: 12px;
+  background: #ff4757;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  font-weight: bold;
+}
+
+.environment-card {
+  transition: all 0.3s ease;
+}
+
+.environment-card:hover {
+  border-color: #00f2ff30;
+}
+
+.environment-icon {
+  min-width: 16px;
+}
+
+@media (max-width: 768px) {
+
   .environment-card {
-    transition: all 0.3s ease;
+    padding: 1rem;
   }
-  
-  .environment-card:hover {
-    border-color: #00f2ff30;
+
+  .compact-calendar-grid {
+    gap: 1px;
   }
-  
-  /* Ajustes para los íconos de temperatura/humedad */
-  .environment-icon {
-    min-width: 16px; /* Para mantener el espaciado consistente */
+
+  .sensor-value {
+    font-size: 0.9rem;
   }
-  
+}  
   /* Refuerza los estilos responsive */
   @media (max-width: 768px) {
     /* Añade estos estilos a tu media query existente */
@@ -225,4 +234,18 @@
 
 .compact-day-cell:not(.current-month) {
   opacity: 0.5;
+}
+
+.progress-bar-container {
+  position: relative;
+}
+
+.progress-bar-label {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.6rem;
+  color: white;
+  pointer-events: none;
 }

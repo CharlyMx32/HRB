@@ -83,7 +83,9 @@ export class AuthService {
 
   registerWorker(employeeData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/register`, employeeData).pipe(
-      catchError(this.handleError)
+      catchError(error => {
+        return throwError(() => error);
+      })
     );
   }
 
@@ -94,7 +96,7 @@ export class AuthService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.put<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
+    return this.http.post<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
       catchError(this.handleError)
     );
   }

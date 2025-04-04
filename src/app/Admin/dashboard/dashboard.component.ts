@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FullCalendarModalComponent } from '../../components/full-calendar-modal/full-calendar-modal.component';
 import { FacturasService } from '../../services/facturas.service';
-import { SensoresService} from '../../services/sensores.service';
+import { SensoresService } from '../../services/sensores.service';
 
 
 @Component({
@@ -28,8 +28,7 @@ import { SensoresService} from '../../services/sensores.service';
 })
 export class DashboardComponent implements OnInit {
 
-  
-  // Estado del calendario
+
   currentDate = new Date();
   daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   weeks: Date[][] = [];
@@ -49,15 +48,11 @@ export class DashboardComponent implements OnInit {
 
 
 
-  
-  // Datos de auditoría
   eventosAuditoria = [
     { accion: 'Acceso RFID A47881', hora: '2:03 PM', detalle: 'Operario #1' },
     { accion: 'Detección PIR', hora: '2:03 PM', detalle: 'Zona Alberta' },
     { accion: 'Producto pesado', hora: '1:45 PM', detalle: 'Cajas electrónicas' }
   ];
-
-  
 
   checkLightStatus() {
     this.sensoresService.getLastLightStatus().subscribe(
@@ -74,7 +69,6 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  // Estado sensores
   puertaAbierta = false;
   luzEncendida = false;
   pirStatus = 'Inactivo';
@@ -83,7 +77,6 @@ export class DashboardComponent implements OnInit {
   humedad = 0;
   ultimoCambioEstado = 'Hoy 09:15 AM';
 
-  // Datos para las tablas
   ultimosAccesos = [
     { nombre: 'Operario #1', hora: '10:45 AM', tipo: 'RFID: A3F2B1' },
     { nombre: 'Proveedor', hora: '09:30 AM', tipo: 'Tarjeta' },
@@ -100,7 +93,7 @@ export class DashboardComponent implements OnInit {
     private facturasService: FacturasService,
     private dialog: MatDialog,
     private sensoresService: SensoresService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.actualizarDatosAmbiente();
@@ -178,24 +171,23 @@ onPirCardClick() {
   }
   formatLastChangeTime(date: Date): string {
     const hoy = new Date();
-    if (date.getDate() === hoy.getDate() && 
-        date.getMonth() === hoy.getMonth() && 
-        date.getFullYear() === hoy.getFullYear()) {
-      return 'Hoy ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    if (date.getDate() === hoy.getDate() &&
+      date.getMonth() === hoy.getMonth() &&
+      date.getFullYear() === hoy.getFullYear()) {
+      return 'Hoy ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     } else {
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     }
   }
 
-  
+
 
   actualizarEstadoLuz() {
     this.sensoresService.getLastLightStatus().subscribe(
       (data) => {
         const nuevoEstado = data.status === 'on';
         const fechaEvento = new Date(data.event_date);
-        
-        // Solo actualizar si hay un cambio de estado
+
         if (nuevoEstado !== this.luzEncendida) {
           this.luzEncendida = nuevoEstado;
           this.ultimoCambioEstado = this.formatLastChangeTime(fechaEvento);
@@ -203,8 +195,8 @@ onPirCardClick() {
           
           // Registrar evento en auditoría
           this.agregarEventoAuditoria(
-            'Cambio estado luz', 
-            fechaEvento.toLocaleTimeString(), 
+            'Cambio estado luz',
+            fechaEvento.toLocaleTimeString(),
             this.luzEncendida ? 'Encendida' : 'Apagada'
           );
         }
@@ -228,18 +220,18 @@ onPirCardClick() {
           this.temperatura = data.temperature_c;
           changed = true;
           this.agregarEventoAuditoria(
-            'Cambio temperatura', 
-            fechaEvento.toLocaleTimeString(), 
+            'Cambio temperatura',
+            fechaEvento.toLocaleTimeString(),
             `Nueva temperatura: ${data.temperature_c}°C`
           );
         }
-        
+
         if (Math.abs(data.humidity_percent - this.humedad) > 1) {
           this.humedad = data.humidity_percent;
           changed = true;
           this.agregarEventoAuditoria(
-            'Cambio humedad', 
-            fechaEvento.toLocaleTimeString(), 
+            'Cambio humedad',
+            fechaEvento.toLocaleTimeString(),
             `Nueva humedad: ${data.humidity_percent}%`
           );
         }
@@ -247,7 +239,7 @@ onPirCardClick() {
         if (changed) {
           this.showEnvChangeIndicator = true;
         }
-        
+
         this.isCheckingTHStatus = false;
       },
       (error) => {
@@ -272,35 +264,32 @@ onPirCardClick() {
   generateCalendar() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
-    
+
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-    
+
     const startDay = firstDay.getDay();
     const endDay = lastDay.getDate();
-    
+
     this.weeks = [];
     let week: Date[] = [];
-    
-    // Días del mes anterior
+
     const prevMonthLastDay = new Date(year, month, 0).getDate();
-    for(let i = startDay - 1; i >= 0; i--) {
+    for (let i = startDay - 1; i >= 0; i--) {
       week.push(new Date(year, month - 1, prevMonthLastDay - i));
     }
-    
-    // Días del mes actual
-    for(let day = 1; day <= endDay; day++) {
+
+    for (let day = 1; day <= endDay; day++) {
       week.push(new Date(year, month, day));
-      if(week.length === 7) {
+      if (week.length === 7) {
         this.weeks.push(week);
         week = [];
       }
     }
-    
-    // Días del siguiente mes
-    if(week.length > 0) {
+
+    if (week.length > 0) {
       const nextMonthDays = 7 - week.length;
-      for(let i = 1; i <= nextMonthDays; i++) {
+      for (let i = 1; i <= nextMonthDays; i++) {
         week.push(new Date(year, month + 1, i));
       }
       this.weeks.push(week);
@@ -378,9 +367,8 @@ onCalendarClick() {
   }
 
   addEvent(day: Date) {
-    // Lógica para manejar clics en días
     console.log('Día seleccionado:', day);
-    this.agregarEventoAuditoria('Evento calendario', new Date().toLocaleTimeString(), 
+    this.agregarEventoAuditoria('Evento calendario', new Date().toLocaleTimeString(),
       `Día ${day.getDate()} seleccionado`);
   }
 
