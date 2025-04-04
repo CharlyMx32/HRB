@@ -1,5 +1,6 @@
 <div class="grid grid-cols-4 gap-3 h-full p-3">
-
+    <!-- Primera Fila -->
+    <!-- Auditoría de Acciones -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
         <h2 class="text-sm font-semibold text-[#EAEAEA] mb-2">Auditoría de Acciones</h2>
         <div class="flex-1 space-y-2 overflow-y-auto">
@@ -14,6 +15,7 @@
         </div>
     </div>
 
+    <!-- Accesos RFID -->
     <div
         class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] hover:border-[#00f2ff]/30 transition-colors col-span-1">
         <div class="flex justify-between items-center mb-2">
@@ -95,6 +97,8 @@
         </div>
     </div>
 
+    <!-- Segunda Fila -->
+    <!-- Estado -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
         <h2 class="text-sm font-semibold text-[#EAEAEA] mb-2">Estado</h2>
 
@@ -114,8 +118,6 @@
             </span>
             <div *ngIf="showLightChangeIndicator" class="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
         </div>
-
-       
 
         <div class="mt-2 text-xxs text-[#7d7d7d] bg-[#1a1a1d]/50 p-1 rounded-lg border border-[#2a2a2e]">
             <i class="fas fa-clock mr-1"></i> Último cambio: {{ultimoCambioEstado}}
@@ -183,6 +185,7 @@
     </div>
 </div>
 
+    <!-- Últimos Productos Pesados (extendido) -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-2">
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-sm font-semibold text-[#EAEAEA]">Últimos Productos Pesados</h2>

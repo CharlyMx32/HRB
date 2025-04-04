@@ -8,7 +8,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FullCalendarModalComponent } from '../../components/full-calendar-modal/full-calendar-modal.component';
 import { FacturasService } from '../../services/facturas.service';
-import { SensoresService } from '../../services/sensores.service';
+import { SensoresService} from '../../services/sensores.service';
 
 
 @Component({
@@ -28,7 +28,8 @@ import { SensoresService } from '../../services/sensores.service';
 })
 export class DashboardComponent implements OnInit {
 
-
+  
+  // Estado del calendario
   currentDate = new Date();
   daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   weeks: Date[][] = [];
@@ -39,11 +40,15 @@ export class DashboardComponent implements OnInit {
   isCheckingTHStatus = false;
 
 
+  
+  // Datos de auditoría
   eventosAuditoria = [
     { accion: 'Acceso RFID A47881', hora: '2:03 PM', detalle: 'Operario #1' },
     { accion: 'Detección PIR', hora: '2:03 PM', detalle: 'Zona Alberta' },
     { accion: 'Producto pesado', hora: '1:45 PM', detalle: 'Cajas electrónicas' }
   ];
+
+  
 
   checkLightStatus() {
     this.sensoresService.getLastLightStatus().subscribe(
@@ -60,6 +65,7 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  // Estado sensores
   puertaAbierta = false;
   luzEncendida = false;
   pirStatus = 'Inactivo';
@@ -68,6 +74,7 @@ export class DashboardComponent implements OnInit {
   humedad = 0;
   ultimoCambioEstado = 'Hoy 09:15 AM';
 
+  // Datos para las tablas
   ultimosAccesos = [
     { nombre: 'Operario #1', hora: '10:45 AM', tipo: 'RFID: A3F2B1' },
     { nombre: 'Proveedor', hora: '09:30 AM', tipo: 'Tarjeta' },
@@ -84,37 +91,42 @@ export class DashboardComponent implements OnInit {
     private facturasService: FacturasService,
     private dialog: MatDialog,
     private sensoresService: SensoresService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.actualizarDatosAmbiente();
     this.actualizarEstadoLuz();
-    this.actualizarEstadoPir(); 
-    this.generateCalendar();
+    this.actualizarEstadoPir(); // Llamada inicial
 
     this.actualizarEstadoLuz();
     this.actualizarDatosAmbiente();
 
-    setInterval(() => {
-      this.actualizarEstadoLuz();
-    }, this.lightCheckInterval);
-
-    setInterval(() => {
-      this.actualizarDatosAmbiente();
-    }, this.thCheckInterval);
-
-    setInterval(() => {
-      this.pirStatus = Math.random() > 0.8 ? '¡Detección!' : 'Inactivo';
-      if (this.pirStatus === '¡Detección!') {
-        this.lastDetection = new Date().toLocaleTimeString();
-        this.agregarEventoAuditoria('Detección PIR', this.lastDetection, 'Zona Alberta');
+actualizarDatosAmbiente() {
+  this.isCheckingTHStatus = true;
+  this.sensoresService.getLastTHSensorData().subscribe(
+    (data) => {
+      this.thConnectionError = false;
+      const fechaEvento = new Date(data.event_date);
+      let changed = false;
+      
+      if (Math.abs(data.temperature_c - this.temperatura) > 0.5) {
+        this.temperatura = data.temperature_c;
+        changed = true;
+        this.agregarEventoAuditoria(
+          'Cambio temperatura', 
+          fechaEvento.toLocaleTimeString(), 
+          `Nueva temperatura: ${data.temperature_c}°C`
+        );
       }
-
-      if (Math.random() > 0.9) {
-        this.puertaAbierta = !this.puertaAbierta;
-        this.ultimoCambioEstado = new Date().toLocaleTimeString();
-        this.agregarEventoAuditoria('Cambio estado puerta', this.ultimoCambioEstado,
-          this.puertaAbierta ? 'Abierta' : 'Cerrada');
+      
+      if (Math.abs(data.humidity_percent - this.humedad) > 1) {
+        this.humedad = data.humidity_percent;
+        changed = true;
+        this.agregarEventoAuditoria(
+          'Cambio humedad', 
+          fechaEvento.toLocaleTimeString(), 
+          `Nueva humedad: ${data.humidity_percent}%`
+        );
       }
 
     }, 3000);
@@ -208,32 +220,35 @@ export class DashboardComponent implements OnInit {
   generateCalendar() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
-
+    
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
-
+    
     const startDay = firstDay.getDay();
     const endDay = lastDay.getDate();
-
+    
     this.weeks = [];
     let week: Date[] = [];
-
+    
+    // Días del mes anterior
     const prevMonthLastDay = new Date(year, month, 0).getDate();
-    for (let i = startDay - 1; i >= 0; i--) {
+    for(let i = startDay - 1; i >= 0; i--) {
       week.push(new Date(year, month - 1, prevMonthLastDay - i));
     }
-
-    for (let day = 1; day <= endDay; day++) {
+    
+    // Días del mes actual
+    for(let day = 1; day <= endDay; day++) {
       week.push(new Date(year, month, day));
-      if (week.length === 7) {
+      if(week.length === 7) {
         this.weeks.push(week);
         week = [];
       }
     }
-
-    if (week.length > 0) {
+    
+    // Días del siguiente mes
+    if(week.length > 0) {
       const nextMonthDays = 7 - week.length;
-      for (let i = 1; i <= nextMonthDays; i++) {
+      for(let i = 1; i <= nextMonthDays; i++) {
         week.push(new Date(year, month + 1, i));
       }
       this.weeks.push(week);
@@ -246,6 +261,7 @@ export class DashboardComponent implements OnInit {
       this.currentDate.getMonth() - 1,
       1
     );
+    this.generateCalendar();
   }
 
   nextMonth() {
@@ -254,16 +270,19 @@ export class DashboardComponent implements OnInit {
       this.currentDate.getMonth() + 1,
       1
     );
+    this.generateCalendar();
   }
 
   hasEvents(day: Date): boolean {
     // AQUI METEREMOS LAS FACTURAS REALES
+    // Ejemplo: días 5, 15 y 25 tienen eventos
     return day.getDate() % 5 === 0; // Solo para demostración
   }
 
   addEvent(day: Date) {
+    // Lógica para manejar clics en días
     console.log('Día seleccionado:', day);
-    this.agregarEventoAuditoria('Evento calendario', new Date().toLocaleTimeString(),
+    this.agregarEventoAuditoria('Evento calendario', new Date().toLocaleTimeString(), 
       `Día ${day.getDate()} seleccionado`);
   }
 
