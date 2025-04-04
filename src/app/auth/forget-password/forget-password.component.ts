@@ -14,22 +14,31 @@ import { FormsModule } from '@angular/forms';
 export class ForgetPasswordComponent {
   email: string = '';
   mensaje: string = '';
+  formSubmitted: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private authService: AuthService) {}
 
   enviarEnlace() {
+    this.formSubmitted = true;
+    
     if (!this.email) {
       this.mensaje = 'Por favor ingresa un correo válido.';
       return;
     }
 
+    this.isLoading = true;
+    this.mensaje = '';
+
     this.authService.resetPassword(this.email).subscribe({
       next: () => {
         this.mensaje = 'Se ha enviado el correo exitosamente, revisa tu bandeja de entrada.';
+        this.isLoading = false;
       },
       error: (err) => {
         this.mensaje = 'Hubo un error al enviar el enlace. Intenta de nuevo.';
         console.error(err);
+        this.isLoading = false;
       }
     });
   }
