@@ -33,12 +33,16 @@ export class DashboardComponent implements OnInit {
   currentDate = new Date();
   daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   weeks: Date[][] = [];
-  lightCheckInterval = 5000;
+  lightCheckInterval = 10000; // 5 segundos
 
-  thCheckInterval = 5000;
-  thConnectionError = false;
-  isCheckingTHStatus = false;
-
+  thCheckInterval = 5000; // 5 segundos para actualizar humedad/temperatura
+thConnectionError = false;
+isCheckingTHStatus = false;
+pirCheckInterval = 3000; // 3 segundos para actualizar el sensor PIR
+pirConnectionError = false;
+isCheckingPirStatus = false;
+// Añade esta propiedad junto a las otras
+showPirChangeIndicator = false;
 
   
   // Datos de auditoría
@@ -98,8 +102,118 @@ export class DashboardComponent implements OnInit {
     this.actualizarEstadoLuz();
     this.actualizarEstadoPir(); // Llamada inicial
 
+    this.generateCalendar();
+
+  
+  setInterval(() => {
     this.actualizarEstadoLuz();
+  }, this.lightCheckInterval);
+  
+  setInterval(() => {
     this.actualizarDatosAmbiente();
+  }, this.thCheckInterval);
+
+  setInterval(() => {
+    this.actualizarEstadoPir();
+  }, this.pirCheckInterval);
+
+  }
+
+  agregarEventoAuditoria(accion: string, hora: string, detalle: string) {
+    this.eventosAuditoria.unshift({ accion, hora, detalle });
+    if (this.eventosAuditoria.length > 5) {
+      this.eventosAuditoria.pop();
+    }
+  }
+  formatLastChangeTime(date: Date): string {
+    const hoy = new Date();
+    if (date.getDate() === hoy.getDate() && 
+        date.getMonth() === hoy.getMonth() && 
+        date.getFullYear() === hoy.getFullYear()) {
+      return 'Hoy ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    } else {
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+    }
+  }
+
+  
+
+  showLightChangeIndicator = false;
+showEnvChangeIndicator = false;
+
+// Métodos para manejar los clics
+onLightCardClick() {
+  this.showLightChangeIndicator = false;
+}
+
+onEnvCardClick() {
+  this.showEnvChangeIndicator = false;
+}
+
+// Modificar los métodos de actualización como se mostró anteriormente
+actualizarEstadoLuz() {
+  this.sensoresService.getLastLightStatus().subscribe(
+    (data) => {
+      const nuevoEstado = data.status === 'on';
+      const fechaEvento = new Date(data.event_date);
+      
+      if (nuevoEstado !== this.luzEncendida) {
+        this.luzEncendida = nuevoEstado;
+        this.ultimoCambioEstado = this.formatLastChangeTime(fechaEvento);
+        this.showLightChangeIndicator = true;
+        
+        this.agregarEventoAuditoria(
+          'Cambio estado luz', 
+          fechaEvento.toLocaleTimeString(), 
+          this.luzEncendida ? 'Encendida' : 'Apagada'
+        );
+      }
+    },
+    (error) => {
+      console.error('Error obteniendo datos del sensor de luz:', error);
+    }
+  );
+}
+
+// Modifica el método actualizarEstadoPir()
+actualizarEstadoPir() {
+  this.isCheckingPirStatus = true;
+  this.sensoresService.getLastPirSensorData().subscribe(
+    (data) => {
+      this.pirConnectionError = false;
+      const fechaEvento = new Date(data.event_date);
+      const nuevoEstado = data.motion_detected ? '¡Detección!' : 'Inactivo';
+      
+      // Solo actualizar si hay un cambio de estado
+      if (nuevoEstado !== this.pirStatus) {
+        this.pirStatus = nuevoEstado;
+        this.showPirChangeIndicator = true; // Activar indicador de cambio
+        
+        if (data.motion_detected) {
+          this.lastDetection = this.formatLastChangeTime(fechaEvento);
+          const alertMsg = data.alert_triggered ? ` (${data.alert_message})` : '';
+          this.agregarEventoAuditoria(
+            'Detección PIR', 
+            fechaEvento.toLocaleTimeString(), 
+            'Zona Alberta' + alertMsg
+          );
+        }
+      }
+      
+      this.isCheckingPirStatus = false;
+    },
+    (error) => {
+      this.pirConnectionError = true;
+      this.isCheckingPirStatus = false;
+      console.error('Error obteniendo datos del sensor PIR:', error);
+    }
+  );
+}
+
+// Añade este método para manejar el clic en la tarjeta PIR
+onPirCardClick() {
+  this.showPirChangeIndicator = false;
+}
 
 actualizarDatosAmbiente() {
   this.isCheckingTHStatus = true;
@@ -128,95 +242,22 @@ actualizarDatosAmbiente() {
           `Nueva humedad: ${data.humidity_percent}%`
         );
       }
-
-    }, 3000);
-  }
-
-  agregarEventoAuditoria(accion: string, hora: string, detalle: string) {
-    this.eventosAuditoria.unshift({ accion, hora, detalle });
-    if (this.eventosAuditoria.length > 5) {
-      this.eventosAuditoria.pop();
-    }
-  }
-  formatLastChangeTime(date: Date): string {
-    const hoy = new Date();
-    if (date.getDate() === hoy.getDate() &&
-      date.getMonth() === hoy.getMonth() &&
-      date.getFullYear() === hoy.getFullYear()) {
-      return 'Hoy ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    } else {
-      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-  }
-
-
-
-  actualizarEstadoLuz() {
-    this.sensoresService.getLastLightStatus().subscribe(
-      (data) => {
-        const nuevoEstado = data.status === 'on';
-        const fechaEvento = new Date(data.event_date);
-
-        if (nuevoEstado !== this.luzEncendida) {
-          this.luzEncendida = nuevoEstado;
-          this.ultimoCambioEstado = this.formatLastChangeTime(fechaEvento);
-          this.agregarEventoAuditoria(
-            'Cambio estado luz',
-            fechaEvento.toLocaleTimeString(),
-            this.luzEncendida ? 'Encendida' : 'Apagada'
-          );
-        }
-      },
-      (error) => {
-        console.error('Error obteniendo datos del sensor de luz:', error);
+      
+      if (changed) {
+        this.showEnvChangeIndicator = true;
       }
-    );
-  }
-  
-  actualizarDatosAmbiente() {
-    this.isCheckingTHStatus = true;
-    this.sensoresService.getLastTHSensorData().subscribe(
-      (data) => {
-        this.thConnectionError = false;
-        const fechaEvento = new Date(data.event_date);
-        if (Math.abs(data.temperature_c - this.temperatura) > 0.5) {
-          this.temperatura = data.temperature_c;
-          changed = true;
-          this.agregarEventoAuditoria(
-            'Cambio temperatura',
-            fechaEvento.toLocaleTimeString(),
-            `Nueva temperatura: ${data.temperature_c}°C`
-          );
-        }
+      
+      this.isCheckingTHStatus = false;
+    },
+    (error) => {
+      this.thConnectionError = true;
+      this.isCheckingTHStatus = false;
+      console.error('Error obteniendo datos de humedad/temperatura:', error);
+    }
+  );
+}
 
-        if (Math.abs(data.humidity_percent - this.humedad) > 1) {
-          this.humedad = data.humidity_percent;
-          changed = true;
-          this.agregarEventoAuditoria(
-            'Cambio humedad',
-            fechaEvento.toLocaleTimeString(),
-            `Nueva humedad: ${data.humidity_percent}%`
-          );
-        }
-
-        if (data.alert_triggered) {
-          this.agregarEventoAuditoria(
-            'Alerta sensor',
-            fechaEvento.toLocaleTimeString(),
-            data.alert_message
-          );
-        }
-
-        this.isCheckingTHStatus = false;
-      },
-      (error) => {
-        this.thConnectionError = true;
-        this.isCheckingTHStatus = false;
-        console.error('Error obteniendo datos de humedad/temperatura:', error);
-      }
-    );
-  }
-
+  // Métodos del calendario
   generateCalendar() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
