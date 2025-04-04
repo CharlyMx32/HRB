@@ -161,6 +161,9 @@
                         <div *ngIf="employeeForm.get('phone')?.errors?.['minlength']">Mínimo 10 dígitos.</div>
                         <div *ngIf="employeeForm.get('phone')?.errors?.['maxlength']">Máximo 10 dígitos.</div>
                         <div *ngIf="employeeForm.get('phone')?.errors?.['pattern']">Solo se permiten números.</div>
+                        <div *ngIf="employeeForm.get('phone')?.errors?.['backendError']">
+                            {{ employeeForm.get('phone')?.errors?.['backendError'] }}
+                        </div>
                     </div>
                 </div>
 

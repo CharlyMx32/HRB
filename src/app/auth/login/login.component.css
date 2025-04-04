@@ -1,4 +1,4 @@
-/* ===== RESET Y ESTILOS BASE ===== */
+/* ===== ESTILOS BASE ===== */
 body {
   margin: 0;
   padding: 0;
@@ -19,7 +19,7 @@ body {
     radial-gradient(circle at 80% 70%, rgba(0, 242, 255, 0.1) 0%, transparent 20%);
 }
 
-/* ===== ESTILOS SVG Y LÍNEAS ===== */
+/* ===== LÍNEAS ANIMADAS ===== */
 .animated-line {
   position: absolute;
   top: 50%;
@@ -100,7 +100,7 @@ body {
   position: relative;
 }
 
-/* ===== FORMULARIO (ESTILOS ALINEADOS A LA IZQUIERDA) ===== */
+/* ===== FORMULARIO ===== */
 .left-align-form {
   display: flex;
   flex-direction: column;
@@ -161,25 +161,39 @@ body {
   color: #00f2ff;
 }
 
+/* ===== BOTÓN DE INGRESO (ESTILO NEGRO CON HOVER AZUL) ===== */
 .submit-button {
   width: 100%;
   padding: 12px 24px;
   border-radius: 6px;
   margin-top: 10px;
   border: none;
-  color: #EAEAEA;
+  color: #fff;
   background-color: #000;
   font-size: 15px;
   font-weight: 600;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
+  letter-spacing: 1.5px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.submit-button:hover {
+.submit-button:hover:not(:disabled) {
   background-color: hsl(225, 80%, 48%);
-  color: white;
-  box-shadow: 0 7px 20px rgba(24, 86, 220, 0.7);
+  color: #fff;
+  box-shadow: rgba(24, 86, 220, 0.7) 0px 7px 29px 0px;
+  letter-spacing: 3px;
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(4px);
+  transition: 100ms;
+  box-shadow: rgba(93, 24, 220, 0) 0px 0px 0px 0px;
 }
 
 .submit-button:disabled {
@@ -237,6 +251,12 @@ body {
   text-decoration: underline;
 }
 
+/* ===== SPINNER ===== */
 .fa-spinner {
-  margin-right: 8px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
