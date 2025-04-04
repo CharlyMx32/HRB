@@ -83,36 +83,6 @@ export class OrdenesComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Filtrar facturas
-  filteredFacturas() {
-    return this.facturas.filter(factura => {
-      const matchesSearch = this.searchFactura 
-        ? factura.nombre.toLowerCase().includes(this.searchFactura.toLowerCase()) 
-        : true;
-      
-      const matchesArea = this.searchArea 
-        ? factura.area_producto.toLowerCase() === this.searchArea.toLowerCase() 
-        : true;
-      
-      const matchesEstado = this.searchEstado 
-        ? factura.estado.toLowerCase() === this.searchEstado.toLowerCase() 
-        : true;
-
-      return matchesSearch && matchesArea && matchesEstado;
-    });
-  }
-
-  // Obtener facturas paginadas
-  paginatedFacturas() {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    return this.filteredFacturas().slice(startIndex, startIndex + this.itemsPerPage);
-  }
-
-  // Cambiar página
-  changePage(page: number) {
-    this.currentPage = page;
-  }
-
   redirectAndMarkOrders(): void {
     this.notificationService.resetInvoicesCount();
     this.redirectToNuevaOrden();
@@ -148,15 +118,21 @@ export class OrdenesComponent implements OnInit, OnDestroy {
     return traducciones[estado] || estado; // Devuelve la traducción o el estado original si no hay traducción
   }
 
-  // Total de páginas
-  get totalPages(): number {
-    return Math.ceil(this.filteredFacturas().length / this.itemsPerPage);
+  get facturasPaginadas(): any[] {
+    const inicio = (this.currentPage - 1) * this.itemsPerPage;
+    const fin = inicio + this.itemsPerPage;
+    return this.facturasFiltradas.slice(inicio, fin);
   }
-
-  // Números de página para la paginación
-  get pageNumbers(): number[] {
-    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  }
-
   
+  get facturasFiltradas(): any[] {
+    return this.facturas.filter(factura =>
+      factura.nombre.toLowerCase().includes(this.searchFactura.toLowerCase()) &&
+      (this.searchArea ? factura.productos.some((p: string) => p.includes(this.searchArea)) : true) &&
+      (this.searchEstado ? factura.estado === this.searchEstado : true)
+    );
+  }
+  
+  get totalPaginas(): number {
+    return Math.ceil(this.facturasFiltradas.length / this.itemsPerPage);
+  }  
 }

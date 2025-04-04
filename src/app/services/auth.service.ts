@@ -99,6 +99,10 @@ export class AuthService {
     );
   }
 
+  resetPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, { email });
+  }
+
   desactivateAccount(id: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/user/desactivate`, { id });
   }
