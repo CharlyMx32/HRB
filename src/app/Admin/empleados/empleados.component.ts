@@ -40,7 +40,8 @@ export class EmpleadosComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private workersService: WorkersService,
-    private router: Router
+    private router: Router,
+
   ) {
     this.minBirthDate.setFullYear(this.today.getFullYear() - 65);
     this.maxBirthDate.setFullYear(this.today.getFullYear() - 18);
@@ -241,6 +242,17 @@ export class EmpleadosComponent implements OnInit {
     // Solo para type="date" (formato YYYY-MM-DD)
     const birthDate = new Date(value);
     return EmpleadosComponent.validateDate(birthDate);
+  }
+
+  reenviarCorreo(email: string): void {
+    this.authService.resendMail(email).subscribe({
+      next: () => {
+        console.log(`Correo reenviado reenviado`);
+      },
+      error: (err) => {
+        console.error(`Error al reenviar el correo`, err);
+      }
+    });
   }
 
   desactivateAccount(id: number): void {
