@@ -30,7 +30,7 @@ export class AdminSidebarComponent implements OnInit {
   constructor(
     private authService: AuthService,
     public router: Router,
-    private notificationService: NotificationService // Añade el servicio
+    private notificationService: NotificationService 
   ) { }
 
   ngOnInit() {
