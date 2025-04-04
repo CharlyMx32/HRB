@@ -196,3 +196,33 @@
     color: white;
     pointer-events: none;
   }
+
+ .text-xs1{
+  color:white;
+  font-size: 0.7rem;
+  font-weight: 500;
+ }
+
+ /* dashboard.component.css */
+.compact-day-cell {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.compact-day-cell.has-events .compact-day-number {
+  font-weight: bold;
+  color: #00f2ff;
+}
+
+.compact-day-cell:hover {
+  background-color: rgba(0, 242, 255, 0.1);
+}
+
+.compact-day-cell.current-month {
+  opacity: 1;
+}
+
+.compact-day-cell:not(.current-month) {
+  opacity: 0.5;
+}

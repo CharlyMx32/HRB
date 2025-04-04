@@ -19,4 +19,8 @@ export class SensoresService {
         return this.http.get(`${this.apiUrl}/temperature-humidity-sensor`);
     }
 
+    getLastPirSensorData(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/pir-sensor`);
+    }
+
 }

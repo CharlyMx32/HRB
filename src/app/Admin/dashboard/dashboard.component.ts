@@ -34,10 +34,20 @@ export class DashboardComponent implements OnInit {
   daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   weeks: Date[][] = [];
   lightCheckInterval = 10000; // 5 segundos
+  facturasNuevas: {[key: string]: boolean} = {}; // Almacena días con facturas nuevas
+  showCalendarIndicator = false; // Controla el punto azul del calendario
 
   thCheckInterval = 5000; // 5 segundos para actualizar humedad/temperatura
-thConnectionError = false;
-isCheckingTHStatus = false;
+  thConnectionError = false;
+  isCheckingTHStatus = false;
+  // En tu componente
+  showLightChangeIndicator = false;
+  showEnvChangeIndicator = false;
+  pirCheckInterval = 3000; // 3 segundos para actualizar el sensor PIR
+  pirConnectionError = false;
+  isCheckingPirStatus = false;
+
+
 
   
   // Datos de auditoría
@@ -95,7 +105,12 @@ isCheckingTHStatus = false;
   ngOnInit() {
     this.actualizarDatosAmbiente();
     this.actualizarEstadoLuz();
+    this.actualizarEstadoPir(); 
     this.generateCalendar();
+
+    this.facturasService.facturas$.subscribe(facturas => {
+      this.procesarFacturas(facturas);
+    });
 
   
   setInterval(() => {
@@ -105,30 +120,55 @@ isCheckingTHStatus = false;
   setInterval(() => {
     this.actualizarDatosAmbiente();
   }, this.thCheckInterval);
+
+  setInterval(() => {
+    this.actualizarEstadoPir();
+  }, this.pirCheckInterval);
   
     
-
     
-    
-    // Simular cambios de estado
-    setInterval(() => {
-      // Simular detección PIR aleatoria
-      this.pirStatus = Math.random() > 0.8 ? '¡Detección!' : 'Inactivo';
-      if (this.pirStatus === '¡Detección!') {
-        this.lastDetection = new Date().toLocaleTimeString();
-        this.agregarEventoAuditoria('Detección PIR', this.lastDetection, 'Zona Alberta');
-      }
+  }
 
-      // Simular cambios puerta/luz
-      if (Math.random() > 0.9) {
-        this.puertaAbierta = !this.puertaAbierta;
-        this.ultimoCambioEstado = new Date().toLocaleTimeString();
-        this.agregarEventoAuditoria('Cambio estado puerta', this.ultimoCambioEstado, 
-          this.puertaAbierta ? 'Abierta' : 'Cerrada');
+  showPirChangeIndicator = false;
+
+// Modifica el método actualizarEstadoPir()
+actualizarEstadoPir() {
+  this.isCheckingPirStatus = true;
+  this.sensoresService.getLastPirSensorData().subscribe(
+    (data) => {
+      this.pirConnectionError = false;
+      const fechaEvento = new Date(data.event_date);
+      const nuevoEstado = data.motion_detected ? '¡Detección!' : 'Inactivo';
+      
+      // Solo actualizar si hay un cambio de estado
+      if (nuevoEstado !== this.pirStatus) {
+        this.pirStatus = nuevoEstado;
+        this.showPirChangeIndicator = true; // Activar indicador de cambio
+        
+        if (data.motion_detected) {
+          this.lastDetection = this.formatLastChangeTime(fechaEvento);
+          const alertMsg = data.alert_triggered ? ` (${data.alert_message})` : '';
+          this.agregarEventoAuditoria(
+            'Detección PIR', 
+            fechaEvento.toLocaleTimeString(), 
+            'Zona Alberta' + alertMsg
+          );
+        }
       }
       
-    }, 3000);
-  }
+      this.isCheckingPirStatus = false;
+    },
+    (error) => {
+      this.pirConnectionError = true;
+      this.isCheckingPirStatus = false;
+      console.error('Error obteniendo datos del sensor PIR:', error);
+    }
+  );
+}
+
+onPirCardClick() {
+  this.showPirChangeIndicator = false;
+}
 
   agregarEventoAuditoria(accion: string, hora: string, detalle: string) {
     this.eventosAuditoria.unshift({ accion, hora, detalle });
@@ -159,6 +199,7 @@ isCheckingTHStatus = false;
         if (nuevoEstado !== this.luzEncendida) {
           this.luzEncendida = nuevoEstado;
           this.ultimoCambioEstado = this.formatLastChangeTime(fechaEvento);
+          this.showLightChangeIndicator = true; // Activar indicador
           
           // Registrar evento en auditoría
           this.agregarEventoAuditoria(
@@ -170,21 +211,22 @@ isCheckingTHStatus = false;
       },
       (error) => {
         console.error('Error obteniendo datos del sensor de luz:', error);
-        // Opcional: mostrar estado de error en la interfaz
       }
     );
   }
-
+  
   actualizarDatosAmbiente() {
     this.isCheckingTHStatus = true;
     this.sensoresService.getLastTHSensorData().subscribe(
       (data) => {
         this.thConnectionError = false;
         const fechaEvento = new Date(data.event_date);
+        let changed = false;
         
-        // Actualizar solo si hay cambios significativos (más de 0.5°C o 1% de humedad)
+        // Actualizar solo si hay cambios significativos
         if (Math.abs(data.temperature_c - this.temperatura) > 0.5) {
           this.temperatura = data.temperature_c;
+          changed = true;
           this.agregarEventoAuditoria(
             'Cambio temperatura', 
             fechaEvento.toLocaleTimeString(), 
@@ -194,6 +236,7 @@ isCheckingTHStatus = false;
         
         if (Math.abs(data.humidity_percent - this.humedad) > 1) {
           this.humedad = data.humidity_percent;
+          changed = true;
           this.agregarEventoAuditoria(
             'Cambio humedad', 
             fechaEvento.toLocaleTimeString(), 
@@ -201,13 +244,8 @@ isCheckingTHStatus = false;
           );
         }
         
-        // Manejar alertas si es necesario
-        if (data.alert_triggered) {
-          this.agregarEventoAuditoria(
-            'Alerta sensor', 
-            fechaEvento.toLocaleTimeString(), 
-            data.alert_message
-          );
+        if (changed) {
+          this.showEnvChangeIndicator = true;
         }
         
         this.isCheckingTHStatus = false;
@@ -219,6 +257,16 @@ isCheckingTHStatus = false;
       }
     );
   }
+
+  onLightCardClick() {
+    this.showLightChangeIndicator = false;
+  }
+  
+  onEnvCardClick() {
+    this.showEnvChangeIndicator = false;
+  }
+  
+  
 
   // Métodos del calendario
   generateCalendar() {
@@ -265,7 +313,6 @@ isCheckingTHStatus = false;
       this.currentDate.getMonth() - 1,
       1
     );
-    this.generateCalendar();
   }
 
   nextMonth() {
@@ -274,13 +321,60 @@ isCheckingTHStatus = false;
       this.currentDate.getMonth() + 1,
       1
     );
-    this.generateCalendar();
   }
 
-  hasEvents(day: Date): boolean {
-    // AQUI METEREMOS LAS FACTURAS REALES
-    // Ejemplo: días 5, 15 y 25 tienen eventos
-    return day.getDate() % 5 === 0; // Solo para demostración
+ // Cambia estas propiedades
+facturasPendientes: {[key: string]: boolean} = {}; // Solo facturas pendientes nuevas
+ultimaFacturaFecha: Date | null = null;
+
+// Modifica el método procesarFacturas
+procesarFacturas(facturas: any[]) {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0); // Normalizar fecha
+  
+  facturas.forEach(factura => {
+    if (factura.invoice_date && factura.status === 'pending') { // Solo facturas pendientes
+      const fechaFactura = new Date(factura.invoice_date);
+      fechaFactura.setHours(0, 0, 0, 0); // Normalizar fecha
+      
+      // Solo procesar facturas de hoy o futuras
+      if (fechaFactura >= hoy) {
+        const diaKey = this.getDiaKey(fechaFactura);
+        
+        // Verificar si es una factura nueva (más reciente que la última registrada)
+        if (!this.ultimaFacturaFecha || fechaFactura > this.ultimaFacturaFecha) {
+          this.facturasPendientes[diaKey] = true;
+          this.ultimaFacturaFecha = fechaFactura;
+          this.showCalendarIndicator = true;
+          
+          this.agregarEventoAuditoria(
+            'Nueva factura pendiente',
+            new Date().toLocaleTimeString(),
+            `Factura #${factura.invoice_number || 'N/A'} - ${fechaFactura.toLocaleDateString()}`
+          );
+        }
+      }
+    }
+  });
+  
+  this.generateCalendar();
+}
+
+// Modifica hasEvents para solo mostrar facturas pendientes
+hasEvents(day: Date): boolean {
+  const diaKey = this.getDiaKey(day);
+  return this.facturasPendientes[diaKey];
+}
+
+// Modifica onCalendarClick para limpiar notificaciones
+onCalendarClick() {
+  this.showCalendarIndicator = false;
+  // Opcional: this.facturasPendientes = {};
+}
+  
+  // Método auxiliar para generar clave única por día
+  getDiaKey(fecha: Date): string {
+    return `${fecha.getFullYear()}-${fecha.getMonth()}-${fecha.getDate()}`;
   }
 
   addEvent(day: Date) {
