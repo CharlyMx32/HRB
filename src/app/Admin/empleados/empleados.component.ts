@@ -15,20 +15,24 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 })
 export class EmpleadosComponent implements OnInit {
   employees: any[] = [];
-  
+
   // Modal states
   showAddModal: boolean = false;
   showEditModal: boolean = false;
-  
+
   selectedEmployeeId: string | null = null;
-  
+
   employeeForm: FormGroup;
   editEmployeeForm: FormGroup;
-  
+
   errorMessage: string = '';
   successMessage: string = '';
   editErrorMessage: string = '';
-  
+
+  today = new Date();
+  minBirthDate = new Date();
+  maxBirthDate = new Date();
+
   loading: boolean = false;
   editLoading: boolean = false;
 
@@ -38,31 +42,33 @@ export class EmpleadosComponent implements OnInit {
     private workersService: WorkersService,
     private router: Router
   ) {
+    this.minBirthDate.setFullYear(this.today.getFullYear() - 65);
+    this.maxBirthDate.setFullYear(this.today.getFullYear() - 18);
 
     this.employeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       last_name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-      birth_date: ['', [Validators.required, this.ageValidator]],
+      birth_date: ['', [Validators.required, this.ageValidator.bind(this)]],
       phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]+$')]],
-      email: ['', [Validators.required, Validators.email]],
-      RFID: ['', [Validators.required, Validators.maxLength(255)]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
+      RFID: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       RFC: ['', [Validators.required, Validators.minLength(12), Validators.maxLength(13)]],
       NSS: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11), Validators.pattern('^[0-9]+$')]],
     });
-  
+
     this.editEmployeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       last_name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
       RFID: ['', [Validators.required, Validators.maxLength(255)]],
     });
-  
+
     this.employeeForm.statusChanges.subscribe(() => {
-      this.errorMessage = ''; 
+      this.errorMessage = '';
     });
-  
+
     this.editEmployeeForm.statusChanges.subscribe(() => {
-      this.editErrorMessage = ''; 
+      this.editErrorMessage = '';
     });
   }
 
@@ -90,7 +96,7 @@ export class EmpleadosComponent implements OnInit {
       last_name: employee.last_name,
       phone: employee.phone,
       RFID: employee.RFID,
-      
+
     });
   }
 
@@ -141,8 +147,27 @@ export class EmpleadosComponent implements OnInit {
         setTimeout(() => this.successMessage = '', 5000);
       },
       error: (error) => {
-        this.errorMessage = error.error?.message || 'Error al registrar empleado';
         this.loading = false;
+
+        if (error.status === 422 && error.error?.errors) {
+          // Maneja errores de validación del backend
+          const backendErrors = error.error.errors;
+
+          // Asigna errores a cada campo
+          Object.keys(backendErrors).forEach(field => {
+            const control = this.employeeForm.get(field);
+            if (control) {
+              // Agrega el error al control sin eliminar otras validaciones
+              control.setErrors({
+                ...control.errors,
+                backendError: backendErrors[field][0]
+              });
+              control.markAsTouched();
+            }
+          });
+        } else {
+          this.errorMessage = error.error?.message || 'Error al registrar empleado';
+        }
       }
     });
   }
@@ -157,7 +182,7 @@ export class EmpleadosComponent implements OnInit {
     this.editErrorMessage = '';
 
     this.workersService.updateEmployee(
-      this.selectedEmployeeId, 
+      this.selectedEmployeeId,
       this.editEmployeeForm.value
     ).subscribe({
       next: () => {
@@ -174,25 +199,55 @@ export class EmpleadosComponent implements OnInit {
     });
   }
 
-  // Validator
-  ageValidator(control: any): { [key: string]: boolean } | null {
-    const birthDate = new Date(control.value);
+  // Cambia el método ageValidator y añade validateDate como función estática
+  private static validateDate(date: Date): { [key: string]: boolean } | null {
+    if (isNaN(date.getTime())) return { 'invalidDate': true };
+
+    const MIN_YEAR = 1960;
+    const MAX_AGE = 65;
     const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
+
+    // Validar año mínimo
+    if (date.getFullYear() < MIN_YEAR) {
+      return { 'minYear': true };
     }
-    
-    return age >= 18 ? null : { 'ageInvalid': true };
+
+    // Validar que no sea fecha futura
+    if (date > today) {
+      return { 'futureDate': true };
+    }
+
+    // Validar edad máxima (65 años)
+    const maxBirthDate = new Date();
+    maxBirthDate.setFullYear(today.getFullYear() - MAX_AGE);
+    if (date < maxBirthDate) {
+      return { 'maxAge': true };
+    }
+
+    // Validar edad mínima (18 años)
+    const minBirthDate = new Date();
+    minBirthDate.setFullYear(today.getFullYear() - 18);
+    if (date > minBirthDate) {
+      return { 'ageInvalid': true };
+    }
+
+    return null;
+  }
+
+  ageValidator(control: any): { [key: string]: boolean } | null {
+    const value = control.value;
+    if (!value) return null;
+
+    // Solo para type="date" (formato YYYY-MM-DD)
+    const birthDate = new Date(value);
+    return EmpleadosComponent.validateDate(birthDate);
   }
 
   desactivateAccount(id: number): void {
     this.authService.desactivateAccount(id).subscribe({
       next: (response) => {
         alert(response.message);
-        this.employees = this.employees.map(emp => 
+        this.employees = this.employees.map(emp =>
           emp.id === id ? { ...emp, activate: true } : emp
         );
         this.getEmployees()
@@ -208,7 +263,7 @@ export class EmpleadosComponent implements OnInit {
     this.authService.activateAccount(id).subscribe({
       next: (response) => {
         alert(response.message);
-        this.employees = this.employees.map(emp => 
+        this.employees = this.employees.map(emp =>
           emp.id === id ? { ...emp, activate: false } : emp
         );
         this.getEmployees()

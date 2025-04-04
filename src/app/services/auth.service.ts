@@ -83,7 +83,9 @@ export class AuthService {
 
   registerWorker(employeeData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/register`, employeeData).pipe(
-      catchError(this.handleError)
+      catchError(error => {
+        return throwError(() => error);
+      })
     );
   }
 

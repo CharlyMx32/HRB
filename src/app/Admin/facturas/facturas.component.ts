@@ -16,7 +16,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class FacturasComponent implements OnInit {
   facturas$!: Observable<any[]>;
+
   employees: Array<{ id: number; name: string; last_name: string; assigned_orders: number}> = [];
+
   modalVisible = false;
   facturaSeleccionadaId!: number;
   selectedEmployeeId!: number;
@@ -30,10 +32,10 @@ export class FacturasComponent implements OnInit {
 
   ngOnInit(): void {
     this.facturas$ = this.facturasService.facturas$;
-    this.loadEmployees(); // Cargar empleados al inicializar el componente
+    this.getEmployees(); 
   }
 
-  loadEmployees(): void {
+  getEmployees(): void {
     this.workersService.getEmployees().subscribe(
       (response: any) => {
         this.employees = response.data.map((employee: any) => ({

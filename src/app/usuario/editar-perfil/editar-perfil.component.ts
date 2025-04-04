@@ -30,8 +30,8 @@ export class EditarPerfilComponent implements OnInit {
   ) {
     this.updatePasswordForm = this.fb.group({
       current_password: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      password_confirmation: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      password_confirmation: ['', [Validators.required, Validators.minLength(8)]]
     }, { validator: this.passwordMatchValidator });
   }
 
@@ -83,7 +83,7 @@ export class EditarPerfilComponent implements OnInit {
 
         setTimeout(() => {
           this.successMessage = '';
-          this.router.navigate(['/worker/dashboard']); // Redirige al dashboard
+          //this.router.navigate(['/worker/dashboard']); // Redirige al dashboard
         }, 3000);
       },
       error => {
