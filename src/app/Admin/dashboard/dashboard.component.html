@@ -1,6 +1,5 @@
 <div class="grid grid-cols-4 gap-3 h-full p-3">
-    <!-- Primera Fila -->
-    <!-- Auditoría de Acciones -->
+
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
         <h2 class="text-sm font-semibold text-[#EAEAEA] mb-2">Auditoría de Acciones</h2>
         <div class="flex-1 space-y-2 overflow-y-auto">
@@ -15,7 +14,6 @@
         </div>
     </div>
 
-    <!-- Accesos RFID -->
     <div
         class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] hover:border-[#00f2ff]/30 transition-colors col-span-1">
         <div class="flex justify-between items-center mb-2">
@@ -35,7 +33,6 @@
         </div>
     </div>
 
-    <!-- Sensor de Movimiento -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
         <h2 class="text-sm font-semibold text-[#EAEAEA] mb-2">Sensor Presencia</h2>
         <div
@@ -55,24 +52,20 @@
         </div>
     </div>
 
-    <!-- Calendario Compacto (más ancho) -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-sm font-semibold text-[#EAEAEA]">
                 {{ currentDate | date:'MMMM y' }}
             </h2>
-            <div class="flex space-x-2 items-center"> <!-- Aumenté space-x-2 para mejor separación -->
-                <!-- Botón Mes Anterior -->
+            <div class="flex space-x-2 items-center"> 
                 <button (click)="prevMonth()" class="text-[#00f2ff] hover:text-[#00c4ff] transition-colors p-1">
                     <i class="fas fa-chevron-left text-xs"></i>
                 </button>
 
-                <!-- Botón Mes Siguiente -->
                 <button (click)="nextMonth()" class="text-[#00f2ff] hover:text-[#00c4ff] transition-colors p-1">
                     <i class="fas fa-chevron-right text-xs"></i>
                 </button>
 
-                <!-- Botón Calendario Completo -->
                 <button (click)="openFullCalendar()" class="text-[#00f2ff] hover:text-[#00c4ff] transition-colors p-1">
                     <i class="fas fa-expand text-xs"></i>
                 </button>
@@ -80,12 +73,10 @@
         </div>
 
         <div class="compact-calendar-grid">
-            <!-- Días de la semana -->
             <div *ngFor="let day of daysOfWeek" class="compact-day-header">
                 {{ day.charAt(0) }}
             </div>
 
-            <!-- Días del mes -->
             <ng-container *ngFor="let week of weeks">
                 <div *ngFor="let day of week" class="compact-day-cell"
                     [class.current-month]="day.getMonth() === currentDate.getMonth()"
@@ -97,12 +88,9 @@
         </div>
     </div>
 
-    <!-- Segunda Fila -->
-    <!-- Estado -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
         <h2 class="text-sm font-semibold text-[#EAEAEA] mb-2">Estado</h2>
 
-        <!-- Luz -->
         <div
             class="bg-[#1a1a1d]/80 p-2 rounded-lg mb-2 flex items-center justify-between hover:bg-[#252529] transition-colors border border-[#2a2a2e]">
             <div class="flex items-center">
@@ -136,14 +124,12 @@
         </div>
     </div>
 
-   <!-- Ambiente -->
 <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
     <div class="flex justify-between items-center mb-2">
         <h2 class="text-sm font-semibold text-[#EAEAEA]">Ambiente</h2>
         <div *ngIf="isCheckingTHStatus" class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
     </div>
     <div class="flex-1 flex flex-col justify-center bg-[#1a1a1d]/80 rounded-lg p-3 border border-[#2a2a2e]">
-        <!-- Temperatura -->
         <div class="flex justify-between items-center mb-2">
             <div class="flex items-center">
                 <i class="fas fa-temperature-low mr-2" 
@@ -161,7 +147,6 @@
             </span>
         </div>
         
-        <!-- Humedad -->
         <div class="flex justify-between items-center mb-3">
             <div class="flex items-center">
                 <i class="fas fa-tint mr-2" 
@@ -177,7 +162,6 @@
             </span>
         </div>
         
-        <!-- Barra de humedad -->
         <div class="w-full bg-[#121215] h-1.5 rounded-full overflow-hidden mb-1">
             <div class="h-full rounded-full" 
                  [class.bg-gradient-to-r]="humedad >= 30 && humedad <= 70"
@@ -188,7 +172,6 @@
             </div>
         </div>
         
-        <!-- Indicadores de rango óptimo -->
         <div class="flex justify-between text-[0.6rem] text-[#7d7d7d]">
             <span>0%</span>
             <span class="text-green-400" *ngIf="humedad >= 30 && humedad <= 70">Óptimo</span>
@@ -197,7 +180,6 @@
     </div>
 </div>
 
-    <!-- Últimos Productos Pesados (extendido) -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-2">
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-sm font-semibold text-[#EAEAEA]">Últimos Productos Pesados</h2>

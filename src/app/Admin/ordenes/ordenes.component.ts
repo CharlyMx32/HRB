@@ -15,17 +15,14 @@ import { NotificationService } from '../../services/notification.service';
   styleUrls: ['./ordenes.component.css']
 })
 export class OrdenesComponent implements OnInit, OnDestroy {
-  // Datos que serán cargados desde el backend
   facturas: any[] = [];
   private pollingSubscription!: Subscription;
   private readonly POLLING_INTERVAL = 15000;
 
-  // Filtros
   searchFactura: string = '';
   searchArea: string = '';
   searchEstado: string = '';
   
-  // Paginación
   currentPage: number = 1;
   itemsPerPage: number = 5;
 
@@ -47,7 +44,7 @@ export class OrdenesComponent implements OnInit, OnDestroy {
   private startPolling(): void {
     this.pollingSubscription = interval(this.POLLING_INTERVAL)
       .pipe(
-        startWith(0), // Ejecutar inmediatamente al iniciar
+        startWith(0), 
       )
       .subscribe(() => {
         this.loadFacturas();
@@ -60,7 +57,6 @@ export class OrdenesComponent implements OnInit, OnDestroy {
     }
   }
   
-  // Método para cargar las facturas desde el servicio
   loadFacturas() {
     this.deliveriesService.getDeliveries().subscribe(
       (response: any) => {
@@ -73,7 +69,6 @@ export class OrdenesComponent implements OnInit, OnDestroy {
           estado: delivery.status,
         }));
         
-        // Actualizar contador de facturas pendientes
         const pendientes = this.facturas.filter(f => f.estado === 'Pending').length;
         this.notificationService.updateInvoicesCount(pendientes);
       },
@@ -83,7 +78,6 @@ export class OrdenesComponent implements OnInit, OnDestroy {
     );
   }
 
-  // Filtrar facturas
   filteredFacturas() {
     return this.facturas.filter(factura => {
       const matchesSearch = this.searchFactura 
@@ -102,13 +96,11 @@ export class OrdenesComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Obtener facturas paginadas
   paginatedFacturas() {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     return this.filteredFacturas().slice(startIndex, startIndex + this.itemsPerPage);
   }
 
-  // Cambiar página
   changePage(page: number) {
     this.currentPage = page;
   }
@@ -118,16 +110,14 @@ export class OrdenesComponent implements OnInit, OnDestroy {
     this.redirectToNuevaOrden();
   }
 
-  // Redirigir a nueva orden
   redirectToNuevaOrden() {
     this.router.navigate(['/admin/facturas']);
   }
 
   markOrdersAsSeen(): void {
-    this.notificationService.resetInvoicesCount(); // Resetea el contador de facturas
+    this.notificationService.resetInvoicesCount(); 
   }
 
-  // Estilos para los estados
   getEstadoColor(estado: string): string {
     switch (estado) {
       case 'Pending': 
@@ -145,18 +135,15 @@ export class OrdenesComponent implements OnInit, OnDestroy {
       Completed: 'Completado',
       Canceled: 'Cancelado'
     };
-    return traducciones[estado] || estado; // Devuelve la traducción o el estado original si no hay traducción
+    return traducciones[estado] || estado; 
   }
 
-  // Total de páginas
   get totalPages(): number {
     return Math.ceil(this.filteredFacturas().length / this.itemsPerPage);
   }
 
-  // Números de página para la paginación
   get pageNumbers(): number[] {
     return Array.from({ length: this.totalPages }, (_, i) => i + 1);
   }
 
-  
 }
