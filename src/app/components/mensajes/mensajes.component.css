@@ -1,0 +1,105 @@
+/* Contenedor principal centrado */
+.notification-container {
+    position: fixed;
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    min-width: 320px;
+    max-width: 90%;
+    width: auto;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    backdrop-filter: blur(8px);
+    animation: notificationSlideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Contenido de la notificación */
+  .notification-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  /* Icono */
+  .notification-icon i {
+    font-size: 1.5rem;
+  }
+  
+  /* Mensaje */
+  .notification-message {
+    flex: 1;
+  }
+  
+  .notification-message p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  
+  /* Botón de cerrar */
+  .notification-close {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0.25rem;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+  }
+  
+  .notification-close:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Estilos específicos para notificaciones */
+  .notification-success {
+    background: linear-gradient(135deg, rgba(46, 125, 50, 0.95) 0%, rgba(76, 175, 80, 0.95) 100%);
+    color: white;
+  }
+  
+  .notification-error {
+    background: linear-gradient(135deg, rgba(198, 40, 40, 0.95) 0%, rgba(244, 67, 54, 0.95) 100%);
+    color: white;
+  }
+  
+  /* Animaciones */
+  @keyframes notificationFadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -40%);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+  }
+  
+  @keyframes notificationFadeOut {
+    from {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    to {
+      opacity: 0;
+      transform: translate(-50%, -60%);
+    }
+  }
+  
+  /* Estado para cerrar */
+  .notification-container.closing {
+    animation: notificationFadeOut 0.25s ease-in forwards;
+  }

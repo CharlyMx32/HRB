@@ -43,3 +43,12 @@ body {
     border-radius: 16px;
 }
 
+.eliminar-cuadro-overlay {
+    background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.mat-dialog-container {
+    padding: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+}

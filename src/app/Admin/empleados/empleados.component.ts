@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { MensajesService } from '../../services/mensajes.service';
 import { WorkersService } from '../../services/workers.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { EliminarCuadroComponent } from '../../components/eliminar-cuadro/eliminar-cuadro.component';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -40,7 +43,9 @@ export class EmpleadosComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private workersService: WorkersService,
+    private mensajesService: MensajesService,
     private router: Router,
+    private dialog: MatDialog
 
   ) {
     this.minBirthDate.setFullYear(this.today.getFullYear() - 65);
@@ -240,7 +245,6 @@ export class EmpleadosComponent implements OnInit {
     const value = control.value;
     if (!value) return null;
 
-    // Solo para type="date" (formato YYYY-MM-DD)
     const birthDate = new Date(value);
     return EmpleadosComponent.validateDate(birthDate);
   }
@@ -248,9 +252,10 @@ export class EmpleadosComponent implements OnInit {
   reenviarCorreo(email: string): void {
     this.authService.resendMail(email).subscribe({
       next: () => {
-        console.log(`Correo reenviado reenviado`);
+        this.mensajesService.showSuccess('Correo reenviado exitosamente');
       },
       error: (err) => {
+        this.mensajesService.showError('Error al reenviar el correo');
         console.error(`Error al reenviar el correo`, err);
       }
     });
@@ -259,15 +264,15 @@ export class EmpleadosComponent implements OnInit {
   desactivateAccount(id: number): void {
     this.authService.desactivateAccount(id).subscribe({
       next: (response) => {
-        alert(response.message);
+        this.mensajesService.showSuccess(response.message || 'Cuenta desactivada correctamente');
         this.employees = this.employees.map(emp =>
           emp.id === id ? { ...emp, activate: true } : emp
         );
-        this.getEmployees()
+        this.getEmployees();
       },
       error: (err) => {
         console.error('Error al desactivar la cuenta:', err);
-        alert(err.error?.message || 'No se pudo desactivar la cuenta.');
+        this.mensajesService.showError(err.error?.message || 'No se pudo desactivar la cuenta.');
       }
     });
   }
@@ -275,30 +280,44 @@ export class EmpleadosComponent implements OnInit {
   activateAccount(id: number): void {
     this.authService.activateAccount(id).subscribe({
       next: (response) => {
-        alert(response.message);
+        this.mensajesService.showSuccess(response.message || 'Cuenta activada correctamente');
         this.employees = this.employees.map(emp =>
           emp.id === id ? { ...emp, activate: false } : emp
         );
-        this.getEmployees()
+        this.getEmployees();
       },
       error: (err) => {
         console.error('Error al activar la cuenta:', err);
-        alert(err.error?.message || 'No se pudo activar la cuenta.');
+        this.mensajesService.showError(err.error?.message || 'No se pudo activar la cuenta.');
       }
     });
   }
 
   eliminarTrabajador(id: number) {
-    if (confirm('¿Estás seguro de eliminar este trabajador?')) {
-      this.authService.eliminarTrabajador(id).subscribe({
-        next: () => {
-          console.log('Trabajador eliminado correctamente');
-          // Aquí puedes refrescar la lista de empleados si es necesario
-        },
-        error: (error) => {
-          console.error('Error al eliminar trabajador:', error);
-        }
-      });
-    }
-  }  
+    const dialogRef = this.dialog.open(EliminarCuadroComponent, {
+      data: {
+        titulo: 'Eliminar trabajador',
+        mensaje: '¿Estás seguro de eliminar este trabajador? Esta acción no se puede deshacer.',
+        textoConfirmar: 'Sí, eliminar',
+        textoCancelar: 'Cancelar'
+      },
+      width: '400px',
+      panelClass: 'eliminar-cuadro-overlay'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.authService.eliminarTrabajador(id).subscribe({
+          next: () => {
+            this.mensajesService.showSuccess('Trabajador eliminado correctamente');
+            this.getEmployees();
+          },
+          error: (error) => {
+            console.error('Error al eliminar trabajador:', error);
+            this.mensajesService.showError(error.error?.message || 'Error al eliminar trabajador');
+          }
+        });
+      }
+    });
+  }
 }

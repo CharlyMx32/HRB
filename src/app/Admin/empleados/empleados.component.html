@@ -54,45 +54,29 @@
                                 <!-- Botón para editar -->
                                 <button class="text-[#00f2ff] hover:text-[#00c4ff]" (click)="openEditModal(employee.id)" title="Editar">
                                     <!-- Ícono de editar -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
+                                    <i class="fas fa-edit"></i>
                                 </button>
-                            
+
                                 <!-- Botón para reenviar correo -->
                                 <button class="text-[#00f2ff] hover:text-[#00c4ff]" (click)="reenviarCorreo(employee.email)" title="Reenviar correo">
                                     <!-- Ícono de reenviar -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 10h11M9 21l-6-6m0 0l6-6m-6 6h18" />
-                                    </svg>
+                                    <i class="fas fa-paper-plane"></i>
                                 </button>
-                            
+
                                 <!-- Botón para desactivar cuenta -->
                                 <button *ngIf="employee.activate" class="text-red-400 hover:text-red-300"
                                     (click)="desactivateAccount(employee.id)" title="Desactivar cuenta">
                                     <!-- Ícono de desactivar -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
+                                    <i class="fas fa-user-slash"></i>
                                 </button>
-                            
+
                                 <!-- Botón para activar cuenta -->
                                 <button *ngIf="!employee.activate" class="text-green-400 hover:text-green-300"
                                     (click)="activateAccount(employee.id)" title="Activar cuenta">
                                     <!-- Ícono de activar -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M5 13l4 4L19 7" />
-                                    </svg>
+                                    <i class="fas fa-user-check"></i>
                                 </button>
-                            
+
                                 <!-- Botón para eliminar (solo si la cuenta está desactivada) -->
                                 <button *ngIf="!employee.activate" 
                                     [disabled]="employee.activate" 
@@ -103,13 +87,9 @@
                                     title="Eliminar"
                                     (click)="!employee.activate && eliminarTrabajador(employee.id)">
                                     <!-- Ícono de eliminar -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
-                                        viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3m-4 0h14" />
-                                    </svg>
+                                    <i class="fas fa-trash"></i>
                                 </button>
-                            </div>                            
+                            </div>                          
                         </td>                    
                     </tr>
                 </ng-container>

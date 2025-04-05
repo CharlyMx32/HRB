@@ -1,0 +1,15 @@
+<div *ngIf="mensaje" 
+     [class]="mensaje.type === 'success' ? 'notification-success' : 'notification-error'"
+     class="notification-container">
+  <div class="notification-content">
+    <div class="notification-icon">
+      <i [class]="mensaje.type === 'success' ? 'fas fa-check-circle' : 'fas fa-exclamation-circle'"></i>
+    </div>
+    <div class="notification-message">
+      <p>{{ mensaje.message }}</p>
+    </div>
+    <button (click)="close()" class="notification-close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+</div>
