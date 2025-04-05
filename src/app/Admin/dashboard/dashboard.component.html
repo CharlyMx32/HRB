@@ -200,26 +200,31 @@
         <div class="flex-1 overflow-auto">
             <table class="w-full text-[#EAEAEA] text-xs">
                 <thead>
-                    <tr class="bg-[#1a1a1d] text-[#7d7d7d]">
-                        <th class="p-2 text-left rounded-l-lg">Producto</th>
-                        <th class="p-2 text-center">Peso (kg)</th>
-                        <th class="p-2 text-center">Hora</th>
-                        <th class="p-2 text-right rounded-r-lg">Destino</th>
-                    </tr>
+                  <tr class="bg-[#1a1a1d] text-[#7d7d7d]">
+                    <th class="p-2 text-left rounded-l-lg">Producto</th>
+                    <th class="p-2 text-center">Peso (kg)</th>
+                    <th class="p-2 text-center">Hora</th>
+                    <th class="p-2 text-right rounded-r-lg">Destino</th>
+                  </tr>
                 </thead>
                 <tbody class="divide-y divide-[#333333]">
-                    <tr *ngFor="let producto of productosPesados" class="hover:bg-[#2a2a2e] transition-colors">
-                        <td class="p-2 text-left">{{producto.nombre}}</td>
-                        <td class="p-2 text-center font-mono">{{producto.peso}}</td>
-                        <td class="p-2 text-center">{{producto.hora}}</td>
-                        <td class="p-2 text-right">
-                            <span class="bg-[#333337] px-2 py-1 rounded-full text-xs">
-                                {{producto.destino}}
-                            </span>
-                        </td>
-                    </tr>
+                  <tr *ngFor="let item of weightDataList" class="hover:bg-[#2a2a2e] transition-colors">
+                    <td class="p-2 text-left">{{ item.exit_code }}</td>
+                    <td class="p-2 text-center font-mono">{{ item.weight_kg }}</td>
+                    <td class="p-2 text-center">
+                      {{ item.event_date | date: 'shortTime' }}
+                    </td>
+                    <td class="p-2 text-right">
+                      <span class="bg-[#333337] px-2 py-1 rounded-full text-xs">
+                        {{ item.action }}
+                      </span>
+                    </td>
+                  </tr>
+                  <tr *ngIf="weightDataList.length === 0">
+                    <td colspan="4" class="p-2 text-center text-[#777]">No hay datos del sensor</td>
+                  </tr>
                 </tbody>
-            </table>
+              </table>                           
         </div>
     </div>
 </div>
