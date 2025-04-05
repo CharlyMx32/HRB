@@ -1,0 +1,147 @@
+.eliminar-cuadro-container {
+    background-color: #232328;
+    border-radius: 0.5rem;
+    border: 1px solid #333337;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 400px;
+    overflow: hidden;
+  }
+  
+  .eliminar-cuadro-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    background-color: #1a1a1d;
+    border-bottom: 1px solid #333337;
+  }
+  
+  .eliminar-cuadro-header h3 {
+    margin: 0;
+    color: #EAEAEA;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+  
+  .eliminar-cuadro-header i {
+    font-size: 1.5rem;
+  }
+  
+  .eliminar-cuadro-body {
+    padding: 1.5rem;
+    color: #AAAAAA;
+    line-height: 1.5;
+  }
+  
+  .eliminar-cuadro-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1rem 1.5rem;
+    background-color: #1a1a1d;
+    border-top: 1px solid #333337;
+  }
+  
+  .cancelar-btn {
+    background-color: #333337;
+    color: #EAEAEA;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.25rem;
+    cursor: pointer;.eliminar-cuadro-container {
+        background-color: #232328;
+        border-radius: 0.5rem;
+        border: 1px solid #333337;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 400px;
+        overflow: hidden;
+      }
+      
+      .eliminar-cuadro-header {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1.25rem 1.5rem;
+        background-color: #1a1a1d;
+        border-bottom: 1px solid #333337;
+      }
+      
+      .eliminar-cuadro-header h3 {
+        margin: 0;
+        color: #EAEAEA;
+        font-size: 1.125rem;
+        font-weight: 600;
+      }
+      
+      .eliminar-cuadro-header i {
+        font-size: 1.5rem;
+      }
+      
+      .eliminar-cuadro-body {
+        padding: 1.5rem;
+        color: #AAAAAA;
+        line-height: 1.5;
+      }
+      
+      .eliminar-cuadro-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        background-color: #1a1a1d;
+        border-top: 1px solid #333337;
+      }
+      
+      .cancelar-btn {
+        background-color: #333337;
+        color: #EAEAEA;
+        border: none;
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+      
+      .cancelar-btn:hover {
+        background-color: #444444;
+      }
+      
+      .confirmar-btn {
+        background-color: #f44336;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.25rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.2s ease;
+      }
+      
+      .confirmar-btn:hover {
+        background-color: #d32f2f;
+      }
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .cancelar-btn:hover {
+    background-color: #444444;
+  }
+  
+  .confirmar-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .confirmar-btn:hover {
+    background-color: #d32f2f;
+  }
