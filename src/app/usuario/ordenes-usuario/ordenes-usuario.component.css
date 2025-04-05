@@ -1,0 +1,107 @@
+/* Estilos para los botones de acción */
+button {
+  transition: all 0.3s ease;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Estilos para los badges de estado */
+.bg-yellow-500\/10 {
+  background-color: rgba(234, 179, 8, 0.1);
+}
+
+.bg-green-500\/10 {
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.bg-gray-500\/10 {
+  background-color: rgba(107, 114, 128, 0.1);
+}
+
+/* Estilos para los puntos de estado */
+.w-2 {
+  width: 0.5rem;
+}
+
+.h-2 {
+  height: 0.5rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+/* Transiciones suaves */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Efecto hover para las filas de la tabla */
+.hover\:bg-\[\#2a2a2e\]\/80:hover {
+  background-color: rgba(42, 42, 46, 0.8);
+}
+
+/* Animaciones para el modal */
+.modal-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.modal-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 200ms, transform 200ms;
+}
+
+.modal-exit {
+  opacity: 1;
+}
+
+.modal-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 200ms, transform 200ms;
+}
+
+/* Estilos para el botón de confirmar */
+.submit-button {
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  background-color: #000;
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  letter-spacing: 1.5px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.submit-button:hover:not(:disabled) {
+  background-color: hsl(225, 80%, 48%);
+  color: #fff;
+  box-shadow: rgba(24, 86, 220, 0.7) 0px 7px 29px 0px;
+  letter-spacing: 3px;
+}
+
+.submit-button:active:not(:disabled) {
+  transform: translateY(4px);
+  transition: 100ms;
+  box-shadow: rgba(93, 24, 220, 0) 0px 0px 0px 0px;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
