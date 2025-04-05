@@ -16,7 +16,9 @@ import { FormsModule } from '@angular/forms';
 })
 export class FacturasComponent implements OnInit {
   facturas$!: Observable<any[]>;
-  employees: Array<{ id: number; name: string; last_name: string }> = [];
+
+  employees: Array<{ id: number; name: string; last_name: string; assigned_orders: number}> = [];
+
   modalVisible = false;
   facturaSeleccionadaId!: number;
   selectedEmployeeId!: number;
@@ -30,19 +32,31 @@ export class FacturasComponent implements OnInit {
 
   ngOnInit(): void {
     this.facturas$ = this.facturasService.facturas$;
-    this.loadEmployees(); // Cargar empleados al inicializar el componente
+    this.getEmployees(); 
   }
 
-  // Método para cargar la lista de empleados
-  loadEmployees(): void {
-    this.workersService.getEmployees().subscribe({
-      next: (response) => {
-        this.employees = response;
+  getEmployees(): void {
+    this.workersService.getEmployees().subscribe(
+      (response: any) => {
+        this.employees = response.data.map((employee: any) => ({
+          id: employee.id,
+          email: employee.email,
+          name: employee.name,
+          last_name: employee.last_name,
+          birth_date: employee.birth_date,
+          age: employee.age,
+          phone: employee.phone,
+          assigned_orders: employee.assigned_orders,
+          RFID: employee.RFID,
+          RFC: employee.RFC,
+          NSS: employee.NSS,
+          activate: employee.activate,
+        }));
       },
-      error: (error) => {
-        console.error('Error al cargar empleados:', error);
+      (error) => {
+        console.error('Error al obtener las empleados', error);
       }
-    });
+    );
   }
 
   // Abrir la URL de la factura en una nueva pestaña

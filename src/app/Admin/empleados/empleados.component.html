@@ -22,7 +22,6 @@
         <table class="w-full text-[#EAEAEA] text-sm">
             <thead>
                 <tr class="bg-[#1a1a1d] text-[#EAEAEA]">
-                    <th class="p-4 text-left font-medium">ID</th>
                     <th class="p-4 text-left font-medium">Nombre</th>
                     <th class="p-4 text-left font-medium">Apellido</th>
                     <th class="p-4 text-left font-medium">Edad</th>
@@ -33,7 +32,6 @@
             </thead>
             <tbody class="divide-y divide-[#444444]/50">
                 <tr *ngFor="let employee of employees" class="hover:bg-[#2a2a2e]/80 transition-colors">
-                    <td class="p-4 text-left">{{ employee.id }}</td>
                     <td class="p-4 text-left">{{ employee.name }}</td>
                     <td class="p-4 text-left">{{ employee.last_name }}</td>
                     <td class="p-4 text-left">{{ employee.age }} años</td>
@@ -51,25 +49,46 @@
                         </div>
                     </td>
                     <td class="p-4 text-left">
-                        <div class="flex gap-2">
+                        <div class="flex gap-4 items-center">
                             <!-- Botón para editar -->
-                            <button class="text-[#00f2ff] hover:text-[#00c4ff]" (click)="openEditModal(employee.id)">
-                                Editar
+                            <button class="text-[#00f2ff] hover:text-[#00c4ff]" (click)="openEditModal(employee.id)" title="Editar">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5M18.5 2.5a2.121 2.121 0 113 3L12 15l-4 1 1-4 9.5-9.5z" />
+                                </svg>
                             </button>
-
-                            <!-- Si está activado, mostrar botón para desactivar -->
+                    
+                            <!-- Botón para reenviar correo -->
+                            <button class="text-[#00f2ff] hover:text-[#00c4ff]" (click)="reenviarCorreo(employee.email)" title="Reenviar correo">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M16 12H8m0 0l4-4m-4 4l4 4m6 4H6a2 2 0 01-2-2V6a2 2 0 012-2h7l5 5v9a2 2 0 01-2 2z" />
+                                </svg>
+                            </button>
+                    
+                            <!-- Botón para desactivar cuenta -->
                             <button *ngIf="employee.activate" class="text-red-400 hover:text-red-300"
-                                (click)="desactivateAccount(employee.id)">
-                                Desactivar cuenta
+                                (click)="desactivateAccount(employee.id)" title="Desactivar cuenta">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M6 18L18 6M6 6l12 12" />
+                                </svg>
                             </button>
-
-                            <!-- Si está desactivado, mostrar botón para activar -->
+                    
+                            <!-- Botón para activar cuenta -->
                             <button *ngIf="!employee.activate" class="text-green-400 hover:text-green-300"
-                                (click)="activateAccount(employee.id)">
-                                Activar cuenta
+                                (click)="activateAccount(employee.id)" title="Activar cuenta">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M5 13l4 4L19 7" />
+                                </svg>
                             </button>
                         </div>
-                    </td>
+                    </td>                    
                 </tr>
             </tbody>
         </table>
@@ -161,6 +180,9 @@
                         <div *ngIf="employeeForm.get('phone')?.errors?.['minlength']">Mínimo 10 dígitos.</div>
                         <div *ngIf="employeeForm.get('phone')?.errors?.['maxlength']">Máximo 10 dígitos.</div>
                         <div *ngIf="employeeForm.get('phone')?.errors?.['pattern']">Solo se permiten números.</div>
+                        <div *ngIf="employeeForm.get('phone')?.errors?.['backendError']">
+                            {{ employeeForm.get('phone')?.errors?.['backendError'] }}
+                        </div>
                     </div>
                 </div>
 

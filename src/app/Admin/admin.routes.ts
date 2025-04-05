@@ -6,7 +6,7 @@ import { EmpleadosComponent } from './empleados/empleados.component';
 import { FacturasComponent } from './facturas/facturas.component';
 import { ProductosComponent } from './productos/productos.component';
 import { DispositivosComponent } from './dispositivos/dispositivos.component';
-import { EditarPerfilComponent } from '../usuario/editar-perfil/editar-perfil.component';
+import { EditarPerfilComponent } from './editar-perfil/editar-perfil.component';
 
 
 export const adminRoutes: Routes = [

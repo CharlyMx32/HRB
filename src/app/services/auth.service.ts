@@ -96,9 +96,17 @@ export class AuthService {
       'Authorization': `Bearer ${token}`
     });
 
-    return this.http.post<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
+    return this.http.put<any>(`${this.apiUrl}/update-password`, passwordData, { headers }).pipe(
       catchError(this.handleError)
     );
+  }
+
+  resetPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, { email });
+  }
+
+  resendMail(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/resend-email`, { email });
   }
 
   desactivateAccount(id: number): Observable<any> {

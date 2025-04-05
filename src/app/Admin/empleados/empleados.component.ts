@@ -40,7 +40,8 @@ export class EmpleadosComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private workersService: WorkersService,
-    private router: Router
+    private router: Router,
+
   ) {
     this.minBirthDate.setFullYear(this.today.getFullYear() - 65);
     this.maxBirthDate.setFullYear(this.today.getFullYear() - 18);
@@ -106,13 +107,27 @@ export class EmpleadosComponent implements OnInit {
   }
 
   getEmployees(): void {
-    this.workersService.getEmployees().subscribe({
-      next: (data) => this.employees = data,
-      error: (error) => {
-        console.error('Error fetching employees:', error);
-        this.errorMessage = 'Error al cargar los empleados';
+    this.workersService.getEmployees().subscribe(
+      (response: any) => {
+        this.employees = response.data.map((employee: any) => ({
+          id: employee.id,
+          email: employee.email,
+          name: employee.name,
+          last_name: employee.last_name,
+          birth_date: employee.birth_date,
+          age: employee.age,
+          phone: employee.phone,
+          assigned_orders: employee.assigned_orders,
+          RFID: employee.RFID,
+          RFC: employee.RFC,
+          NSS: employee.NSS,
+          activate: employee.activate,
+        }));
+      },
+      (error) => {
+        console.error('Error al obtener las empleados', error);
       }
-    });
+    );
   }
 
   register(): void {
@@ -227,6 +242,17 @@ export class EmpleadosComponent implements OnInit {
     // Solo para type="date" (formato YYYY-MM-DD)
     const birthDate = new Date(value);
     return EmpleadosComponent.validateDate(birthDate);
+  }
+
+  reenviarCorreo(email: string): void {
+    this.authService.resendMail(email).subscribe({
+      next: () => {
+        console.log(`Correo reenviado reenviado`);
+      },
+      error: (err) => {
+        console.error(`Error al reenviar el correo`, err);
+      }
+    });
   }
 
   desactivateAccount(id: number): void {
