@@ -40,10 +40,9 @@
      class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1 cursor-pointer relative">
     <div class="flex justify-between items-center mb-2">
         <h2 class="text-sm font-semibold text-[#EAEAEA]">Sensor Presencia</h2>
-        <div *ngIf="isCheckingPirStatus" class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
         <div *ngIf="pirConnectionError" class="w-2 h-2 bg-red-500 rounded-full"></div>
     </div>
-    <div *ngIf="showPirChangeIndicator" class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+    <div  class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
     <div class="flex-1 flex flex-col items-center justify-center bg-[#1a1a1d]/80 rounded-lg p-3 border border-[#2a2a2e]">
         <div class="flex items-center gap-2 mb-2">
             <div class="relative">

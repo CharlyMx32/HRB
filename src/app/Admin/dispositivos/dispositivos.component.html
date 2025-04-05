@@ -119,7 +119,105 @@
                     </div>
                 </form>
             </div>
+
+<div class="alert-container" *ngIf="showAlert" [ngClass]="alertType">
+    <span>{{ alertMessage }}</span>
+    <button class="close-alert" (click)="showAlert = false">&times;</button>
+  </div>
+  
+  <div class="table-container">
+    <table class="devices-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Contraseña</th>
+          <th>Área</th>
+          <th>Tiempo de Lectura</th>
+          <th>Tiempo de Respuesta</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let device of devices">
+          <td>{{ device.id }}</td>
+          <td>{{ device.name }}</td>
+          <td class="password-cell">{{ device.password || 'N/A' }}</td>
+          <td>{{ device.area_name || 'Sin área' }}</td>
+          <td>{{ device.reading_time || 'N/A' }} ms</td>
+          <td>{{ device.response_time || 'N/A' }} ms</td>
+          <td class="actions-cell">
+            <button class="edit-btn" (click)="openEditModal(device)" title="Editar">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-btn" (click)="confirmDelete(device)" title="Eliminar">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+<!-- Modal de Edición -->
+<div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <span class="close-btn" (click)="closeModal()">&times;</span>
+      <h3>Editar Dispositivo: {{selectedDevice.name}}</h3>
+      <form class="modal-form" [formGroup]="editForm" (ngSubmit)="saveChanges()">
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input class="form-input" formControlName="name" 
+                 [value]="selectedDevice.name" />
+          <small class="hint">(Dejar igual para no cambiar)</small>
         </div>
+        
+        <div class="form-group">
+          <label>Contraseña:</label>
+          <input class="form-input" type="password" formControlName="password" 
+                 placeholder="Dejar vacío para no cambiar" />
+        </div>
+        
+        <div class="form-group" *ngIf="areas.length > 0">
+          <label>Área:</label>
+          <select class="form-input" formControlName="area_id">
+            <option [value]="selectedDevice.area_id" selected>
+              {{ getAreaName(selectedDevice.area_id) || 'Mantener área actual' }}
+            </option>
+            <option *ngFor="let area of areas" [value]="area.id">
+              {{ area.name }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Tiempo de Lectura (ms):</label>
+          <input class="form-input" formControlName="reading_time" type="number" 
+                 [placeholder]="selectedDevice.reading_time || 'Actual: No definido'" />
+        </div>
+        
+        <div class="form-group">
+          <label>Tiempo de Respuesta (ms):</label>
+          <input class="form-input" formControlName="response_time" type="number" 
+                 [placeholder]="selectedDevice.response_time || 'Actual: No definido'" />
+        </div>
+        
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">Guardar cambios</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Cancelar</button>
+        </div>
+      </form>
     </div>
-    }
-</div>
+  </div>
+  
+  <!-- Modal de Confirmación para Eliminar -->
+  <div class="modal" *ngIf="showDeleteConfirm">
+    <div class="modal-content confirm-modal">
+      <h3>Confirmar Eliminación</h3>
+      <p>¿Estás seguro de que deseas eliminar el dispositivo <strong>{{deviceToDelete?.name}}</strong>?</p>
+      <div class="modal-actions">
+        <button type="button" class="delete-confirm-btn" (click)="deleteDevice()">Eliminar</button>
+        <button type="button" class="cancel-btn" (click)="closeDeleteConfirm()">Cancelar</button>
+      </div>
+    </div>
+  </div>
