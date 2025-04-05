@@ -1,0 +1,132 @@
+<div class="profile-container">
+    <!-- Header -->
+    <div class="profile-header">
+        <h2>Mi Perfil</h2>
+    </div>
+
+    <!-- Spinner de carga -->
+    <div *ngIf="isLoading && !showPasswordForm" class="spinner-container">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Datos del usuario -->
+    <div *ngIf="!isLoading && !showPasswordForm" class="user-data">
+        <div class="data-row">
+            <span class="data-label">Nombre:</span>
+            <span class="data-value">{{ userData.name }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">Correo:</span>
+            <span class="data-value">{{ userData.email }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">RFC:</span>
+            <span class="data-value">{{ userData.RFC }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">RFID:</span>
+            <span class="data-value">{{ userData.RFID }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">NSS:</span>
+            <span class="data-value">{{ userData.NSS }}</span>
+        </div>
+        <div class="data-row">
+            <span class="data-label">Teléfono:</span>
+            <span class="data-value">{{ userData.phone }}</span>
+        </div>
+
+        <div class="button-container">
+            <button type="button" (click)="togglePasswordForm()" class="change-password-btn">
+                Cambiar Contraseña
+            </button>
+        </div>
+    </div>
+
+    <!-- Formulario de cambio de contraseña -->
+    <div *ngIf="showPasswordForm" class="password-form-container">
+        <!-- Mensajes de error/éxito -->
+        <div *ngIf="errorMessage" class="error-message">
+            <i class="fas fa-exclamation-circle error-icon"></i>
+            {{ errorMessage }}
+        </div>
+
+        <div *ngIf="successMessage" class="success-message">
+            <i class="fas fa-check-circle success-icon"></i>
+            {{ successMessage }}
+        </div>
+
+        <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()" class="password-form">
+            <!-- Contraseña Actual -->
+            <div class="form-group">
+                <label for="current_password">Contraseña Actual</label>
+                <div class="input-container">
+                    <input [type]="showCurrentPassword ? 'text' : 'password'" id="current_password"
+                        formControlName="current_password" placeholder="Contraseña Actual">
+                    <button type="button" (click)="toggleCurrentPasswordVisibility()" class="toggle-password">
+                        <i [class]="showCurrentPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+                    </button>
+                </div>
+                <div *ngIf="passwordForm.get('current_password')?.invalid && passwordForm.get('current_password')?.touched"
+                    class="text-danger">
+                    La contraseña actual es requerida.
+                </div>
+            </div>
+
+            <!-- Nueva Contraseña -->
+            <div class="form-group">
+                <label for="password">Nueva Contraseña</label>
+                <div class="input-container">
+                    <input [type]="showNewPassword ? 'text' : 'password'" id="password" formControlName="password"
+                        placeholder="Nueva Contraseña (mínimo 8 caracteres)">
+                    <button type="button" (click)="toggleNewPasswordVisibility()" class="toggle-password">
+                        <i [class]="showNewPassword ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+                    </button>
+                </div>
+                <div *ngIf="passwordForm.get('password')?.invalid && passwordForm.get('password')?.touched"
+                    class="text-danger">
+                    <div *ngIf="passwordForm.get('password')?.errors?.['required']">La nueva contraseña es requerida.
+                    </div>
+                    <div *ngIf="passwordForm.get('password')?.errors?.['minlength']">Debe tener al menos 8 caracteres.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmar Nueva Contraseña -->
+            <div class="form-group">
+                <label for="password_confirmation">Confirmar Nueva Contraseña</label>
+                <div class="input-container">
+                    <input [type]="showPasswordConfirmation ? 'text' : 'password'" id="password_confirmation"
+                        formControlName="password_confirmation" placeholder="Confirmar Nueva Contraseña">
+                    <button type="button" (click)="togglePasswordConfirmationVisibility()" class="toggle-password">
+                        <i [class]="showPasswordConfirmation ? 'fas fa-eye' : 'fas fa-eye-slash'"></i>
+                    </button>
+                </div>
+                <div *ngIf="passwordForm.get('password_confirmation')?.invalid && passwordForm.get('password_confirmation')?.touched"
+                    class="text-danger">
+                    <div *ngIf="passwordForm.get('password_confirmation')?.errors?.['required']">La confirmación es
+                        requerida.</div>
+                    <div *ngIf="passwordForm.get('password_confirmation')?.errors?.['minlength']">Debe tener al menos 8
+                        caracteres.</div>
+                </div>
+                <div *ngIf="passwordForm.errors?.['mismatch'] && passwordForm.get('password_confirmation')?.touched"
+                    class="text-danger">
+                    Las contraseñas no coinciden.
+                </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="form-actions">
+                <button type="submit" [disabled]="isLoading" class="submit-btn">
+                    <span *ngIf="!isLoading">Actualizar Contraseña</span>
+                    <span *ngIf="isLoading" class="loading">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Cargando...
+                    </span>
+                </button>
+                <button type="button" (click)="togglePasswordForm()" class="cancel-btn">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
