@@ -40,63 +40,52 @@
 <!-- Modal de Edición -->
 <!-- Modal de Edición -->
 <div class="modal" *ngIf="showModal">
-  <div class="modal-content">
-    <span class="close-btn" (click)="closeModal()">&times;</span>
-    <h3>Editar Dispositivo: {{selectedDevice.name}}</h3>
-    <form class="modal-form" [formGroup]="editForm" (ngSubmit)="saveChanges()">
-      <div class="form-group">
-        <label>Nombre:</label>
-        <input class="form-input" formControlName="name" 
-               [value]="selectedDevice.name" />
-        <small class="hint">(Dejar igual para no cambiar)</small>
-      </div>
-      
-      <div class="form-group">
-        <label>Contraseña:</label>
-        <input class="form-input" type="password" formControlName="password" 
-               placeholder="Dejar vacío para no cambiar" />
-      </div>
-      
-      <div class="form-group" *ngIf="areas.length > 0">
-        <label>Área:</label>
-        <select class="form-input" formControlName="area_id">
-          <option [value]="selectedDevice.area_id" selected>
-            {{ getAreaName(selectedDevice.area_id) || 'Mantener área actual' }}
-          </option>
-          <option *ngFor="let area of areas" [value]="area.id">
-            {{ area.name }}
-          </option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label>Tiempo de Lectura (ms):</label>
-        <input class="form-input" formControlName="reading_time" type="number" 
-               [placeholder]="selectedDevice.reading_time || 'Actual: No definido'" />
-      </div>
-      
-      <div class="form-group">
-        <label>Tiempo de Respuesta (ms):</label>
-        <input class="form-input" formControlName="response_time" type="number" 
-               [placeholder]="selectedDevice.response_time || 'Actual: No definido'" />
-      </div>
-      
-      <div class="modal-actions">
-        <button type="submit" class="save-btn">Guardar cambios</button>
-        <button type="button" class="cancel-btn" (click)="closeModal()">Cancelar</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- Modal de Confirmación para Eliminar -->
-<div class="modal" *ngIf="showDeleteConfirm">
-  <div class="modal-content confirm-modal">
-    <h3>Confirmar Eliminación</h3>
-    <p>¿Estás seguro de que deseas eliminar el dispositivo <strong>{{deviceToDelete?.name}}</strong>?</p>
-    <div class="modal-actions">
-      <button type="button" class="delete-confirm-btn" (click)="deleteDevice()">Eliminar</button>
-      <button type="button" class="cancel-btn" (click)="closeDeleteConfirm()">Cancelar</button>
+    <div class="modal-content">
+      <span class="close-btn" (click)="closeModal()">&times;</span>
+      <h3>Editar Dispositivo: {{selectedDevice.name}}</h3>
+      <form class="modal-form" [formGroup]="editForm" (ngSubmit)="saveChanges()">
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input class="form-input" formControlName="name" 
+                 [value]="selectedDevice.name" />
+          <small class="hint">(Dejar igual para no cambiar)</small>
+        </div>
+        
+        <div class="form-group">
+          <label>Contraseña:</label>
+          <input class="form-input" type="password" formControlName="password" 
+                 placeholder="Dejar vacío para no cambiar" />
+        </div>
+        
+        <div class="form-group" *ngIf="areas.length > 0">
+          <label>Área:</label>
+          <select class="form-input" formControlName="area_id">
+            <option [value]="selectedDevice.area_id" selected>
+              {{ getAreaName(selectedDevice.area_id) || 'Mantener área actual' }}
+            </option>
+            <option *ngFor="let area of areas" [value]="area.id">
+              {{ area.name }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Tiempo de Lectura (ms):</label>
+          <input class="form-input" formControlName="reading_time" type="number" 
+                 [placeholder]="selectedDevice.reading_time || 'Actual: No definido'" />
+        </div>
+        
+        <div class="form-group">
+          <label>Tiempo de Respuesta (ms):</label>
+          <input class="form-input" formControlName="response_time" type="number" 
+                 [placeholder]="selectedDevice.response_time || 'Actual: No definido'" />
+        </div>
+        
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">Guardar cambios</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Cancelar</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

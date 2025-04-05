@@ -23,6 +23,24 @@ export class WorkersService {
     return this.http.get<any>(`${this.apiUrl}/worker/${id}`);
   }
 
+  getWorkerData(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/worker-data`).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error al obtener datos del trabajador:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  updateWorkerData(data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/worker-data`, data).pipe(
+      catchError((error: HttpErrorResponse) => {
+        console.error('Error al actualizar datos del trabajador:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   updateEmployee(id: string, data: any): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/worker/${id}`, data).pipe(
       catchError((error: HttpErrorResponse) => {
@@ -32,10 +50,9 @@ export class WorkersService {
     );
   }
 
-  // En tu WorkersService
   getWorkerOrders(): Observable<any[]> {
     return this.http.get<any>(`${this.apiUrl}/my-deliveries`).pipe(
-      map(response => response.data || []), // Extraemos el array 'data' o devolvemos array vacío
+      map(response => response.data || []), 
       catchError((error: HttpErrorResponse) => {
         console.error('Error al obtener órdenes del trabajador:', error);
         return throwError(() => error);
