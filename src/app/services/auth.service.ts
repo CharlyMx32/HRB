@@ -117,6 +117,10 @@ export class AuthService {
     return this.http.put(`${this.apiUrl}/user/activate`, { id });
   }
 
+  eliminarTrabajador(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/worker/${id}`);
+  }  
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Unknown error!';
     if (error.error instanceof ErrorEvent) {

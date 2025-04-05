@@ -1,94 +1,301 @@
-.modal-overlay {
-    backdrop-filter: blur(5px);
-    transition: opacity 0.3s ease;
-}
-
-.modal-content {
-    transform: translateY(20px);
-    transition: transform 0.3s ease;
-}
-
-.modal-overlay:not(.hidden) .modal-content {
-    transform: translateY(0);
-}
-
-.table-container {
+/* ===== ESTILOS PARA ALERTAS ===== */
+.alert-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 5px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease-out;
+    max-width: 350px;
+  }
+  
+  .alert-container.success {
+    background-color: #4CAF50;
+  }
+  
+  .alert-container.error {
+    background-color: #F44336;
+  }
+  
+  .alert-container.info {
+    background-color: #2196F3;
+  }
+  
+  .close-alert {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2em;
+    margin-left: 15px;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  /* ===== ESTILOS PARA LA TABLA ===== */
+  .table-container {
+    width: 100%;
     overflow-x: auto;
-    border-radius: 0.5rem;
-    border: 1px solid rgba(68, 68, 68, 0.5);
-}
-
-.table-container table {
-    width: 100%;
-    color: #EAEAEA;
-    font-size: 0.875rem;
-}
-
-.table-container thead tr {
-    background-color: #1a1a1d;
-    color: #EAEAEA;
-}
-
-.table-container th, 
-.table-container td {
-    padding: 1rem;
-    text-align: left;
-    border-bottom: 1px solid rgba(68, 68, 68, 0.5);
-}
-
-.table-container tr:hover {
-    background-color: rgba(42, 42, 46, 0.8);
-    transition: background-color 0.3s;
-}
-
-.action-button {
-    transition: color 0.3s;
-}
-
-.edit-button {
-    color: #00f2ff;
-}
-
-.edit-button:hover {
-    color: #00c4ff;
-}
-
-.delete-button {
-    color: #ef4444;
-}
-
-.delete-button:hover {
-    color: #f87171;
-}
-
-.zone-badge {
-    padding: 0.25rem 0.5rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    display: inline-block;
-}
-
-.zone-a {
-    background-color: rgba(24, 73, 220, 0.2);
-    color: #1849DC;
-}
-
-.zone-b {
-    background-color: rgba(76, 175, 80, 0.2);
-    color: #4CAF50;
-}
-
-.input-field {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
+    margin: 2rem 0;
+    border-radius: 10px;
     background-color: #232328;
-    border: 1px solid rgba(68, 68, 68, 0.5);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  }
+  
+  .devices-table {
+    width: 100%;
+    border-collapse: collapse;
     color: #EAEAEA;
-}
-
-.input-field:focus {
-    border-color: rgba(0, 242, 255, 0.5);
+    font-size: 0.9rem;
+  }
+  
+  .devices-table th {
+    padding: 15px;
+    text-align: left;
+    background-color: rgba(0, 140, 255, 0.2);
+    color: #00f2ff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(0, 242, 255, 0.3);
+  }
+  
+  .devices-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .devices-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .devices-table tr:hover {
+    background-color: rgba(0, 242, 255, 0.05);
+  }
+  
+  .password-cell {
+    font-family: 'Courier New', monospace;
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .actions-cell {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .edit-btn, .delete-btn {
+    background: transparent;
+    border: 1px solid rgba(0, 242, 255, 0.3);
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .edit-btn {
+    color: #00f2ff;
+  }
+  
+  .edit-btn:hover {
+    background: rgba(0, 242, 255, 0.1);
+    box-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
+  }
+  
+  .delete-btn {
+    color: #ff3860;
+    border-color: rgba(255, 56, 96, 0.3);
+  }
+  
+  .delete-btn:hover {
+    background: rgba(255, 56, 96, 0.1);
+    box-shadow: 0 0 10px rgba(255, 56, 96, 0.3);
+  }
+  
+  /* ===== ESTILOS PARA LOS MODALES ===== */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: #232328;
+    padding: 30px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.2);
+    position: relative;
+  }
+  
+  .confirm-modal {
+    text-align: center;
+    max-width: 400px;
+  }
+  
+  .confirm-modal p {
+    margin-bottom: 25px;
+    color: #EAEAEA;
+  }
+  
+  .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: #aaa;
+    font-size: 24px;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+  
+  .close-btn:hover {
+    color: #ff3860;
+  }
+  
+  .modal h3 {
+    color: #00f2ff;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .modal-form .form-group {
+    margin-bottom: 15px;
+  }
+  /* Estilos para textos de ayuda */
+.hint {
+    color: #aaa;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 5px;
+  }
+  
+  /* Placeholders más claros */
+  input::placeholder {
+    color: #666;
+    font-style: italic;
+  }
+  
+  .modal-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff;
+    font-size: 0.9rem;
+  }
+  
+  .modal-form .form-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #EAEAEA;
+  }
+  
+  /* Estilos mejorados para el select/combobox */
+  select.form-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2300f2ff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 15px;
+    padding-right: 30px;
+    cursor: pointer;
+  }
+  
+  select.form-input option {
+    background-color: #232328;
+    color: #EAEAEA;
+    padding: 10px;
+  }
+  
+  select.form-input:focus {
+    border-color: #00f2ff;
+    box-shadow: 0 0 0 2px rgba(0, 242, 255, 0.2);
     outline: none;
-    box-shadow: 0 0 0 1px rgba(0, 242, 255, 0.3);
-}
+  }
+  
+  select.form-input option:hover {
+    background-color: rgba(0, 242, 255, 0.2) !important;
+    color: #00f2ff !important;
+  }
+  
+  select.form-input option:checked {
+    background-color: rgba(0, 242, 255, 0.3);
+    color: #00f2ff;
+    font-weight: 500;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  
+  .save-btn, .cancel-btn, .delete-confirm-btn {
+    padding: 10px 20px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .save-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .save-btn:hover {
+    background-color: #0069d9;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+  }
+  
+  .save-btn:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  
+  .cancel-btn {
+    background-color: transparent;
+    color: #aaa;
+    border: 1px solid #aaa;
+  }
+  
+  .cancel-btn:hover {
+    color: #ff3860;
+    border-color: #ff3860;
+  }
+  
+  .delete-confirm-btn {
+    background-color: #ff3860;
+    color: white;
+  }
+  
+  .delete-confirm-btn:hover {
+    background-color: #e03156;
+    box-shadow: 0 0 10px rgba(255, 56, 96, 0.5);
+  }

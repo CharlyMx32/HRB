@@ -122,6 +122,7 @@ export class EmpleadosComponent implements OnInit {
           RFC: employee.RFC,
           NSS: employee.NSS,
           activate: employee.activate,
+          deleted_at: employee.deleted_at,
         }));
       },
       (error) => {
@@ -286,4 +287,18 @@ export class EmpleadosComponent implements OnInit {
       }
     });
   }
+
+  eliminarTrabajador(id: number) {
+    if (confirm('¿Estás seguro de eliminar este trabajador?')) {
+      this.authService.eliminarTrabajador(id).subscribe({
+        next: () => {
+          console.log('Trabajador eliminado correctamente');
+          // Aquí puedes refrescar la lista de empleados si es necesario
+        },
+        error: (error) => {
+          console.error('Error al eliminar trabajador:', error);
+        }
+      });
+    }
+  }  
 }

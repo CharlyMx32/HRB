@@ -51,6 +51,7 @@ export class FacturasComponent implements OnInit {
           RFC: employee.RFC,
           NSS: employee.NSS,
           activate: employee.activate,
+          deleted_at: employee.deleted_at,
         }));
       },
       (error) => {
