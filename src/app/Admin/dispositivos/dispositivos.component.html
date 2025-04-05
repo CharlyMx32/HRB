@@ -1,125 +1,102 @@
-<div class="bg-[#232328]/90 rounded-xl shadow-lg p-6 border border-[#333337]">
-
-    <div
-        class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 mb-6 border-b border-[#444444]/50">
-        <h2 class="text-xl font-semibold text-[#EAEAEA]">Control de Dispositivos</h2>
-        <button (click)="openDeviceModal()"
-            class="bg-[#1849DC] hover:bg-[#1a53f0] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
-            <i class="fas fa-plus"></i>
-            <span>Agregar Dispositivo</span>
-        </button>
-    </div>
-
-    <div class="overflow-x-auto rounded-lg border border-[#444444]/50">
-        <table class="w-full text-[#EAEAEA] text-sm">
-            <thead>
-                <tr class="bg-[#1a1a1d] text-[#EAEAEA]">
-                    <th class="p-4 text-left font-medium">ID</th>
-                    <th class="p-4 text-left font-medium">Nombre</th>
-                    <th class="p-4 text-left font-medium">Tipo</th>
-                    <th class="p-4 text-left font-medium">Tiempo Lectura</th>
-                    <th class="p-4 text-left font-medium">Tiempo Respuesta</th>
-                    <th class="p-4 text-left font-medium">Zona</th>
-                    <th class="p-4 text-left font-medium">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-[#444444]/50">
-                @for (device of devices(); track device.id) {
-                <tr class="hover:bg-[#2a2a2e]/80 transition-colors">
-                    <td class="p-4 text-left">{{device.id}}</td>
-                    <td class="p-4 text-left">{{device.name}}</td>
-                    <td class="p-4 text-left">{{device.type}}</td>
-                    <td class="p-4 text-left">{{device.readTime}}ms</td>
-                    <td class="p-4 text-left">{{device.responseTime}}ms</td>
-                    <td class="p-4 text-left">
-                        <span
-                            class="px-2 py-1 bg-[#1849DC]/20 text-[#1849DC] rounded-full text-xs">{{device.zone}}</span>
-                    </td>
-                    <td class="p-4 text-left">
-                        <div class="flex gap-2">
-                            <button (click)="editDevice(device)" class="text-[#00f2ff] hover:text-[#00c4ff]">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button (click)="deleteDevice(device.id)" class="text-red-400 hover:text-red-300">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
-    @if (showModal()) {
-    <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-        <div class="bg-[#232328] rounded-xl shadow-xl border border-[#333337] w-full max-w-md">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold text-[#EAEAEA]">
-                        {{editingDevice() ? 'Editar' : 'Registrar'}} Dispositivo
-                    </h3>
-                    <button (click)="closeDeviceModal()" class="text-[#7d7d7d] hover:text-[#EAEAEA]">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-
-                <form [formGroup]="deviceForm" (ngSubmit)="saveDevice()" class="space-y-4">
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-[#EAEAEA]">Nombre del Dispositivo</label>
-                        <input type="text" formControlName="name" placeholder="Ej: STHR01" 
-                               class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
-                    </div>
-
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-[#EAEAEA]">Tipo</label>
-                        <select formControlName="type"
-                            class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
-                            <option value="Lector RFID">Lector RFID</option>
-                            <option value="Terminal">Terminal</option>
-                            <option value="Sensor">Sensor</option>
-                            <option value="Controlador">Controlador</option>
-                        </select>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="space-y-2">
-                            <label class="block text-sm font-medium text-[#EAEAEA]">Tiempo Lectura (ms)</label>
-                            <input type="number" formControlName="readTime" placeholder="500"
-                                class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="block text-sm font-medium text-[#EAEAEA]">Tiempo Respuesta (ms)</label>
-                            <input type="number" formControlName="responseTime" placeholder="200"
-                                class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
-                        </div>
-                    </div>
-
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-[#EAEAEA]">Zona</label>
-                        <input type="text" formControlName="zone" placeholder="Ej: Zona A"
-                            class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
-                    </div>
-
-                    <div class="space-y-2">
-                        <label class="block text-sm font-medium text-[#EAEAEA]">Contraseña</label>
-                        <input type="password" formControlName="password" placeholder="••••••••"
-                            class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff]/50 focus:ring-1 focus:ring-[#00f2ff]/30">
-                    </div>
-
-                    <div class="flex justify-end gap-3 pt-4">
-                        <button type="button" (click)="closeDeviceModal()"
-                            class="bg-[#333337] hover:bg-[#444444] text-[#EAEAEA] px-4 py-2 rounded-lg transition-colors">
-                            Cancelar
-                        </button>
-                        <button type="submit"
-                            class="bg-[#1849DC] hover:bg-[#1a53f0] text-white px-4 py-2 rounded-lg transition-colors">
-                            {{editingDevice() ? 'Actualizar' : 'Guardar'}} Dispositivo
-                        </button>
-                    </div>
-                </form>
-            </div>
+<div class="alert-container" *ngIf="showAlert" [ngClass]="alertType">
+    <span>{{ alertMessage }}</span>
+    <button class="close-alert" (click)="showAlert = false">&times;</button>
+  </div>
+  
+  <div class="table-container">
+    <table class="devices-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Contraseña</th>
+          <th>Área</th>
+          <th>Tiempo de Lectura</th>
+          <th>Tiempo de Respuesta</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let device of devices">
+          <td>{{ device.id }}</td>
+          <td>{{ device.name }}</td>
+          <td class="password-cell">{{ device.password || 'N/A' }}</td>
+          <td>{{ device.area_name || 'Sin área' }}</td>
+          <td>{{ device.reading_time || 'N/A' }} ms</td>
+          <td>{{ device.response_time || 'N/A' }} ms</td>
+          <td class="actions-cell">
+            <button class="edit-btn" (click)="openEditModal(device)" title="Editar">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="delete-btn" (click)="confirmDelete(device)" title="Eliminar">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- Modal de Edición -->
+ <!-- Modal de Edición -->
+<div class="modal" *ngIf="showModal">
+    <div class="modal-content">
+      <span class="close-btn" (click)="closeModal()">&times;</span>
+      <h3>Editar Dispositivo: {{selectedDevice.name}}</h3>
+      <form class="modal-form" [formGroup]="editForm" (ngSubmit)="saveChanges()">
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input class="form-input" formControlName="name" 
+                 [value]="selectedDevice.name" />
+          <small class="hint">(Dejar igual para no cambiar)</small>
         </div>
+        
+        <div class="form-group">
+          <label>Contraseña:</label>
+          <input class="form-input" type="password" formControlName="password" 
+                 placeholder="Dejar vacío para no cambiar" />
+        </div>
+        
+        <div class="form-group" *ngIf="areas.length > 0">
+          <label>Área:</label>
+          <select class="form-input" formControlName="area_id">
+            <option [value]="selectedDevice.area_id" selected>
+              {{ getAreaName(selectedDevice.area_id) || 'Mantener área actual' }}
+            </option>
+            <option *ngFor="let area of areas" [value]="area.id">
+              {{ area.name }}
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Tiempo de Lectura (ms):</label>
+          <input class="form-input" formControlName="reading_time" type="number" 
+                 [placeholder]="selectedDevice.reading_time || 'Actual: No definido'" />
+        </div>
+        
+        <div class="form-group">
+          <label>Tiempo de Respuesta (ms):</label>
+          <input class="form-input" formControlName="response_time" type="number" 
+                 [placeholder]="selectedDevice.response_time || 'Actual: No definido'" />
+        </div>
+        
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">Guardar cambios</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Cancelar</button>
+        </div>
+      </form>
     </div>
-    }
-</div>
+  </div>
+  
+  <!-- Modal de Confirmación para Eliminar -->
+  <div class="modal" *ngIf="showDeleteConfirm">
+    <div class="modal-content confirm-modal">
+      <h3>Confirmar Eliminación</h3>
+      <p>¿Estás seguro de que deseas eliminar el dispositivo <strong>{{deviceToDelete?.name}}</strong>?</p>
+      <div class="modal-actions">
+        <button type="button" class="delete-confirm-btn" (click)="deleteDevice()">Eliminar</button>
+        <button type="button" class="cancel-btn" (click)="closeDeleteConfirm()">Cancelar</button>
+      </div>
+    </div>
+  </div>
