@@ -15,7 +15,7 @@
             </div>
             <button
                 class="bg-[#1849DC] hover:bg-[#1a53f0] text-white px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition-colors shadow-md hover:shadow-[#1849DC]/30 new-order-btn"
-                (click)="redirectAndMarkOrders()">
+                (click)="openFacturasModal()"> <!-- Cambiado a openFacturasModal() -->
                 <i class="fas fa-eye"></i> Ver Facturas
                 <div *ngIf="newInvoicesCount > 0" class="notification-badge">
                     {{ newInvoicesCount }}
@@ -69,15 +69,11 @@
 
         <div class="flex justify-center items-center mt-6">
             <div class="flex gap-2 bg-[#1f1f22] p-2 rounded-lg shadow-md">
-
-                <!-- Flecha izquierda -->
                 <button
                     class="px-3 py-1.5 text-sm text-white hover:bg-[#2a2a2e] rounded-md transition-all duration-200 disabled:opacity-40"
                     (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">
                     ◀
                 </button>
-
-                <!-- Números de página -->
                 <ng-container *ngFor="let page of [].constructor(totalPaginas); let i = index">
                     <button class="px-3 py-1.5 text-sm rounded-md transition-all duration-200" [ngClass]="{
                             'bg-[#00f2ff] text-black font-semibold': currentPage === i + 1,
@@ -86,22 +82,42 @@
                         {{ i + 1 }}
                     </button>
                 </ng-container>
-
-                <!-- Flecha derecha -->
                 <button
                     class="px-3 py-1.5 text-sm text-white hover:bg-[#2a2a2e] rounded-md transition-all duration-200 disabled:opacity-40"
                     (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPaginas">
                     ▶
                 </button>
-
             </div>
         </div>
     </div>
 
-
     <div class="flex justify-between items-center mt-6 pt-6 border-t border-[#444444]/50">
         <div class="text-sm text-[#7d7d7d]">
             Mostrando {{ facturas.length }} facturas
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Facturas - Fuera del contenedor principal -->
+<div class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 transition-opacity duration-300"
+    [ngClass]="{'opacity-0 pointer-events-none': !showFacturasModal, 'opacity-100': showFacturasModal}"
+    *ngIf="showFacturasModal" (click)="closeFacturasModal()">
+
+    <div class="bg-[#232328] rounded-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 shadow-2xl border border-[#333337]"
+        [ngClass]="{'scale-95': !showFacturasModal, 'scale-100': showFacturasModal}" (click)="$event.stopPropagation()">
+
+        <!-- Header del Modal -->
+        <div class="sticky top-0 bg-[#1a1a1d] p-4 border-b border-[#333337] flex justify-between items-center z-10">
+            <h3 class="text-lg font-semibold text-[#EAEAEA]">Asignación de Facturas</h3>
+            <button (click)="closeFacturasModal()" class="text-[#EAEAEA] hover:text-[#00f2ff] transition-colors">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <div class="p-6">
+            <app-facturas (close)="closeFacturasModal()" (facturaAsignadaExitosamente)="closeFacturasModal()"
+                class="block">
+            </app-facturas>
         </div>
     </div>
 </div>

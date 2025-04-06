@@ -1,216 +1,165 @@
 li:hover {
-    background-color: hsl(225, 80%, 48%);
-    color: hsl(0, 0%, 100%);
-    box-shadow: rgb(24, 86, 220) 0px 0px 20px 0px;
+  background-color: hsl(225, 80%, 48%);
+  color: hsl(0, 0%, 100%);
+  box-shadow: rgb(24, 86, 220) 0px 0px 20px 0px;
 }
 
 li:active {
-    background-color: hsl(225, 80%, 48%);
-    color: hsl(0, 0%, 100%);
-    box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
-    transform: translateY(2px);
-    transition: 100ms;
+  background-color: hsl(225, 80%, 48%);
+  color: hsl(0, 0%, 100%);
+  box-shadow: rgb(93 24 220) 0px 0px 0px 0px;
+  transform: translateY(2px);
+  transition: 100ms;
 }
 
 .sidebar {
-    filter: drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.5));
-    overflow: hidden;
+  filter: drop-shadow(0px 5px 10px rgba(0, 0, 0, 0.5));
+  overflow: hidden;
 }
 
 
 .sidebar li span {
-    opacity: 0;
-    display: inline-block;
-    height: 25px;
+  opacity: 0;
+  display: inline-block;
+  height: 25px;
 }
 
 .invisible {
-    opacity: 0;
-}
-
-
-.Btn {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition-duration: .3s;
-    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
-    background-color: rgb(255, 65, 65);
+  opacity: 0;
 }
 
 .sign {
-    width: 100%;
-    transition-duration: .3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  transition-duration: .3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sign svg {
-    width: 17px;
+  width: 17px;
 }
 
 .sign svg path {
-    fill: #EAEAEA;
+  fill: #EAEAEA;
 }
 
 .text {
-    position: absolute;
-    right: 0%;
-    width: 0%;
-    opacity: 0;
-    color: #EAEAEA;
-    font-size: 1.2em;
-    font-weight: 600;
-    transition-duration: .3s;
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: #EAEAEA;
+  font-size: 1.2em;
+  font-weight: 600;
+  transition-duration: .3s;
 }
 
 .Btn:hover {
-    width: 125px;
-    border-radius: 40px;
-    transition-duration: .3s;
+  width: 125px;
+  border-radius: 40px;
+  transition-duration: .3s;
 }
 
 .Btn:hover .sign {
-    width: 30%;
-    transition-duration: .3s;
-    padding-left: 20px;
+  width: 30%;
+  transition-duration: .3s;
+  padding-left: 20px;
 }
 
 .Btn:hover .text {
-    opacity: 1;
-    width: 70%;
-    transition-duration: .3s;
-    padding-right: 10px;
+  opacity: 1;
+  width: 70%;
+  transition-duration: .3s;
+  padding-right: 10px;
 }
 
 .Btn:active {
-    transform: translate(2px, 2px);
+  transform: translate(2px, 2px);
 }
 
 .Btn.collapsed {
-    width: 45px !important;
-    border-radius: 50% !important;
+  width: 45px !important;
+  border-radius: 50% !important;
 }
 
 .Btn.collapsed:hover {
-    width: 45px !important;
-    border-radius: 50% !important;
+  width: 45px !important;
+  border-radius: 50% !important;
 }
 
 .Btn.collapsed .sign {
-    width: 100% !important;
-    padding-left: 0 !important;
+  width: 100% !important;
+  padding-left: 0 !important;
 }
 
 .Btn.collapsed .text {
-    display: none;
+  display: none;
 }
 
-/* Estilo para el badge de notificación */
-.bg-red-500 {
-    background-color: #ef4444;
-  }
-  
-  .absolute {
-    position: absolute;
-  }
-  
-  .-top-1 {
-    top: -0.25rem;
-  }
-  
-  .-right-1 {
-    right: -0.25rem;
-  }
-  
-  .rounded-full {
-    border-radius: 9999px;
-  }
-  
-  .w-5 {
-    width: 1.25rem;
-  }
-  
-  .h-5 {
-    height: 1.25rem;
-  }
-  
-  .flex {
-    display: flex;
-  }
-  
-  .items-center {
-    align-items: center;
-  }
-  
-  .justify-center {
-    justify-content: center;
-  }
-  
-  .text-xs {
-    font-size: 0.75rem;
-    line-height: 1rem;
+.absolute {
+  position: absolute;
+}
+
+.-top-1 {
+  top: -0.25rem;
+}
+
+.-right-1 {
+  right: -0.25rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
+}
+
+.w-5 {
+  width: 1.25rem;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+
+/* Asegúrate que los items del sidebar tengan posición relativa */
+.sidebar li {
+  position: relative;
+}
+
+
+/* Efecto de parpadeo para llamar la atención */
+@keyframes pulse {
+  0% {
+    opacity: 1;
   }
 
-  .notification-badge {
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    background-color: red;
-    color: white;
-    font-size: 12px;
-    font-weight: bold;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
- 
-  /* Asegúrate que los items del sidebar tengan posición relativa */
-  .sidebar li {
-    position: relative;
+  50% {
+    opacity: 0.5;
   }
 
-  /* Estilo para el icono de notificación */
-.text-red-500 {
-    color: #ef4444;
+  100% {
+    opacity: 1;
   }
-  
-  /* Estilo para el badge de notificación */
-  .notification-badge {
-    position: absolute;
-    top: -5px;
-    right: -5px;
-    background-color: #ef4444;
-    color: white;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: bold;
-    z-index: 10;
-  }
-  
-  /* Efecto de parpadeo para llamar la atención */
-  @keyframes pulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-  }
-  
-  .has-new-orders {
-    animation: pulse 2s infinite;
-  }
+}
+
+.has-new-orders {
+  animation: pulse 2s infinite;
+}

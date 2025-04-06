@@ -1,30 +1,79 @@
 <div class="facturas-container">
+
+  <div *ngIf="(facturas$ | async)?.length === 0" class="text-center text-gray-500">
+    <p>No hay facturas por asignar.</p>
+  </div>
+
   <div class="card" *ngFor="let factura of facturas$ | async; trackBy: trackByFn">
     <div class="card-body">
-      <p><strong>Status:</strong> {{ factura.status }}</p>
-      <button class="btn btn-primary btn-custom" (click)="verFactura(factura.URL)">Ver Factura</button>
-      <button class="btn btn-secondary btn-custom btn-iniciar-orden" (click)="abrirModal(factura.id)">Asignar
-        Factura</button>
+      <p><strong>Status:</strong> {{ translateStatus(factura.status) }}</p>
+      <div class="buttons-container">
+        <button class="btn btn-primary btn-custom" (click)="verFactura(factura.URL)">
+          <i class="fas fa-file-invoice"></i> Ver Factura
+        </button>
+        <button class="btn btn-secondary btn-custom btn-iniciar-orden" (click)="abrirModal(factura.id)">
+          <i class="fas fa-user-tag"></i> Asignar Factura
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal de Asignación de Facturas -->
 <div class="modal-overlay" *ngIf="modalVisible">
   <div class="modal-content">
     <span class="modal-close" (click)="cerrarModal()">&times;</span>
-    <h3>Asignar Factura: {{ facturaSeleccionadaId }}</h3>
-    <label for="employeeSelect">Seleccionar Empleado:</label>
-    <select [(ngModel)]="selectedEmployeeId" id="employeeSelect" class="form-control">
-      <ng-container *ngFor="let employee of employees">
-        <option [value]="employee.id">
-          {{ employee.name }} {{ employee.last_name }}
-        </option>
-      </ng-container>
-    </select>
-    <div class="modal-buttons">
-      <button class="btn btn-primary" (click)="asignarFactura()">Asignar</button>
-      <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>
+    
+    <div class="modal-header">
+      <h3>Asignar Factura #{{facturaSeleccionadaId}}</h3>
+      <div class="status-badge pending">
+        {{ translateStatus('Pending') }}
+      </div>
+    </div>
+    
+    <div class="modal-body">
+
+      <div *ngIf="successMessage" class="success-message">
+        <i class="success-icon fas fa-check-circle"></i> {{ successMessage }}
+      </div>
+    
+      <!-- Mensaje de error -->
+      <div *ngIf="errorMessage" class="error-message">
+        <i class="error-icon fas fa-exclamation-circle"></i> {{ errorMessage }}
+      </div>
+    
+      <div class="form-group">
+        <label for="employeeSelect">Seleccionar Empleado:</label>
+        
+        <div *ngIf="employees.length === 0" class="no-employees-alert">
+          <i class="fas fa-exclamation-circle"></i>
+          No hay empleados disponibles para asignar
+        </div>
+        
+        <select [(ngModel)]="selectedEmployeeId" id="employeeSelect" class="form-control" 
+                [disabled]="employees.length === 0" *ngIf="employees.length > 0">
+          <option value="" disabled selected>Seleccione un empleado</option>
+          <option *ngFor="let employee of employees" [value]="employee.id">
+            {{ employee.name }} {{ employee.last_name }} 
+            <span *ngIf="employee.assigned_orders !== undefined">({{ employee.assigned_orders }} órdenes)</span>
+          </option>
+        </select>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="cerrarModal()">
+          Cancelar
+        </button>
+        
+        <button type="button" class="btn-submit" 
+                [disabled]="isLoading || !selectedEmployeeId || employees.length === 0" 
+                (click)="asignarFactura()">
+          <span *ngIf="!isLoading">Asignar</span>
+          <span *ngIf="isLoading">
+            <i class="fas fa-spinner fa-spin"></i> Asignando...
+          </span>
+        </button>
+      </div>
     </div>
   </div>
 </div>

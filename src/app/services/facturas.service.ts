@@ -28,6 +28,17 @@ export class FacturasService {
         });
   }
 
+  actualizarFacturas(): void {
+    this.http.get<any[]>(`${this.apiUrl}/invoices`).subscribe({
+      next: (data) => {
+        this.facturasSubject.next(data);
+      },
+      error: (error) => {
+        console.error('Error al actualizar facturas:', error);
+      }
+    });
+  }
+
   private initializeWebSocket() {
     const pusher = new Pusher(this.pusherKey, {
       cluster: this.pusherCluster
@@ -44,4 +55,5 @@ export class FacturasService {
       }
     });
   }
+
 }

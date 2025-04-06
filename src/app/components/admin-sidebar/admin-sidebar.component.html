@@ -11,14 +11,9 @@
         <!-- Navigation -->
         <ul class="flex flex-col gap-4 flex-grow">
             <li *ngFor="let item of menuItems" class="p-2 flex items-center gap-2 rounded-lg cursor-pointer relative"
-                (click)="navigateTo(item.route)" [class.active]="router.url === item.route">
-                <i [class]="item.icon" [class.text-red-500]="item.route === '/admin/ordenes' && hasNewOrders"></i>
-                <span [ngClass]="{'invisible': isCollapsed}">{{ item.label }}</span>
-                
-                <!-- Badge de notificación para Órdenes -->
-                <div *ngIf="item.route === '/admin/ordenes' && newInvoicesCount > 0" class="notification-badge">
-                    {{ newInvoicesCount }}
-                </div>
+            (click)="navigateTo(item.route)" [class.active]="router.url === item.route">
+            <i [class]="item.icon"></i>
+            <span [ngClass]="{'invisible': isCollapsed}">{{ item.label }}</span>
             </li>
         </ul>
 
