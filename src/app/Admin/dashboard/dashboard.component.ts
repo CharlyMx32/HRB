@@ -62,12 +62,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { nombre: 'Transportista', hora: 'Ayer 5:30 PM', tipo: 'RFID: 7B2C9D' },
   ];
 
-  productosPesados = [
-    { nombre: 'Cajas electrónicas', peso: 12.5, hora: '10:20 AM', destino: 'Almacén B' },
-    { nombre: 'Componentes PC', peso: 8.2, hora: '09:45 AM', destino: 'Expedición' },
-    { nombre: 'Cables USB', peso: 5.7, hora: 'Ayer 4:15 PM', destino: 'Taller' },
-  ];
-
   private sensorSubscriptions: Subscription = new Subscription();
 
   constructor(

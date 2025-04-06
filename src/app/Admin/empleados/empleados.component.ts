@@ -65,8 +65,12 @@ export class EmpleadosComponent implements OnInit {
     this.editEmployeeForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
       last_name: ['', [Validators.required, Validators.maxLength(255), Validators.pattern('^[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+$')]],
-      phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-      RFID: ['', [Validators.required, Validators.maxLength(255)]],
+      phone: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10), Validators.pattern('^[0-9]+$')]],
+      birth_date: ['', [Validators.required, this.ageValidator.bind(this)]],
+      RFID: ['', [Validators.required, Validators.maxLength(50)]],
+      RFC: ['', [Validators.minLength(12), Validators.maxLength(13)]],
+      NSS: ['', [Validators.minLength(11), Validators.maxLength(11), Validators.pattern('^[0-9]+$')]],
+      email: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)]],
     });
 
     this.employeeForm.statusChanges.subscribe(() => {
@@ -92,23 +96,41 @@ export class EmpleadosComponent implements OnInit {
     this.showAddModal = false;
   }
 
-  openEditModal(employee: any): void {
-    this.selectedEmployeeId = employee.id;
+  openEditModal(employeeId: string): void {
+    this.selectedEmployeeId = employeeId;
+    this.editLoading = true;
     this.showEditModal = true;
     this.editErrorMessage = '';
+    this.successMessage = '';
 
-    this.editEmployeeForm.patchValue({
-      name: employee.name,
-      last_name: employee.last_name,
-      phone: employee.phone,
-      RFID: employee.RFID,
-
+    this.workersService.getEmployee(employeeId).subscribe({
+      next: (employee) => {
+        console.log('Empleado recibido:', employee);
+        this.editEmployeeForm.patchValue({
+          name: employee.name,
+          last_name: employee.last_name,
+          phone: employee.phone,
+          birth_date: employee.birth_date,
+          RFID: employee.RFID,
+          RFC: employee.RFC || '',
+          NSS: employee.NSS || '',
+          email: employee.email || ''
+        });
+        this.editLoading = false;
+      },
+      error: (error) => {
+        this.editLoading = false;
+        this.showEditModal = false;
+        this.mensajesService.showError('Error al cargar los datos del empleado');
+        console.error('Error al obtener empleado:', error);
+      }
     });
   }
 
   closeEditModal(): void {
     this.showEditModal = false;
     this.selectedEmployeeId = null;
+    this.editEmployeeForm.reset();
   }
 
   getEmployees(): void {
@@ -181,27 +203,50 @@ export class EmpleadosComponent implements OnInit {
 
   updateEmployee(): void {
     if (this.editEmployeeForm.invalid || !this.selectedEmployeeId) {
-      this.editErrorMessage = 'Por favor complete todos los campos';
+      this.editErrorMessage = 'Por favor complete todos los campos requeridos';
       return;
     }
-
+  
     this.editLoading = true;
     this.editErrorMessage = '';
-
-    this.workersService.updateEmployee(
-      this.selectedEmployeeId,
-      this.editEmployeeForm.value
-    ).subscribe({
-      next: () => {
-        this.successMessage = 'Empleado actualizado correctamente';
+    this.successMessage = '';
+  
+    const formData = this.editEmployeeForm.value;
+  
+    // Manejo de campos opcionales
+    if (!formData.RFC) formData.RFC = null;
+    if (!formData.NSS) formData.NSS = null;
+    if (!formData.email) formData.email = null;
+  
+    this.workersService.updateEmployee(this.selectedEmployeeId, formData).subscribe({
+      next: (response) => {
         this.editLoading = false;
-        this.showEditModal = false;
+        this.successMessage = response.message || 'Empleado actualizado correctamente';
         this.getEmployees();
-        setTimeout(() => this.successMessage = '', 5000);
+        setTimeout(() => {
+          this.showEditModal = false;
+          this.successMessage = '';
+        }, 2000);
       },
       error: (error) => {
-        this.editErrorMessage = error.error?.message || 'Error al actualizar empleado';
         this.editLoading = false;
+  
+        if (error.validationErrors) {
+          // Manejar errores de validación del backend
+          Object.keys(error.validationErrors).forEach(field => {
+            const control = this.editEmployeeForm.get(field);
+            if (control) {
+              control.setErrors({
+                ...control.errors,
+                backendError: error.validationErrors[field]
+              });
+              control.markAsTouched();
+            }
+          });
+          this.editErrorMessage = 'Por favor corrija los errores en el formulario';
+        } else {
+          this.editErrorMessage = error.message || 'Error al actualizar empleado';
+        }
       }
     });
   }
