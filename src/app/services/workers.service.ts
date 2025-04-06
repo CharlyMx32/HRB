@@ -20,7 +20,9 @@ export class WorkersService {
   }
 
   getEmployee(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/worker/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/worker/${id}`).pipe(
+      map(response => response.data || response)
+    );
   }
 
   getWorkerData(): Observable<any> {
@@ -41,15 +43,6 @@ export class WorkersService {
     );
   }
 
-  updateEmployee(id: string, data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/worker/${id}`, data).pipe(
-      catchError((error: HttpErrorResponse) => {
-        console.error('Error en la solicitud PUT:', error);
-        return throwError(() => error);
-      })
-    );
-  }
-
   getWorkerOrders(): Observable<any[]> {
     return this.http.get<any>(`${this.apiUrl}/my-deliveries`).pipe(
       map(response => response.data || []), 
@@ -65,6 +58,30 @@ export class WorkersService {
       catchError((error: HttpErrorResponse) => {
         console.error('Error al marcar orden como completada:', error);
         return throwError(() => error);
+      })
+    );
+  }
+
+  updateEmployee(id: string, data: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/worker/${id}`, data).pipe(
+      map(response => ({
+        success: true,
+        data: response.data || response
+      })),
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 422 && error.error?.errors) {
+          const formattedErrors: any = {};
+          Object.keys(error.error.errors).forEach(key => {
+            formattedErrors[key] = error.error.errors[key][0];
+          });
+          return throwError(() => ({
+            success: false,
+            validationErrors: formattedErrors
+          }));
+        }
+        return throwError(() => ({
+          success: false
+        }));
       })
     );
   }

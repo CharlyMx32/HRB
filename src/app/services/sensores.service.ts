@@ -89,6 +89,10 @@ export class SensoresService {
         return this.http.get(`${this.apiUrl}/areas`);
     }
 
+    getWeightSensorData(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/weight-sensor`);
+    }
+
     getDevices(): Observable<any> {
         return this.http.get(`${this.apiUrl}/devices`);
     }

@@ -38,42 +38,42 @@ export class FacturasComponent implements OnInit {
   getEmployees(): void {
     this.workersService.getEmployees().subscribe(
       (response: any) => {
-        this.employees = response.data.map((employee: any) => ({
-          id: employee.id,
-          email: employee.email,
-          name: employee.name,
-          last_name: employee.last_name,
-          birth_date: employee.birth_date,
-          age: employee.age,
-          phone: employee.phone,
-          assigned_orders: employee.assigned_orders,
-          RFID: employee.RFID,
-          RFC: employee.RFC,
-          NSS: employee.NSS,
-          activate: employee.activate,
-        }));
+        this.employees = response.data
+          .filter((employee: any) => employee.activate) 
+          .map((employee: any) => ({
+            id: employee.id,
+            email: employee.email,
+            name: employee.name,
+            last_name: employee.last_name,
+            birth_date: employee.birth_date,
+            age: employee.age,
+            phone: employee.phone,
+            assigned_orders: employee.assigned_orders,
+            RFID: employee.RFID,
+            RFC: employee.RFC,
+            NSS: employee.NSS,
+            activate: employee.activate,
+            deleted_at: employee.deleted_at,
+          }));
       },
       (error) => {
-        console.error('Error al obtener las empleados', error);
+        console.error('Error al obtener los empleados', error);
       }
     );
   }
 
-  // Abrir la URL de la factura en una nueva pestaña
   verFactura(url: string): void {
     window.open(url, '_blank');
   }
 
-  // Abrir el modal para asignar factura
   abrirModal(facturaId: number): void {
     this.facturaSeleccionadaId = facturaId;
     this.modalVisible = true;
   }
 
-  // Cerrar el modal
   cerrarModal(): void {
     this.modalVisible = false;
-    this.selectedEmployeeId = 0; // Limpiar la selección del empleado
+    this.selectedEmployeeId = 0; 
   }
 
   asignarFactura(): void {

@@ -1,0 +1,19 @@
+<div class="eliminar-cuadro-container">
+    <div class="eliminar-cuadro-header">
+        <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+        <h3>{{ data.titulo }}</h3>
+    </div>
+
+    <div class="eliminar-cuadro-body">
+        <p>{{ data.mensaje }}</p>
+    </div>
+
+    <div class="eliminar-cuadro-footer">
+        <button (click)="onCancel()" class="cancelar-btn">
+            {{ data.textoCancelar }}
+        </button>
+        <button (click)="onConfirm()" class="confirmar-btn">
+            {{ data.textoConfirmar }}
+        </button>
+    </div>
+</div>

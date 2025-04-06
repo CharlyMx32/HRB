@@ -3,7 +3,8 @@
     <div class="card-body">
       <p><strong>Status:</strong> {{ factura.status }}</p>
       <button class="btn btn-primary btn-custom" (click)="verFactura(factura.URL)">Ver Factura</button>
-      <button class="btn btn-secondary btn-custom btn-iniciar-orden" (click)="abrirModal(factura.id)">Asignar Factura</button>
+      <button class="btn btn-secondary btn-custom btn-iniciar-orden" (click)="abrirModal(factura.id)">Asignar
+        Factura</button>
     </div>
   </div>
 </div>
@@ -16,11 +17,11 @@
     <label for="employeeSelect">Seleccionar Empleado:</label>
     <select [(ngModel)]="selectedEmployeeId" id="employeeSelect" class="form-control">
       <ng-container *ngFor="let employee of employees">
-        <option *ngIf="employee.assigned_orders <= 10" [value]="employee.id">
+        <option [value]="employee.id">
           {{ employee.name }} {{ employee.last_name }}
         </option>
       </ng-container>
-    </select>    
+    </select>
     <div class="modal-buttons">
       <button class="btn btn-primary" (click)="asignarFactura()">Asignar</button>
       <button class="btn btn-secondary" (click)="cerrarModal()">Cancelar</button>

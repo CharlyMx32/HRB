@@ -28,6 +28,7 @@ export class OrdenesComponent implements OnInit, OnDestroy {
 
   newInvoicesCount: number = 0;
 
+  showFacturasModal: boolean = false;
 
   constructor(private router: Router, private deliveriesService: DeliveriesService, private notificationService: NotificationService) {}
 
@@ -61,7 +62,7 @@ export class OrdenesComponent implements OnInit, OnDestroy {
     this.deliveriesService.getDeliveries().subscribe(
       (response: any) => {
         this.facturas = response.data.map((delivery: any) => ({
-          nombre: `ORD-${delivery.invoice_id}`,
+          nombre: `${delivery.invoice_id}`,
           fecha_entrega: delivery.delivery_date,
           productos: delivery.products.split(', '),
           trabajador_asignado: delivery.worker_name,
@@ -110,6 +111,7 @@ export class OrdenesComponent implements OnInit, OnDestroy {
     };
     return traducciones[estado] || estado; 
   }
+
 
   get facturasPaginadas(): any[] {
     const inicio = (this.currentPage - 1) * this.itemsPerPage;
