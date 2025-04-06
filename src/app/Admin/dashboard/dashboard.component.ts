@@ -239,7 +239,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.cdr.markForCheck();
     }
   }
-  // Métodos para manejar los clics en las tarjetas
   onLightCardClick() {
     this.showLightChangeIndicator = false;
   }
@@ -270,7 +269,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  // Métodos del calendario (se mantienen igual)
+
   generateCalendar() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();
