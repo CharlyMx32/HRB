@@ -64,6 +64,12 @@
                         </div>
                     </td>
                 </tr>
+
+                <tr *ngIf="ordenesPaginadas.length === 0">
+                    <td colspan="7" class="p-4 text-center text-[#7d7d7d]">
+                        Orden no encontrada
+                    </td>
+                </tr>
             </tbody>
         </table>
 

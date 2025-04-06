@@ -1,0 +1,11 @@
+.max-h-90vh {
+    max-height: 90vh;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+
+.grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}

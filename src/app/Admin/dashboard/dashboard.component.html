@@ -16,12 +16,10 @@
     </div>
 
     <!-- Accesos RFID -->
-    <div
-        class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] hover:border-[#00f2ff]/30 transition-colors col-span-1">
+    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] hover:border-[#00f2ff]/30 transition-colors col-span-1">
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-sm font-semibold text-[#EAEAEA]">Accesos RFID</h2>
-            <span class="text-xs text-[#00f2ff] bg-[#00f2ff]/10 px-2 py-1 rounded-full">{{ultimosAccesos.length}}
-                nuevos</span>
+            <span class="text-xs text-[#00f2ff] bg-[#00f2ff]/10 px-2 py-1 rounded-full">{{ultimosAccesos.length}} nuevos</span>
         </div>
         <div class="flex-1 space-y-2 overflow-y-auto">
             <div *ngFor="let acceso of ultimosAccesos"
@@ -35,50 +33,45 @@
         </div>
     </div>
 
-<!-- Sensor de Movimiento -->
-<div (click)="onPirCardClick()" 
-     class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1 cursor-pointer relative">
-    <div class="flex justify-between items-center mb-2">
-        <h2 class="text-sm font-semibold text-[#EAEAEA]">Sensor Presencia</h2>
-    </div>
-    <div  class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-    <div class="flex-1 flex flex-col items-center justify-center bg-[#1a1a1d]/80 rounded-lg p-3 border border-[#2a2a2e]">
-        <div class="flex items-center gap-2 mb-2">
-            <div class="relative">
-                <i class="fas fa-user-secret text-xl" 
-                   [class.text-[#00f2ff]]="pirStatus === '¡Detección!'"
-                   [class.text-[#7d7d7d]]="pirStatus === 'Inactivo'"></i>
-                <div *ngIf="pirStatus === '¡Detección!'"
-                    class="absolute inset-0 rounded-full bg-[#00f2ff]/20 animate-ping"></div>
-            </div>
-            <span class="font-mono text-sm" 
-                  [class.text-[#00f2ff]]="pirStatus === '¡Detección!'"
-                  [class.text-[#7d7d7d]]="pirStatus === 'Inactivo'">
-                {{pirStatus}}
-            </span>
+    <!-- Sensor de Movimiento -->
+    <div (click)="onPirCardClick()" 
+         class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1 cursor-pointer relative">
+        <div class="flex justify-between items-center mb-2">
+            <h2 class="text-sm font-semibold text-[#EAEAEA]">Sensor Presencia</h2>
         </div>
-        <p class="text-xs text-[#7d7d7d]">Última detección: {{lastDetection || '--'}}</p>
+        <div *ngIf="showPirChangeIndicator" class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+        <div class="flex-1 flex flex-col items-center justify-center bg-[#1a1a1d]/80 rounded-lg p-3 border border-[#2a2a2e]">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="relative">
+                    <i class="fas fa-user-secret text-xl" 
+                       [class.text-[#00f2ff]]="pirStatus === '¡Detección!'"
+                       [class.text-[#7d7d7d]]="pirStatus === 'Inactivo'"></i>
+                    <div *ngIf="pirStatus === '¡Detección!'"
+                        class="absolute inset-0 rounded-full bg-[#00f2ff]/20 animate-ping"></div>
+                </div>
+                <span class="font-mono text-sm" 
+                      [class.text-[#00f2ff]]="pirStatus === '¡Detección!'"
+                      [class.text-[#7d7d7d]]="pirStatus === 'Inactivo'">
+                    {{pirStatus}}
+                </span>
+            </div>
+            <p class="text-xs text-[#7d7d7d]">Última detección: {{lastDetection || '--'}}</p>
+        </div>
     </div>
-</div>
 
-    <!-- Calendario Compacto (más ancho) -->
+    <!-- Calendario Compacto -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-sm font-semibold text-[#EAEAEA]">
                 {{ currentDate | date:'MMMM y' }}
             </h2>
             <div class="flex space-x-2 items-center">
-                <!-- Botón Mes Anterior -->
                 <button (click)="prevMonth()" class="text-[#00f2ff] hover:text-[#00c4ff] transition-colors p-1">
                     <i class="fas fa-chevron-left text-xs"></i>
                 </button>
-
-                <!-- Botón Mes Siguiente -->
                 <button (click)="nextMonth()" class="text-[#00f2ff] hover:text-[#00c4ff] transition-colors p-1">
                     <i class="fas fa-chevron-right text-xs"></i>
                 </button>
-
-                <!-- Botón Calendario Completo -->
                 <button (click)="openFullCalendar()" class="text-[#00f2ff] hover:text-[#00c4ff] transition-colors p-1">
                     <i class="fas fa-expand text-xs"></i>
                 </button>
@@ -119,7 +112,9 @@
                 </div>
                 <span class="text-xs1">Luz</span>
             </div>
-            <span class="text-xs" [class.text-green-400]="luzEncendida" [class.text-red-400]="!luzEncendida">
+            <span class="text-xs" 
+                  [class.text-green-400]="luzEncendida"
+                  [class.text-red-400]="!luzEncendida">
                 {{luzEncendida ? 'Encendida' : 'Apagada'}}
             </span>
             <div *ngIf="showLightChangeIndicator" class="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
@@ -150,7 +145,7 @@
                       [class.text-red-400]="temperatura > 30" 
                       [class.text-yellow-400]="temperatura > 25 && temperatura <= 30"
                       [class.text-green-400]="temperatura <= 25">
-                    {{temperatura}}°C
+                    {{temperatura | number:'1.1-1'}}°C
                 </span>
             </div>
             
@@ -165,7 +160,7 @@
                 <span class="text-sm font-mono" 
                       [class.text-blue-400]="humedad < 30 || humedad > 70" 
                       [class.text-green-400]="humedad >= 30 && humedad <= 70">
-                    {{humedad}}%
+                    {{humedad | number:'1.1-1'}}%
                 </span>
             </div>
             
@@ -189,7 +184,7 @@
         </div>
     </div>
 
-    <!-- Últimos Productos Pesados (extendido) -->
+    <!-- Últimos Productos Pesados -->
     <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-2">
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-sm font-semibold text-[#EAEAEA]">Últimos Productos Pesados</h2>
