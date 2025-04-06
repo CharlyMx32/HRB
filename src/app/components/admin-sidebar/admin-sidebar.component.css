@@ -28,6 +28,23 @@ li:active {
   opacity: 0;
 }
 
+
+.Btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition-duration: .3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: rgb(255, 65, 65);
+}
+
 .sign {
   width: 100%;
   transition-duration: .3s;
@@ -50,7 +67,7 @@ li:active {
   width: 0%;
   opacity: 0;
   color: #EAEAEA;
-  font-size: 1.2em;
+  font-size: 1.0rem;
   font-weight: 600;
   transition-duration: .3s;
 }
@@ -142,6 +159,11 @@ li:active {
 /* Asegúrate que los items del sidebar tengan posición relativa */
 .sidebar li {
   position: relative;
+}
+
+/* Estilo para el icono de notificación */
+.text-red-500 {
+  color: #ef4444;
 }
 
 
