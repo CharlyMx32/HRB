@@ -135,6 +135,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
   }
 
+    obtenerDatosSensor(): void {
+    this.sensoresService.getWeightSensorData().subscribe({
+      next: (res) => {
+        if (res.success && res.data.length > 0) {
+          // Mostrar los últimos 5 (puedes ajustar el número si cambian los requerimientos)
+          this.weightDataList = res.data.slice(-5).reverse(); // `.reverse()` para mostrar el más reciente arriba
+        } else {
+          this.weightDataList = [];
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener datos del sensor:', err);
+        this.weightDataList = [];
+      }
+    });
+  }
+
   private handleLightUpdate(data: any) {
     if (!data) return;
     
@@ -205,23 +222,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (changed) {
       this.showEnvChangeIndicator = true;
     }
-  }
-
-  obtenerDatosSensor(): void {
-    this.sensoresService.getWeightSensorData().subscribe({
-      next: (res) => {
-        if (res.success && res.data.length > 0) {
-          // Mostrar los últimos 5 (puedes ajustar el número si cambian los requerimientos)
-          this.weightDataList = res.data.slice(-5).reverse(); // `.reverse()` para mostrar el más reciente arriba
-        } else {
-          this.weightDataList = [];
-        }
-      },
-      error: (err) => {
-        console.error('Error al obtener datos del sensor:', err);
-        this.weightDataList = [];
-      }
-    });
   }
 
   // Métodos para manejar los clics en las tarjetas
