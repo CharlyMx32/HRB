@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,21 +10,6 @@ import { FullCalendarModalComponent } from '../../components/full-calendar-modal
 import { FacturasService } from '../../services/facturas.service';
 import { SensoresService } from '../../services/sensores.service';
 import { Subscription } from 'rxjs';
-
-interface ThSensorData {
-  temperature_c: number;
-  humidity_percent: number;
-  event_date: string;
-}
-interface PirSensorData {
-  motion_detected: boolean;
-  event_date: string;
-  alert_message?: string;
-  alert_triggered?: boolean;
-  area_id?: string;
-  area_name?: string;
-  _id?: string;
-}
 
 @Component({
   selector: 'app-dashboard',
@@ -39,8 +24,7 @@ interface PirSensorData {
     MatDialogModule
   ],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   // Estado del calendario
@@ -83,8 +67,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   constructor(
     private facturasService: FacturasService,
     private dialog: MatDialog,
-    private sensoresService: SensoresService,
-    private cdr: ChangeDetectorRef
+    private sensoresService: SensoresService
   ) {}
 
   ngOnInit() {
@@ -119,47 +102,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         error: (err) => console.error('Error loading TH sensor:', err)
       })
     );
-  }
 
-  private setupRealTimeUpdates() {
-    this.sensorSubscriptions.add(
-      this.sensoresService.thSensorUpdates$.subscribe({
-        next: (data) => {
-          console.log('TH Sensor update received:', data);
-          if (data) {
-            this.handleThUpdate(data);
-          }
-        },
-        error: (err) => console.error('Error in TH sensor WS:', err)
-      })
-    );
-    this.sensorSubscriptions.add(
-      this.sensoresService.lightSensorUpdates$.subscribe({
-        next: (data) => data && this.handleLightUpdate(data),
-        error: (err) => console.error('Error in light sensor WS:', err)
-      })
-    );
-
-    this.sensorSubscriptions.add(
-      this.sensoresService.pirSensorUpdates$.subscribe({
-        next: (data) => {
-          console.log('PIR Sensor update received:', data);
-          if (data) {
-            this.handlePirUpdate(data);
-          }
-        },
-        error: (err) => console.error('Error in PIR sensor WS:', err)
-      })
-    );
-
-
-  }
-
-    obtenerDatosSensor(): void {
     this.sensoresService.getWeightSensorData().subscribe({
       next: (res) => {
         if (res.success && res.data.length > 0) {
-          // Mostrar los últimos 5 (puedes ajustar el número si cambian los requerimientos)
           this.weightDataList = res.data.slice(-5).reverse(); // `.reverse()` para mostrar el más reciente arriba
         } else {
           this.weightDataList = [];
@@ -170,6 +116,37 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.weightDataList = [];
       }
     });
+  }
+
+  private setupRealTimeUpdates() {
+    // Configuración de listeners para actualizaciones en tiempo real
+    this.sensorSubscriptions.add(
+      this.sensoresService.lightSensorUpdates$.subscribe({
+        next: (data) => data && this.handleLightUpdate(data),
+        error: (err) => console.error('Error in light sensor WS:', err)
+      })
+    );
+
+    this.sensorSubscriptions.add(
+      this.sensoresService.pirSensorUpdates$.subscribe({
+        next: (data) => data && this.handlePirUpdate(data),
+        error: (err) => console.error('Error in PIR sensor WS:', err)
+      })
+    );
+
+    this.sensorSubscriptions.add(
+      this.sensoresService.thSensorUpdates$.subscribe({
+        next: (data) => data && this.handleThUpdate(data),
+        error: (err) => console.error('Error in TH sensor WS:', err)
+      })
+    );
+
+    this.sensorSubscriptions.add(
+      this.sensoresService.weightSensorUpdates$.subscribe({
+        next: (data) => data && this.handleWeightUpdate(data),
+        error: (err) => console.error('Error in weight sensor WS:', err)
+      })
+    );
   }
 
   private handleLightUpdate(data: any) {
@@ -188,13 +165,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
         fechaEvento.toLocaleTimeString(), 
         this.luzEncendida ? 'Encendida' : 'Apagada'
       );
-      
-      // Notifica a Angular que debe verificar los cambios
-      this.cdr.markForCheck();
     }
   }
-  
-  private handlePirUpdate(data: PirSensorData) {
+
+  private handlePirUpdate(data: any) {
     if (!data) return;
     
     const fechaEvento = new Date(data.event_date);
@@ -207,55 +181,67 @@ export class DashboardComponent implements OnInit, OnDestroy {
       if (data.motion_detected) {
         this.lastDetection = this.formatLastChangeTime(fechaEvento);
         const alertMsg = data.alert_triggered ? ` (${data.alert_message})` : '';
-        const areaName = data.area_name || 'Zona desconocida';
-        
         this.agregarEventoAuditoria(
           'Detección PIR', 
           fechaEvento.toLocaleTimeString(), 
-          `${areaName}${alertMsg}`
+          'Zona Alberta' + alertMsg
         );
       }
-      
-      this.cdr.markForCheck();
     }
   }
-  
-  private handleThUpdate(data: ThSensorData) {
+
+  private handleThUpdate(data: any) {
     if (!data) return;
     
     const fechaEvento = new Date(data.event_date);
     let changed = false;
     
-    // Usamos Number() para asegurarnos que son números
-    const nuevaTemp = Number(data.temperature_c);
-    const nuevaHum = Number(data.humidity_percent);
-    
-    if (Math.abs(nuevaTemp - this.temperatura) > 0.5) {
-      this.temperatura = nuevaTemp;
+    if (Math.abs(data.temperature_c - this.temperatura) > 0.5) {
+      this.temperatura = data.temperature_c;
       changed = true;
       this.agregarEventoAuditoria(
         'Cambio temperatura', 
         fechaEvento.toLocaleTimeString(), 
-        `Nueva temperatura: ${nuevaTemp}°C`
+        `Nueva temperatura: ${data.temperature_c}°C`
       );
     }
     
-    if (Math.abs(nuevaHum - this.humedad) > 1) {
-      this.humedad = nuevaHum;
+    if (Math.abs(data.humidity_percent - this.humedad) > 1) {
+      this.humedad = data.humidity_percent;
       changed = true;
       this.agregarEventoAuditoria(
         'Cambio humedad', 
         fechaEvento.toLocaleTimeString(), 
-        `Nueva humedad: ${nuevaHum}%`
+        `Nueva humedad: ${data.humidity_percent}%`
       );
     }
     
     if (changed) {
       this.showEnvChangeIndicator = true;
-      // Notificamos a Angular que debe actualizar la vista
-      this.cdr.markForCheck();
     }
   }
+
+  private handleWeightUpdate(data: any) {
+    if (!data) return;
+  
+    const fechaEvento = new Date(data.event_date);
+  
+    // Insertar el nuevo dato al principio de la lista
+    this.weightDataList.unshift(data);
+  
+    // Limitar la lista a los 5 últimos registros
+    if (this.weightDataList.length > 5) {
+      this.weightDataList = this.weightDataList.slice(0, 5);
+    }
+  
+    this.agregarEventoAuditoria(
+      'Producto pesado',
+      fechaEvento.toLocaleTimeString(),
+      data.descripcion || 'Producto detectado'
+    );
+  }
+  
+
   // Métodos para manejar los clics en las tarjetas
   onLightCardClick() {
     this.showLightChangeIndicator = false;

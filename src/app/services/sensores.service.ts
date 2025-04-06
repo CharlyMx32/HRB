@@ -27,63 +27,84 @@ interface ThSensorData {
   _id?: string;
 }
 
+interface WeightSensorData {
+    exit_code: string;
+    weight_kg: number;
+    status: number
+    area_id?: string;
+    event_date: string;
+    processed: boolean;
+    action: string;
+    _id?: string;
+}  
+
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class SensoresService {
-  private apiUrl = environment.apiUrl;
-  private pusherKey = environment.pusherKey;
-  private pusherCluster = environment.pusherCluster;
+    private apiUrl = environment.apiUrl;
+    private pusherKey = environment.pusherKey;
+    private pusherCluster = environment.pusherCluster;
 
-  private lightSensorSubject = new BehaviorSubject<LightSensorData | null>(null);
-  private pirSensorSubject = new BehaviorSubject<PirSensorData | null>(null);
-  private thSensorSubject = new BehaviorSubject<ThSensorData | null>(null);
+    private lightSensorSubject = new BehaviorSubject<LightSensorData | null>(null);
+    private pirSensorSubject = new BehaviorSubject<PirSensorData | null>(null);
+    private thSensorSubject = new BehaviorSubject<ThSensorData | null>(null);
+    private weightSensorSubject = new BehaviorSubject<WeightSensorData | null>(null);
+    
+    public lightSensorUpdates$ = this.lightSensorSubject.asObservable();
+    public pirSensorUpdates$ = this.pirSensorSubject.asObservable();
+    public thSensorUpdates$ = this.thSensorSubject.asObservable();
+    public weightSensorUpdates$ = this.weightSensorSubject.asObservable();
 
-  public lightSensorUpdates$ = this.lightSensorSubject.asObservable();
-  public pirSensorUpdates$ = this.pirSensorSubject.asObservable();
-  public thSensorUpdates$ = this.thSensorSubject.asObservable();
 
-  constructor(private http: HttpClient) {
-    this.initializeWebSockets();
-  }
+    constructor(private http: HttpClient) {
+        this.initializeWebSockets();
+    }
 
-  private initializeWebSockets(): void {
-    const pusher = new Pusher(this.pusherKey, {
-      cluster: this.pusherCluster,
+    private initializeWebSockets(): void {
+        const pusher = new Pusher(this.pusherKey, {
+        cluster: this.pusherCluster,
+        });
+
+        pusher.subscribe('light-sensor-updates')
+    .bind('LightSensorUpdated', (data: { lightData: LightSensorData }) => {
+        console.log('WebSocket data received:', data); // Para depuración
+        this.lightSensorSubject.next(data.lightData);
     });
 
-    pusher.subscribe('light-sensor-updates')
-  .bind('LightSensorUpdated', (data: { lightData: LightSensorData }) => {
-    console.log('WebSocket data received:', data); // Para depuración
-    this.lightSensorSubject.next(data.lightData);
-  });
+        pusher.subscribe('pir-sensor-updates')
+        .bind('PirSensorUpdated', (data: PirSensorData) => {
+        console.log('PIR Sensor data received:', data); // Para depuración
+        this.pirSensorSubject.next(data);
+        });
 
-    pusher.subscribe('pir-sensor-updates')
-    .bind('PirSensorUpdated', (data: PirSensorData) => {
-      console.log('PIR Sensor data received:', data); // Para depuración
-      this.pirSensorSubject.next(data);
-    });
+        // Canal para sensor TH
+    // En el método initializeWebSockets():
+        pusher.subscribe('th-sensor-updates')
+        .bind('ThSensorUpdated', (data: ThSensorData) => {
+            console.log('TH Sensor data received:', data); // Para depuración
+            this.thSensorSubject.next(data);
+        });
 
-    // Canal para sensor TH
-   // En el método initializeWebSockets():
-      pusher.subscribe('th-sensor-updates')
-      .bind('ThSensorUpdated', (data: ThSensorData) => {
-        console.log('TH Sensor data received:', data); // Para depuración
-        this.thSensorSubject.next(data);
-      });
-  }
+                // Canal para sensor de peso
+        pusher.subscribe('weight-sensor-updates')
+        .bind('WeightSensorUpdated', (data: { weightData: WeightSensorData }) => {
+        console.log('Weight Sensor data received:', data); // Para depuración
+        this.weightSensorSubject.next(data.weightData);
+        });
+    }
 
-  getLastLightStatus(): Observable<LightSensorData> {
-    return this.http.get<LightSensorData>(`${this.apiUrl}/light-sensor`);
-  }
+    getLastLightStatus(): Observable<LightSensorData> {
+        return this.http.get<LightSensorData>(`${this.apiUrl}/light-sensor`);
+    }
 
-  getLastPirSensorData(): Observable<PirSensorData> {
-    return this.http.get<PirSensorData>(`${this.apiUrl}/pir-sensor`);
-  }
+    getLastPirSensorData(): Observable<PirSensorData> {
+        return this.http.get<PirSensorData>(`${this.apiUrl}/pir-sensor`);
+    }
 
-  getLastTHSensorData(): Observable<ThSensorData> {
-    return this.http.get<ThSensorData>(`${this.apiUrl}/temperature-humidity-sensor`);
-  }
+    getLastTHSensorData(): Observable<ThSensorData> {
+        return this.http.get<ThSensorData>(`${this.apiUrl}/temperature-humidity-sensor`);
+    }
 
     getAriaReferenceIds(): Observable<any> {
         return this.http.get(`${this.apiUrl}/areas`);
