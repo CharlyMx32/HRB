@@ -6,6 +6,8 @@ import { Router } from '@angular/router'; // Importamos Router para navegación
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-facturas',
@@ -15,31 +17,38 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FacturasComponent implements OnInit {
+  @Output() facturaAsignadaExitosamente = new EventEmitter<void>(); 
   facturas$!: Observable<any[]>;
 
-  employees: Array<{ id: number; name: string; last_name: string; assigned_orders: number}> = [];
+  employees: Array<{ id: number; name: string; last_name: string; assigned_orders: number }> = [];
 
   modalVisible = false;
   facturaSeleccionadaId!: number;
   selectedEmployeeId!: number;
 
+  successMessage: string = '';
+  errorMessage: string = '';
+
+  isLoading: boolean = false;
+
   constructor(
     private facturasService: FacturasService,
     private deliveriesService: DeliveriesService,
-    private workersService: WorkersService, 
-    private router: Router
-  ) {}
+    private workersService: WorkersService,
+    private router: Router,
+    private cdr: ChangeDetectorRef 
+  ) { }
 
   ngOnInit(): void {
     this.facturas$ = this.facturasService.facturas$;
-    this.getEmployees(); 
+    this.getEmployees();
   }
 
   getEmployees(): void {
     this.workersService.getEmployees().subscribe(
       (response: any) => {
         this.employees = response.data
-          .filter((employee: any) => employee.activate) 
+          .filter((employee: any) => employee.activate)
           .map((employee: any) => ({
             id: employee.id,
             email: employee.email,
@@ -62,6 +71,15 @@ export class FacturasComponent implements OnInit {
     );
   }
 
+  translateStatus(status: string): string {
+    const translations: { [key: string]: string } = {
+      Pending: 'Pendiente',
+      Completed: 'Completado',
+    };
+
+    return translations[status] || status;
+  }
+
   verFactura(url: string): void {
     window.open(url, '_blank');
   }
@@ -73,34 +91,51 @@ export class FacturasComponent implements OnInit {
 
   cerrarModal(): void {
     this.modalVisible = false;
-    this.selectedEmployeeId = 0; 
+    this.selectedEmployeeId = 0;
   }
 
   asignarFactura(): void {
+    this.successMessage = '';
+    this.errorMessage = '';
+  
     if (!this.selectedEmployeeId) {
-      alert('Por favor, seleccione un empleado válido.');
+      this.errorMessage = 'Por favor, seleccione un empleado válido.';
+      setTimeout(() => this.errorMessage = '', 5000);
+      this.cdr.detectChanges(); // Forzar detección de cambios
       return;
     }
+  
+    this.isLoading = true;
+    this.cdr.detectChanges(); // Forzar detección de cambios
   
     const payload = { worker_id: this.selectedEmployeeId };
     this.deliveriesService.assignInvoice(this.facturaSeleccionadaId, payload).subscribe({
       next: () => {
         console.log('Factura asignada exitosamente');
-  
-        // Cerrar el modal
-        this.cerrarModal();
-  
-        // Retrasar la recarga de la página por 3 segundos
+        this.isLoading = false;
+        this.successMessage = 'Factura asignada exitosamente.';
+        
+        // Forzar actualización del observable
+        this.facturasService.actualizarFacturas(); // Asegúrate de que este método exista en tu servicio
+        this.facturas$ = this.facturasService.facturas$;
+        
+        this.cdr.detectChanges(); // Forzar detección de cambios
+        
         setTimeout(() => {
-          window.location.reload();
+          this.cerrarModal();
+          this.facturaAsignadaExitosamente.emit();
+          this.cdr.detectChanges(); // Forzar detección de cambios
         }, 3000);
       },
       error: (error) => {
         console.error('Error al asignar factura:', error);
-        alert('Hubo un error al asignar la factura. Por favor, verifica los datos.');
+        this.errorMessage = 'Hubo un error al asignar la factura. Por favor, verifica los datos.';
+        this.isLoading = false;
+        this.cdr.detectChanges(); // Forzar detección de cambios
+        setTimeout(() => this.errorMessage = '', 5000);
       }
     });
-  }  
+  }
 
   trackByFn(factura: any): number {
     return factura.id;
