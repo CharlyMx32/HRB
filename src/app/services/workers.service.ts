@@ -15,8 +15,21 @@ export class WorkersService {
   constructor(private http: HttpClient) { }
 
 
-  getEmployees(): Observable<any[]> {
-    return this.http.get<any>(`${this.apiUrl}/workers`);
+  getEmployees(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/workers`).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      errorMessage = `Código: ${error.status}, Mensaje: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(errorMessage);
   }
 
   getEmployee(id: string): Observable<any> {
