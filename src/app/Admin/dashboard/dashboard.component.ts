@@ -23,16 +23,21 @@ interface EventoAuditoria {
   fechaCompleta?: Date;
 }
 
+interface RfidAccessFromAPI {
+  nombre: string;
+  puesto: string;
+  area: string;
+  rfid_code: string;
+  fecha: string;
+}
+
 interface RfidAccess {
-  _id?: string;
   card_id: string;
-  user_name?: string;
+  user_name: string;
   access_granted: boolean;
   event_date: string;
-  area_id?: string;
-  area_name?: string;
-  device_id?: string;
-  device_name?: string;
+  area_name: string;
+  position?: string;
 }
 
 interface WeightSensorData {
@@ -156,24 +161,32 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  private transformRfidData(apiData: RfidAccessFromAPI): RfidAccess {
+    return {
+      card_id: apiData.rfid_code,
+      user_name: apiData.nombre,
+      access_granted: true,
+      event_date: apiData.fecha,
+      area_name: apiData.area,
+      position: apiData.puesto
+    };
+  }
+
   private loadRfidAccesses() {
     this.loadingAccesses = true;
     this.sensorSubscriptions.add(
       this.sensoresService.getLockSensorData().subscribe({
         next: (data: any) => {
           if (data && data.length > 0) {
-            // Adaptar los datos recibidos al formato esperado por el componente
-            this.ultimosAccesos = data.map((item: any) => ({
-              card_id: item.rfid_code,  // Mapea 'rfid_code' a 'card_id'
-              user_name: item.nombre,  // Mapea 'nombre' a 'user_name'
-              event_date: item.hora,  // Mapea 'hora' a 'event_date'
-              area_name: item.area,  // Mapea 'area' a 'area_name'
-              access_granted: true,  // Forzar acceso concedido siempre
-            })).slice(0, 3); // Mostrar solo los 3 más recientes
+            this.ultimosAccesos = data.map((item: any) => 
+              this.transformRfidData(item)
+            ).slice(0, 3);
+            
+            // Forzar detección de cambios
+            this.ultimosAccesos = [...this.ultimosAccesos];
             
             this.showRfidChangeIndicator = true;
             
-            // Agregar el último acceso a la auditoría
             const lastAccess = this.ultimosAccesos[0];
             this.agregarEventoAuditoria(
               'Acceso RFID',
@@ -190,9 +203,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       })
     );
   }
-  
-  
-  
 
   private setupRealTimeUpdates() {
     // Configuración de listeners para actualizaciones en tiempo real
@@ -223,6 +233,40 @@ export class DashboardComponent implements OnInit, OnDestroy {
         error: (err) => console.error('Error in weight sensor WS:', err)
       })
     );
+
+    this.sensorSubscriptions.add(
+      this.sensoresService.rfidCodes$.subscribe({
+        next: (data) => this.handleRfidAccessUpdate(data),
+        error: (err) => console.error('Error en la actualización de accesos RFID:', err)
+      })
+    );
+  }
+
+  private handleRfidAccessUpdate(data: any) {
+    try {
+      if (!data) return;
+
+      // Validar datos mínimos
+      if (!data.rfid_code || !data.fecha) {
+        console.warn('Datos RFID incompletos:', data);
+        return;
+      }
+
+      const nuevoAcceso = this.transformRfidData(data);
+      
+      // Actualizar la lista manteniendo solo los 3 más recientes
+      this.ultimosAccesos = [nuevoAcceso, ...this.ultimosAccesos.slice(0, 2)];
+
+      this.showRfidChangeIndicator = true;
+
+      this.agregarEventoAuditoria(
+        'Acceso RFID',
+        nuevoAcceso.event_date,
+        `Acceso concedido a ${nuevoAcceso.user_name} en el área ${nuevoAcceso.area_name}`
+      );
+    } catch (error) {
+      console.error('Error procesando acceso RFID:', error);
+    }
   }
 
   private handleLightUpdate(data: any) {
@@ -303,12 +347,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const fechaEvento = data.event_date;
   
     // Insertar el nuevo dato al principio de la lista
-    this.weightDataList.unshift(data);
-  
-    // Limitar la lista a los 5 últimos registros
-    if (this.weightDataList.length > 5) {
-      this.weightDataList = this.weightDataList.slice(0, 5);
-    }
+    this.weightDataList = [data, ...this.weightDataList.slice(0, 4)];
   
     this.agregarEventoAuditoria(
       'Producto pesado',
@@ -390,21 +429,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const fecha = new Date(fechaString);
     const horaFormateada = this.formatTime(fechaString);
     
-    this.eventosAuditoria.unshift({ 
-      accion, 
-      hora: horaFormateada, 
-      detalle,
-      fechaCompleta: fecha
-    });
-    
-    // Limitar a los últimos 5 eventos
-    if (this.eventosAuditoria.length > 5) {
-      this.eventosAuditoria.pop();
-    }
+    this.eventosAuditoria = [
+      { 
+        accion, 
+        hora: horaFormateada, 
+        detalle,
+        fechaCompleta: fecha
+      },
+      ...this.eventosAuditoria.slice(0, 4)
+    ];
   }
 
   private formatTime(dateString: string): string {
+    if (!dateString) return '--:--';
+    
     const date = new Date(dateString);
+    
+    if (isNaN(date.getTime())) {
+      console.warn('Fecha inválida para formatTime:', dateString);
+      return '--:--';
+    }
+    
     const timeOptions: Intl.DateTimeFormatOptions = {
       hour: '2-digit',
       minute: '2-digit',
@@ -415,24 +460,41 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private formatLastChangeTime(dateString: string): string {
-    const date = new Date(dateString);
+    if (!dateString) return 'Fecha desconocida';
+    
+    // Intentar parsear la fecha en diferentes formatos
+    let date: Date;
+    
+    // Formato ISO (2025-04-07 04:56:50)
+    if (dateString.match(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/)) {
+      date = new Date(dateString.replace(' ', 'T') + 'Z');
+    } 
+    // Otros formatos pueden agregarse aquí
+    else {
+      date = new Date(dateString);
+    }
+    
+    // Verificar si la fecha es válida
+    if (isNaN(date.getTime())) {
+      console.warn('Fecha inválida:', dateString);
+      return 'Fecha inválida';
+    }
+
     const hoy = new Date();
-    
-    const timeString = this.formatTime(dateString);
-    
+    const timeString = this.formatTime(date.toISOString());
+
     if (date.toDateString() === hoy.toDateString()) {
       return `Hoy ${timeString}`;
     } else if (date.getDate() === hoy.getDate() - 1 && 
-               date.getMonth() === hoy.getMonth() && 
-               date.getFullYear() === hoy.getFullYear()) {
+              date.getMonth() === hoy.getMonth() && 
+              date.getFullYear() === hoy.getFullYear()) {
       return `Ayer ${timeString}`;
     } else {
-      const dateOptions: Intl.DateTimeFormatOptions = {
+      const fechaFormateada = date.toLocaleDateString('es-MX', {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
-      };
-      const fechaFormateada = date.toLocaleDateString('es-MX', dateOptions);
+      });
       return `${fechaFormateada} ${timeString}`;
     }
   }
