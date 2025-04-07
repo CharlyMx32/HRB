@@ -1,103 +1,81 @@
-/* Estilos base */
+/* Estilos base mejorados */
 .grid > div {
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto hover para las tarjetas */
+.grid > div:hover {
+  box-shadow: 0 15px 30px rgba(0, 242, 255, 0.1);
+  z-index: 10;
 }
 
 /* Scrollbar personalizada */
-::-webkit-scrollbar {
+.custom-scrollbar::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
 }
 
-::-webkit-scrollbar-thumb {
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
   background: #444;
   border-radius: 3px;
 }
 
-/* Calendario compacto */
-.compact-calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 2px;
-  flex: 1;
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
-.compact-day-header {
-  text-align: center;
-  font-size: 0.6rem;
-  padding: 4px 0;
-  color: #7d7d7d;
-  text-transform: uppercase;
-  font-weight: 500;
+/* Animaciones */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
-.compact-day-cell {
-  aspect-ratio: 1;
-  position: relative;
-  background: #1a1a1d;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-
-.compact-day-cell:hover {
-  background: #252529;
-}
-
-.compact-day-cell.current-month {
-  background: #1e1e22;
-}
-
-.compact-day-cell.has-events::after {
-  content: '';
-  position: absolute;
-  bottom: 2px;
-  width: 4px;
-  height: 4px;
-  background: #00f2ff;
-  border-radius: 50%;
-}
-
-.compact-day-number {
-  font-size: 0.65rem;
-  color: #EAEAEA;
-  font-weight: 400;
-}
-
-.compact-day-cell.current-month .compact-day-number {
-  font-weight: 500;
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   .grid {
-      grid-template-columns: 1fr !important;
-      padding: 1rem;
-      gap: 1rem;
-  }
-
-  .compact-day-header {
-      font-size: 0.55rem;
-      padding: 2px 0;
+    grid-template-columns: 1fr !important;
+    padding: 1rem;
+    gap: 1.2rem;
   }
   
-  .compact-day-number {
-      font-size: 0.6rem;
+  .grid > div {
+    padding: 1.2rem;
   }
 }
 
-/* Estilos para el modal del calendario completo */
-.full-calendar-modal .mat-dialog-container {
-  padding: 0;
-  overflow: hidden;
-  background: transparent;
+/* Efecto de gradiente para las tarjetas */
+.grid > div::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #00f2ff, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.full-calendar-modal {
-  background: #232328;
-  border-radius: 16px;
+.grid > div:hover::before {
+  opacity: 1;
+}
+
+/* Estilos para los eventos */
+.evento-item {
+  transition: all 0.2s ease;
+}
+
+.evento-item:hover {
+  transform: translateX(2px);
 }

@@ -16,24 +16,50 @@
     </div>
 
     <!-- Accesos RFID -->
-    <div
-        class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] hover:border-[#00f2ff]/30 transition-colors col-span-1">
-        <div class="flex justify-between items-center mb-2">
-            <h2 class="text-sm font-semibold text-[#EAEAEA]">Accesos RFID</h2>
-            <span class="text-xs text-[#00f2ff] bg-[#00f2ff]/10 px-2 py-1 rounded-full">{{ultimosAccesos.length}}
-                nuevos</span>
-        </div>
-        <div class="flex-1 space-y-2 overflow-y-auto">
-            <div *ngFor="let acceso of ultimosAccesos"
-                class="bg-[#1a1a1d]/80 rounded-lg p-2 hover:bg-[#252529] transition-all border border-[#2a2a2e]">
-                <div class="flex justify-between items-center">
-                    <span class="font-medium text-sm text-[#EAEAEA]">{{acceso.nombre}}</span>
-                    <span class="text-[#00f2ff] text-xs">{{acceso.hora}}</span>
-                </div>
-                <div class="text-[#7d7d7d] text-xs mt-1">{{acceso.tipo}}</div>
-            </div>
-        </div>
+    <div (click)="onRfidCardClick()"
+     class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] hover:border-[#00f2ff]/30 transition-colors col-span-1 cursor-pointer relative">
+  <div class="flex justify-between items-center mb-2">
+    <h2 class="text-sm font-semibold text-[#EAEAEA]">Accesos RFID</h2>
+    <span *ngIf="!loadingAccesses" class="text-xs text-[#00f2ff] bg-[#00f2ff]/10 px-2 py-1 rounded-full">
+      {{ultimosAccesos.length}} nuevos
+    </span>
+    <span *ngIf="loadingAccesses" class="text-xs text-[#7d7d7d]">
+      <i class="fas fa-spinner fa-spin mr-1"></i> Cargando...
+    </span>
+  </div>
+  
+  <div class="flex-1 space-y-2 overflow-y-auto">
+    <div *ngIf="loadingAccesses" class="flex items-center justify-center h-full">
+      <i class="fas fa-spinner fa-spin text-[#00f2ff]"></i>
     </div>
+    
+    <div *ngFor="let acceso of ultimosAccesos"
+         class="bg-[#1a1a1d]/80 rounded-lg p-2 hover:bg-[#252529] transition-all border border-[#2a2a2e]">
+      <div class="flex justify-between items-center">
+        <span class="font-medium text-sm text-[#EAEAEA]">
+          {{acceso.user_name || 'Visitante'}}
+        </span>
+        <span class="text-[#00f2ff] text-xs">
+          {{formatAccessDate(acceso.event_date)}}
+        </span>
+      </div>
+      <div class="text-[#7d7d7d] text-xs mt-1">
+        <span [class.text-green-400]="acceso.access_granted" [class.text-red-400]="!acceso.access_granted">
+          {{getAccessStatus(acceso)}}
+        </span> • {{getAccessType(acceso)}} • 
+        <span class="text-xs text-[#7d7d7d]">Área: {{acceso.area_name || 'Área desconocida'}}</span> •
+        <span class="text-xs text-[#7d7d7d]">RFID: {{acceso.card_id || 'Código desconocido'}}</span>
+      </div>
+    </div>
+    
+    <div *ngIf="!loadingAccesses && ultimosAccesos.length === 0" class="text-center text-[#7d7d7d] text-xs p-2">
+      No hay accesos recientes
+    </div>
+  </div>
+  
+  <div *ngIf="showRfidChangeIndicator" class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+</div>
+
 
     <!-- Sensor de Movimiento -->
     <div (click)="onPirCardClick()"
@@ -41,7 +67,7 @@
         <div class="flex justify-between items-center mb-2">
             <h2 class="text-sm font-semibold text-[#EAEAEA]">Sensor Presencia</h2>
         </div>
-        <div class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+        <div *ngIf="showPirChangeIndicator" class="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
         <div
             class="flex-1 flex flex-col items-center justify-center bg-[#1a1a1d]/80 rounded-lg p-3 border border-[#2a2a2e]">
             <div class="flex items-center gap-2 mb-2">

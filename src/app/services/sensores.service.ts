@@ -1,52 +1,102 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import Pusher from 'pusher-js';
 import { environment } from '../../environments/environment';
+
+interface LightSensorData {
+  status: 'on' | 'off';
+  event_date: string;
+  alert_message?: string;
+  alert_triggered?: boolean;
+  area_id?: string;
+  _id?: string;
+}
+
+interface PirSensorData {
+  motion_detected: boolean;
+  event_date: string;
+  alert_message?: string;
+  _id?: string;
+}
+
+interface ThSensorData {
+  temperature_c: number;
+  humidity_percent: number;
+  event_date: string;
+  _id?: string;
+}
+
+interface WeightSensorData {
+    exit_code: string;
+    weight_kg: number;
+    status: number
+    area_id?: string;
+    event_date: string;
+    processed: boolean;
+    action: string;
+    _id?: string;
+}  
 
 @Injectable({
     providedIn: 'root'
 })
 export class SensoresService {
     private apiUrl = environment.apiUrl;
-    private pusherKey = environment.pusherKey; // Asegúrate de añadir esto a environment.ts
+    private pusherKey = environment.pusherKey;
     private pusherCluster = environment.pusherCluster;
 
-    // Subjects para cada tipo de sensor
-    private lightSensorSubject = new BehaviorSubject<any>(null);
-    private thSensorSubject = new BehaviorSubject<any>(null);
-    private pirSensorSubject = new BehaviorSubject<any>(null);
+    private lightSensorSubject = new BehaviorSubject<LightSensorData | null>(null);
+    private pirSensorSubject = new BehaviorSubject<PirSensorData | null>(null);
+    private thSensorSubject = new BehaviorSubject<ThSensorData | null>(null);
+    private weightSensorSubject = new BehaviorSubject<WeightSensorData | null>(null);
     private rfidCodesSubject = new BehaviorSubject<string[]>([]);
 
     // Observables públicos
     rfidCodes$ = this.rfidCodesSubject.asObservable();
-    lightSensorUpdates$ = this.lightSensorSubject.asObservable();
-    thSensorUpdates$ = this.thSensorSubject.asObservable();
-    pirSensorUpdates$ = this.pirSensorSubject.asObservable();
+    
+    public lightSensorUpdates$ = this.lightSensorSubject.asObservable();
+    public pirSensorUpdates$ = this.pirSensorSubject.asObservable();
+    public thSensorUpdates$ = this.thSensorSubject.asObservable();
+    public weightSensorUpdates$ = this.weightSensorSubject.asObservable();
+
 
     constructor(private http: HttpClient) {
-        this.initializeWebSocket();
+        this.initializeWebSockets();
         this.loadInitialSensorData();
         this.loadRfidCodes();
     }
 
-    private initializeWebSocket() {
+    private initializeWebSockets(): void {
         const pusher = new Pusher(this.pusherKey, {
-            cluster: this.pusherCluster
+        cluster: this.pusherCluster,
         });
-    
-        const channel = pusher.subscribe('sensor-updates');
-    
-        channel.bind('App\\Events\\PirSensorUpdated', (data: any) => {
-            this.pirSensorSubject.next(data.data);
+
+        pusher.subscribe('light-sensor-updates')
+    .bind('LightSensorUpdated', (data: { lightData: LightSensorData }) => {
+        console.log('WebSocket data received:', data); // Para depuración
+        this.lightSensorSubject.next(data.lightData);
+    });
+
+        pusher.subscribe('pir-sensor-updates')
+        .bind('PirSensorUpdated', (data: PirSensorData) => {
+        console.log('PIR Sensor data received:', data); // Para depuración
+        this.pirSensorSubject.next(data);
         });
-    
-        channel.bind('App\\Events\\LightSensorUpdated', (data: any) => {
-            this.lightSensorSubject.next(data.data);
+
+        // Canal para sensor TH
+    // En el método initializeWebSockets():
+        pusher.subscribe('th-sensor-updates')
+        .bind('ThSensorUpdated', (data: ThSensorData) => {
+            console.log('TH Sensor data received:', data); // Para depuración
+            this.thSensorSubject.next(data);
         });
-    
-        channel.bind('App\\Events\\ThSensorUpdated', (data: any) => {
-            this.thSensorSubject.next(data.data);
+
+                // Canal para sensor de peso
+        pusher.subscribe('weight-sensor-updates')
+        .bind('WeightSensorUpdated', (data: { weightData: WeightSensorData }) => {
+        console.log('Weight Sensor data received:', data); // Para depuración
+        this.weightSensorSubject.next(data.weightData);
         });
     }
 
@@ -55,6 +105,14 @@ export class SensoresService {
         this.getLastLightStatus().subscribe(data => this.lightSensorSubject.next(data));
         this.getLastTHSensorData().subscribe(data => this.thSensorSubject.next(data));
         this.getLastPirSensorData().subscribe(data => this.pirSensorSubject.next(data));
+    }
+
+    getLastLightStatus(): Observable<LightSensorData> {
+        return this.http.get<LightSensorData>(`${this.apiUrl}/light-sensor`);
+    }
+
+    getLastPirSensorData(): Observable<PirSensorData> {
+        return this.http.get<PirSensorData>(`${this.apiUrl}/pir-sensor`);
     }
 
     getRfidCodes(): Observable<string[]> {
@@ -72,17 +130,8 @@ export class SensoresService {
         return this.http.get<string[]>(`${this.apiUrl}/assigned-rfid-codes`);
     }
 
-    // Métodos existentes (los mantienes igual)
-    getLastLightStatus(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/light-sensor`);
-    }
-
-    getLastTHSensorData(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/temperature-humidity-sensor`);
-    }
-
-    getLastPirSensorData(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/pir-sensor`);
+    getLastTHSensorData(): Observable<ThSensorData> {
+        return this.http.get<ThSensorData>(`${this.apiUrl}/temperature-humidity-sensor`);
     }
 
     getAriaReferenceIds(): Observable<any> {
@@ -93,8 +142,12 @@ export class SensoresService {
         return this.http.get(`${this.apiUrl}/weight-sensor`);
     }
 
+    getLockSensorData(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/lock-sensor/ultimos-accesos`);
+    }
+
     getDevices(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/devices`);
+        return this.http.get(`${this.apiUrl}/device`);
     }
 
     updateDevice(id: string, data: any) {
@@ -104,4 +157,6 @@ export class SensoresService {
     deleteDevice(id: string): Observable<any> {
         return this.http.delete(`${this.apiUrl}/devices/${id}`);
     }
+
+
 }
