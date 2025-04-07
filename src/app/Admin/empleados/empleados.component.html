@@ -188,10 +188,27 @@
                     </div>
                 </div>
 
+                <!-- En tu empleados.component.html -->
                 <div class="space-y-2">
                     <label for="RFID" class="block text-sm font-medium text-[#EAEAEA]">RFID</label>
-                    <input type="text" id="RFID" formControlName="RFID" placeholder="Tarjeta RFID"
+
+                    <!-- Mostrar select si hay códigos disponibles -->
+                    <select *ngIf="rfidCodes.length > 0" id="RFID" formControlName="RFID"
                         class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
+                        <option value="" disabled selected>Seleccione un código RFID</option>
+                        <option *ngFor="let code of rfidCodes" [value]="code">{{code}}</option>
+                    </select>
+
+                    <!-- Mostrar mensaje si no hay códigos -->
+                    <div *ngIf="noRfidAvailable" class="text-yellow-400 text-sm py-2">
+                        No hay códigos RFID disponibles. Por favor, escanee una tarjeta primero.
+                    </div>
+
+                    <!-- Mostrar input si no hay códigos (opcional) -->
+                    <input *ngIf="noRfidAvailable" type="text" id="RFID" formControlName="RFID"
+                        placeholder="Ingrese manualmente el RFID"
+                        class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
+
                     <div *ngIf="employeeForm.get('RFID')?.invalid && (employeeForm.get('RFID')?.dirty || employeeForm.get('RFID')?.touched)"
                         class="text-red-400 text-xs">
                         <div *ngIf="employeeForm.get('RFID')?.errors?.['required']">RFID requerido.</div>
@@ -352,10 +369,9 @@
 
                 <!-- RFID -->
                 <div class="space-y-2">
-                    <label class="block text-sm font-medium text-[#EAEAEA]">RFID</label>
-                    <input type="text" formControlName="RFID"
-                        class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50"
-                        [disabled]="editLoading">
+                    <label class="block text-sm font-medium text-[#EAEAEA]">RFID (No editable)</label>
+                    <input type="text" formControlName="RFID" [disabled]="true" readonly
+                        class="w-full px-4 py-2 rounded-lg bg-[#232328] border border-[#444444]/50 text-[#EAEAEA] focus:border-[#00f2ff] focus:ring-1 focus:ring-[#00f2ff]/50">
                     <div *ngIf="editEmployeeForm.get('RFID')?.invalid && (editEmployeeForm.get('RFID')?.dirty || editEmployeeForm.get('RFID')?.touched)"
                         class="text-red-400 text-xs">
                         <div *ngIf="editEmployeeForm.get('RFID')?.errors?.['required']">RFID requerido</div>

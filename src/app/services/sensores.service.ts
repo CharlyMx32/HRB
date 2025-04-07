@@ -50,6 +50,10 @@ export class SensoresService {
     private pirSensorSubject = new BehaviorSubject<PirSensorData | null>(null);
     private thSensorSubject = new BehaviorSubject<ThSensorData | null>(null);
     private weightSensorSubject = new BehaviorSubject<WeightSensorData | null>(null);
+    private rfidCodesSubject = new BehaviorSubject<string[]>([]);
+
+    // Observables públicos
+    rfidCodes$ = this.rfidCodesSubject.asObservable();
     
     public lightSensorUpdates$ = this.lightSensorSubject.asObservable();
     public pirSensorUpdates$ = this.pirSensorSubject.asObservable();
@@ -59,6 +63,8 @@ export class SensoresService {
 
     constructor(private http: HttpClient) {
         this.initializeWebSockets();
+        this.loadInitialSensorData();
+        this.loadRfidCodes();
     }
 
     private initializeWebSockets(): void {
@@ -94,12 +100,34 @@ export class SensoresService {
         });
     }
 
+    private loadInitialSensorData() {
+        // Cargar datos iniciales
+        this.getLastLightStatus().subscribe(data => this.lightSensorSubject.next(data));
+        this.getLastTHSensorData().subscribe(data => this.thSensorSubject.next(data));
+        this.getLastPirSensorData().subscribe(data => this.pirSensorSubject.next(data));
+    }
+
     getLastLightStatus(): Observable<LightSensorData> {
         return this.http.get<LightSensorData>(`${this.apiUrl}/light-sensor`);
     }
 
     getLastPirSensorData(): Observable<PirSensorData> {
         return this.http.get<PirSensorData>(`${this.apiUrl}/pir-sensor`);
+    }
+
+    getRfidCodes(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.apiUrl}/rfid-codes`);
+    }
+
+    private loadRfidCodes() {
+        this.getRfidCodes().subscribe({
+            next: (codes) => this.rfidCodesSubject.next(codes),
+            error: (err) => console.error('Error loading RFID codes', err)
+        });
+    }
+
+    getAssignedRfidCodes(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.apiUrl}/assigned-rfid-codes`);
     }
 
     getLastTHSensorData(): Observable<ThSensorData> {
