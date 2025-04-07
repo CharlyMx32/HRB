@@ -273,7 +273,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  // Métodos del calendario (se mantienen igual)
   generateCalendar() {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth();

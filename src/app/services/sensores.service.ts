@@ -115,7 +115,7 @@ export class SensoresService {
     }
 
     getDevices(): Observable<any> {
-        return this.http.get(`${this.apiUrl}/devices`);
+        return this.http.get(`${this.apiUrl}/device`);
     }
 
     updateDevice(id: string, data: any) {
