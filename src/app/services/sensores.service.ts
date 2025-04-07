@@ -16,8 +16,10 @@ export class SensoresService {
     private lightSensorSubject = new BehaviorSubject<any>(null);
     private thSensorSubject = new BehaviorSubject<any>(null);
     private pirSensorSubject = new BehaviorSubject<any>(null);
+    private rfidCodesSubject = new BehaviorSubject<string[]>([]);
 
     // Observables públicos
+    rfidCodes$ = this.rfidCodesSubject.asObservable();
     lightSensorUpdates$ = this.lightSensorSubject.asObservable();
     thSensorUpdates$ = this.thSensorSubject.asObservable();
     pirSensorUpdates$ = this.pirSensorSubject.asObservable();
@@ -25,6 +27,7 @@ export class SensoresService {
     constructor(private http: HttpClient) {
         this.initializeWebSocket();
         this.loadInitialSensorData();
+        this.loadRfidCodes();
     }
 
     private initializeWebSocket() {
@@ -52,6 +55,21 @@ export class SensoresService {
         this.getLastLightStatus().subscribe(data => this.lightSensorSubject.next(data));
         this.getLastTHSensorData().subscribe(data => this.thSensorSubject.next(data));
         this.getLastPirSensorData().subscribe(data => this.pirSensorSubject.next(data));
+    }
+
+    getRfidCodes(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.apiUrl}/rfid-codes`);
+    }
+
+    private loadRfidCodes() {
+        this.getRfidCodes().subscribe({
+            next: (codes) => this.rfidCodesSubject.next(codes),
+            error: (err) => console.error('Error loading RFID codes', err)
+        });
+    }
+
+    getAssignedRfidCodes(): Observable<string[]> {
+        return this.http.get<string[]>(`${this.apiUrl}/assigned-rfid-codes`);
     }
 
     // Métodos existentes (los mantienes igual)

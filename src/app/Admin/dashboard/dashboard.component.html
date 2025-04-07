@@ -71,56 +71,70 @@
 
         <div
             class="flex-1 flex flex-col items-center justify-center bg-[#1a1a1d]/80 rounded-lg p-3 border border-[#2a2a2e]">
-            <div class="text-center mb-3">
-                <div class="text-3xl font-bold text-[#00f2ff] mb-1">{{employeeCount}}</div>
-                <p class="text-xs text-[#7d7d7d]">Total de empleados</p>
-            </div>
-
-            <div class="w-full bg-[#121215] h-1 rounded-full overflow-hidden mb-1">
-                <div class="h-full rounded-full bg-gradient-to-r from-[#00a2ff] to-[#00f2ff]"
-                    [style.width.%]="(activeEmployees / employeeCount) * 100">
+            <!-- Contenido cuando hay empleados -->
+            <ng-container *ngIf="employeeCount > 0; else noEmployeesTemplate">
+                <div class="text-center mb-3">
+                    <div class="text-3xl font-bold text-[#00f2ff] mb-1">{{employeeCount}}</div>
+                    <p class="text-xs text-[#7d7d7d]">Total de empleados</p>
                 </div>
-            </div>
 
-            <div class="flex justify-between w-full text-[0.6rem] text-[#7d7d7d] mb-3">
-                <span>Activos: {{activeEmployees}}</span>
-                <span>Inactivos: {{employeeCount - activeEmployees}}</span>
-            </div>
+                <div class="w-full bg-[#121215] h-1 rounded-full overflow-hidden mb-1">
+                    <div class="h-full rounded-full bg-gradient-to-r from-[#00a2ff] to-[#00f2ff]"
+                        [style.width.%]="(activeEmployees / employeeCount) * 100">
+                    </div>
+                </div>
 
-            <div *ngIf="errorLoadingEmployees" class="mt-2 text-xs text-red-400">
-                Error al cargar datos
-            </div>
+                <div class="flex justify-between w-full text-[0.6rem] text-[#7d7d7d] mb-3">
+                    <span>Activos: {{activeEmployees}}</span>
+                    <span>Inactivos: {{employeeCount - activeEmployees}}</span>
+                </div>
+            </ng-container>
+
+            <!-- Template cuando NO hay empleados -->
+            <ng-template #noEmployeesTemplate>
+                <div class="text-center">
+                    <i class="fas fa-users-slash text-2xl text-[#7d7d7d] mb-2"></i>
+                    <p class="text-sm text-[#7d7d7d]">No hay empleados registrados</p>
+                </div>
+            </ng-template>
+        </div>
+
+        <!-- Mensaje de error -->
+        <div *ngIf="errorLoadingEmployees" class="mt-2 text-xs text-red-400">
+            Error al cargar datos
         </div>
     </div>
 
     <!-- Segunda Fila -->
-    <!-- Estado -->
-    <div class="bg-[#232328]/90 rounded-xl shadow-lg p-3 flex flex-col border border-[#333337] col-span-1">
-        <h2 class="text-sm font-semibold text-[#EAEAEA] mb-2">Estado</h2>
+    <div class="h-full w-full flex">
+        <div
+            class="bg-[#232328]/90 rounded-xl shadow-lg p-6 flex flex-col border border-[#333337] flex-grow w-full h-full">
+            <h2 class="text-lg font-semibold text-[#EAEAEA] mb-4 text-center">Estado</h2>
 
-        <!-- Luz -->
-        <div (click)="onLightCardClick()"
-            class="bg-[#1a1a1d]/80 p-2 rounded-lg mb-2 flex items-center justify-between hover:bg-[#252529] transition-colors border border-[#2a2a2e] cursor-pointer relative">
-            <div class="flex items-center">
-                <div class="relative mr-2">
-                    <i class="fas fa-lightbulb text-base" [class.text-yellow-400]="luzEncendida"
-                        [class.text-[#7d7d7d]]="!luzEncendida"></i>
-                    <div *ngIf="luzEncendida" class="absolute inset-0 rounded-full bg-yellow-400/20 animate-pulse">
+            <div class="flex-1 flex flex-col items-center justify-center gap-6">
+                <!-- Luz -->
+                <div (click)="onLightCardClick()"
+                    class="bg-[#1a1a1d]/80 p-6 rounded-xl w-full max-w-[300px] flex items-center justify-between hover:bg-[#252529] transition-colors border border-[#2a2a2e] cursor-pointer relative">
+                    <div class="flex items-center">
+                        <div class="relative mr-4">
+                            <i class="fas fa-lightbulb text-3xl" [class.text-yellow-400]="luzEncendida"
+                                [class.text-[#7d7d7d]]="!luzEncendida"></i>
+                            <div *ngIf="luzEncendida"
+                                class="absolute inset-0 rounded-full bg-yellow-400/20 animate-pulse"></div>
+                        </div>
+                        <span class="text-lg text-white">Luz</span>
                     </div>
+                    <span class="text-lg font-bold" [class.text-green-400]="luzEncendida"
+                        [class.text-red-400]="!luzEncendida">
+                        {{ luzEncendida ? 'ENCENDIDA' : 'APAGADA' }}
+                    </span>
+                    <div *ngIf="showLightChangeIndicator"
+                        class="absolute -top-1 -right-1 w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
                 </div>
-                <span class="text-xs1">Luz</span>
             </div>
-            <span class="text-xs" [class.text-green-400]="luzEncendida" [class.text-red-400]="!luzEncendida">
-                {{luzEncendida ? 'Encendida' : 'Apagada'}}
-            </span>
-            <div *ngIf="showLightChangeIndicator"
-                class="absolute -top-1 -right-1 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-        </div>
-
-        <div class="mt-2 text-xxs text-[#7d7d7d] bg-[#1a1a1d]/50 p-1 rounded-lg border border-[#2a2a2e]">
-            <i class="fas fa-clock mr-1"></i> Último cambio: {{ultimoCambioEstado}}
         </div>
     </div>
+
 
     <!-- Ambiente -->
     <div (click)="onEnvCardClick()"
@@ -215,4 +229,4 @@
             </table>
         </div>
     </div>
-</div>
+    <div>

@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { EliminarCuadroComponent } from '../../components/eliminar-cuadro/eliminar-cuadro.component';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SensoresService } from '../../services/sensores.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-empleados',
@@ -18,6 +20,8 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 })
 export class EmpleadosComponent implements OnInit {
   employees: any[] = [];
+  rfidCodes: string[] = [];
+  noRfidAvailable: boolean = false;
 
   // Modal states
   showAddModal: boolean = false;
@@ -44,6 +48,7 @@ export class EmpleadosComponent implements OnInit {
     private authService: AuthService,
     private workersService: WorkersService,
     private mensajesService: MensajesService,
+    private sensoresService: SensoresService,
     private router: Router,
     private dialog: MatDialog
 
@@ -84,6 +89,7 @@ export class EmpleadosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getEmployees();
+    this.loadRfidCodes();
   }
 
   openAddModal(): void {
@@ -158,6 +164,26 @@ export class EmpleadosComponent implements OnInit {
     );
   }
 
+  private loadRfidCodes(): void {
+    combineLatest([
+      this.sensoresService.rfidCodes$,
+      this.sensoresService.getAssignedRfidCodes()
+    ]).subscribe({
+      next: ([allCodes, assignedCodes]) => {
+        this.rfidCodes = allCodes.filter(code => !assignedCodes.includes(code));
+        this.noRfidAvailable = this.rfidCodes.length === 0;
+
+        if (this.rfidCodes.length === 1) {
+          this.employeeForm.patchValue({ RFID: this.rfidCodes[0] });
+        }
+      },
+      error: (err) => {
+        console.error('Error al obtener códigos RFID', err);
+        this.noRfidAvailable = true;
+      }
+    });
+  }
+
   register(): void {
     if (this.employeeForm.invalid) {
       this.errorMessage = 'Por favor complete todos los campos correctamente';
@@ -173,6 +199,7 @@ export class EmpleadosComponent implements OnInit {
         this.loading = false;
         this.showAddModal = false;
         this.getEmployees();
+        this.loadRfidCodes();
         setTimeout(() => this.successMessage = '', 5000);
       },
       error: (error) => {
@@ -206,18 +233,18 @@ export class EmpleadosComponent implements OnInit {
       this.editErrorMessage = 'Por favor complete todos los campos requeridos';
       return;
     }
-  
+
     this.editLoading = true;
     this.editErrorMessage = '';
     this.successMessage = '';
-  
+
     const formData = this.editEmployeeForm.value;
-  
+
     // Manejo de campos opcionales
     if (!formData.RFC) formData.RFC = null;
     if (!formData.NSS) formData.NSS = null;
     if (!formData.email) formData.email = null;
-  
+
     this.workersService.updateEmployee(this.selectedEmployeeId, formData).subscribe({
       next: (response) => {
         this.editLoading = false;
@@ -230,7 +257,7 @@ export class EmpleadosComponent implements OnInit {
       },
       error: (error) => {
         this.editLoading = false;
-  
+
         if (error.validationErrors) {
           // Manejar errores de validación del backend
           Object.keys(error.validationErrors).forEach(field => {
