@@ -23,6 +23,29 @@ interface EventoAuditoria {
   fechaCompleta?: Date;
 }
 
+interface RfidAccess {
+  _id?: string;
+  card_id: string;
+  user_name?: string;
+  access_granted: boolean;
+  event_date: string;
+  area_id?: string;
+  area_name?: string;
+  device_id?: string;
+  device_name?: string;
+}
+
+interface WeightSensorData {
+  exit_code: string;
+  weight_kg: number;
+  status: number;
+  area_id?: string;
+  event_date: string;
+  processed: boolean;
+  action: string;
+  _id?: string;
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -44,7 +67,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   daysOfWeek = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
   weeks: Date[][] = [];
 
-  weightDataList: any[] = [];
+  weightDataList: WeightSensorData[] = [];
   errorMessage: string = '';
 
   // Empleados
@@ -66,16 +89,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
   showLightChangeIndicator = false;
   showEnvChangeIndicator = false;
   showPirChangeIndicator = false;
+  showRfidChangeIndicator = false;
 
   // Datos de auditoría
   eventosAuditoria: EventoAuditoria[] = [];
 
   // Datos para las tablas
-  ultimosAccesos = [
-    { nombre: 'Operario #1', hora: '10:45 AM', tipo: 'RFID: A3F2B1' },
-    { nombre: 'Proveedor', hora: '09:30 AM', tipo: 'Tarjeta' },
-    { nombre: 'Transportista', hora: 'Ayer 5:30 PM', tipo: 'RFID: 7B2C9D' },
-  ];
+  ultimosAccesos: RfidAccess[] = [];
+  loadingAccesses: boolean = false;
 
   private sensorSubscriptions: Subscription = new Subscription();
 
@@ -90,6 +111,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadInitialData();
     this.setupRealTimeUpdates();
     this.loadEmployeeCount();
+    this.loadRfidAccesses();
   }
 
   ngOnDestroy() {
@@ -120,7 +142,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     );
 
     this.sensoresService.getWeightSensorData().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         if (res.success && res.data.length > 0) {
           this.weightDataList = res.data.slice(-5).reverse();
         } else {
@@ -133,6 +155,44 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  private loadRfidAccesses() {
+    this.loadingAccesses = true;
+    this.sensorSubscriptions.add(
+      this.sensoresService.getLockSensorData().subscribe({
+        next: (data: any) => {
+          if (data && data.length > 0) {
+            // Adaptar los datos recibidos al formato esperado por el componente
+            this.ultimosAccesos = data.map((item: any) => ({
+              card_id: item.rfid_code,  // Mapea 'rfid_code' a 'card_id'
+              user_name: item.nombre,  // Mapea 'nombre' a 'user_name'
+              event_date: item.hora,  // Mapea 'hora' a 'event_date'
+              area_name: item.area,  // Mapea 'area' a 'area_name'
+              access_granted: true,  // Forzar acceso concedido siempre
+            })).slice(0, 3); // Mostrar solo los 3 más recientes
+            
+            this.showRfidChangeIndicator = true;
+            
+            // Agregar el último acceso a la auditoría
+            const lastAccess = this.ultimosAccesos[0];
+            this.agregarEventoAuditoria(
+              'Acceso RFID',
+              lastAccess.event_date,
+              `Acceso concedido a ${lastAccess.user_name || 'Usuario desconocido'} en el área ${lastAccess.area_name || 'Área desconocida'}`
+            );
+          }
+          this.loadingAccesses = false;
+        },
+        error: (err) => {
+          console.error('Error loading RFID accesses:', err);
+          this.loadingAccesses = false;
+        }
+      })
+    );
+  }
+  
+  
+  
 
   private setupRealTimeUpdates() {
     // Configuración de listeners para actualizaciones en tiempo real
@@ -296,7 +356,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   obtenerDatosSensor(): void {
     this.sensoresService.getWeightSensorData().subscribe({
-      next: (res) => {
+      next: (res: any) => {
         if (res.success && res.data.length > 0) {
           this.weightDataList = res.data.slice(-5).reverse();
         } else {
@@ -320,6 +380,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   onPirCardClick() {
     this.showPirChangeIndicator = false;
+  }
+
+  onRfidCardClick() {
+    this.showRfidChangeIndicator = false;
   }
 
   agregarEventoAuditoria(accion: string, fechaString: string, detalle: string) {
@@ -373,5 +437,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+  formatAccessDate(dateString: string): string {
+    return this.formatLastChangeTime(dateString);
+  }
+
+  getAccessStatus(access: RfidAccess): string {
+    return access.access_granted ? 'Concedido' : 'Denegado';
+  }
+
+  getAccessType(access: RfidAccess): string {
+    return access.card_id ? `RFID: ${access.card_id.substring(0, 6)}` : 'Tarjeta';
+  }
 }

@@ -114,6 +114,10 @@ export class SensoresService {
         return this.http.get(`${this.apiUrl}/weight-sensor`);
     }
 
+    getLockSensorData(): Observable<any> {
+        return this.http.get(`${this.apiUrl}/lock-sensor/ultimos-accesos`);
+    }
+
     getDevices(): Observable<any> {
         return this.http.get(`${this.apiUrl}/device`);
     }
@@ -125,4 +129,6 @@ export class SensoresService {
     deleteDevice(id: string): Observable<any> {
         return this.http.delete(`${this.apiUrl}/devices/${id}`);
     }
+
+
 }
